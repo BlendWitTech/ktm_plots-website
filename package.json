@@ -1,0 +1,35 @@
+{
+  "name": "blendwit-base-cms",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "demo"
+  ],
+  "scripts": {
+    "dev:backend": "npm run start:dev -w backend",
+    "dev:frontend": "npm run dev -w frontend",
+    "dev:demo": "npm run dev -w demo",
+    "dev:theme": "node scripts/dev-theme.js",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:demo\"",
+    "build": "npm run build -w backend && npm run build -w frontend",
+    "install:all": "npm install",
+    "setup": "powershell -ExecutionPolicy Bypass -File ./scripts/setup.ps1",
+    "reset": "powershell -ExecutionPolicy Bypass -File ./scripts/reset.ps1",
+    "db:init": "npx prisma migrate dev -w backend",
+    "db:seed": "npm run seed -w backend",
+    "start": "node ./scripts/start.js",
+    "start:prod": "node backend/dist/main",
+    "package-theme": "node scripts/package-theme.js",
+    "zip-theme": "node scripts/zip-theme.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "prisma": "^6.19.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.2"
+  }
+}

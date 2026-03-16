@@ -1,0 +1,408 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String        @id @default(uuid())
+  email               String        @unique
+  password            String
+  name                String?
+  roleId              String
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  forcePasswordChange Boolean       @default(false)
+  ipWhitelist         String[]      @default([])
+  twoFactorEnabled    Boolean       @default(false)
+  twoFactorSecret     String?
+  failedLoginAttempts Int           @default(0)
+  lockoutUntil        DateTime?
+  preferences         Json?
+  avatar              String?
+  bio                 String?
+  status              String        @default("ACTIVE")
+  lastActive          DateTime?
+  activityLogs        ActivityLog[]
+  comments            Comment[]
+  posts               Post[]
+  role                Role          @relation(fields: [roleId], references: [id])
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid())
+  userId    String
+  action    String
+  metadata  Json?
+  createdAt DateTime @default(now())
+  status    String   @default("INFO")
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Invitation {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  roleId      String
+  ipWhitelist String[] @default([])
+  token       String   @unique
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  status      String   @default("PENDING")
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  permissions Json
+  level       Int      @default(10)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  icon        String?
+  users       User[]
+}
+
+model Setting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id         String   @id @default(uuid())
+  userId     String?
+  type       String
+  title      String
+  message    String
+  link       String?
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  targetRole String?
+}
+
+model Media {
+  id        String   @id @default(uuid())
+  filename  String
+  url       String
+  mimetype  String
+  size      Int
+  createdAt DateTime @default(now())
+  altText   String?
+  folder    String   @default("root")
+  height    Int?
+  metadata  Json?
+  updatedAt DateTime @updatedAt
+  width     Int?
+}
+
+model Collection {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  slug        String           @unique
+  description String?
+  type        String           @default("COLLECTION")
+  fields      Json
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  items       CollectionItem[]
+}
+
+model CollectionItem {
+  id           String     @id @default(uuid())
+  collectionId String
+  data         Json
+  slug         String?
+  isPublished  Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@index([collectionId])
+}
+
+model Form {
+  id          String           @id @default(uuid())
+  name        String
+  slug        String           @unique
+  description String?
+  fields      Json
+  settings    Json?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  submissions FormSubmission[]
+}
+
+model FormSubmission {
+  id        String   @id @default(uuid())
+  formId    String
+  data      Json
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  form      Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+}
+
+model AnalyticsConfig {
+  id                  String   @id @default(uuid())
+  ga4MeasurementId    String?
+  ga4PropertyId       String?
+  serviceAccountEmail String?
+  privateKey          String?  @db.Text
+  gscPropertyUrl      String?
+  fbPixelId           String?
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+// Bundled: Post, Category, Tag (Comment is in comments.prisma)
+model Post {
+  id          String     @id @default(uuid())
+  title       String
+  slug        String     @unique
+  content     String
+  excerpt     String?
+  coverImage  String?
+  status      String     @default("DRAFT")
+  authorId    String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  featured    Boolean    @default(false)
+  theme       String?
+  publishedAt DateTime?
+  comments    Comment[]
+  author      User       @relation(fields: [authorId], references: [id])
+  categories  Category[] @relation("CategoryToPost")
+  tags        Tag[]      @relation("PostToTag")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  posts       Post[]   @relation("CategoryToPost")
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]   @relation("PostToTag")
+}
+
+// Depends on: blogs (Post model), _core (User model)
+model Comment {
+  id          String   @id @default(uuid())
+  content     String
+  authorName  String
+  authorEmail String
+  status      String   @default("PENDING")
+  postId      String
+  userId      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user        User?    @relation(fields: [userId], references: [id])
+}
+
+model Lead {
+  id         String   @id @default(uuid())
+  name       String
+  email      String
+  phone      String?
+  message    String?  @db.Text
+  originPage String?
+  status     String   @default("NEW")
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// Bundled: Menu, MenuItem
+model Menu {
+  id        String     @id @default(uuid())
+  name      String
+  slug      String     @unique
+  theme     String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  items     MenuItem[]
+}
+
+model MenuItem {
+  id        String     @id @default(uuid())
+  label     String
+  url       String
+  target    String     @default("_self")
+  order     Int        @default(0)
+  parentId  String?
+  menuId    String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  menu      Menu       @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  parent    MenuItem?  @relation("MenuNesting", fields: [parentId], references: [id], onDelete: Cascade)
+  children  MenuItem[] @relation("MenuNesting")
+}
+
+model Page {
+  id            String   @id @default(uuid())
+  title         String
+  slug          String   @unique
+  content       String?
+  data          Json?
+  description   String?
+  featuredImage String?
+  status        String   @default("DRAFT")
+  settings      Json?
+  theme         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Land plot listings — dedicated module for real-estate plot themes
+// Separate from the Project model which is for construction/portfolio themes
+
+model Plot {
+  id          String        @id @default(uuid())
+  title       String
+  slug        String        @unique
+  description String        @db.Text
+  content     String?       @db.Text
+  coverImage  String?
+  gallery     String[]
+  status      String        @default("available")
+  categoryId  String?
+  category    PlotCategory? @relation(fields: [categoryId], references: [id])
+  location    String?
+  featured    Boolean       @default(false)
+  priceFrom   String?
+  priceTo     String?
+  areaFrom    String?
+  areaTo      String?
+  facing      String?
+  roadAccess  String?
+  theme       String?
+  attributes  Json?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model PlotCategory {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  theme       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  plots       Plot[]
+}
+
+model Redirect {
+  id        String   @id @default(uuid())
+  fromPath  String   @unique
+  toPath    String
+  type      Int      @default(301)
+  isActive  Boolean  @default(true)
+  hits      Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model RobotsTxt {
+  id        String   @id @default(uuid())
+  content   String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// SeoMeta — uses pageType/pageId pattern (no direct FK to Project)
+// Query by: { where: { pageType: 'project', pageId: projectId } }
+model SeoMeta {
+  id                 String   @id @default(uuid())
+  pageType           String
+  pageId             String?
+  title              String?
+  description        String?
+  keywords           String[]
+  ogTitle            String?
+  ogDescription      String?
+  ogImage            String?
+  twitterCard        String?  @default("summary_large_image")
+  twitterTitle       String?
+  twitterDescription String?
+  twitterImage       String?
+  canonicalUrl       String?
+  noindex            Boolean  @default(false)
+  nofollow           Boolean  @default(false)
+  schema             Json?
+  updatedAt          DateTime @updatedAt
+
+  @@unique([pageType, pageId])
+}
+
+model Service {
+  id           String   @id @default(uuid())
+  title        String
+  description  String?  @db.Text
+  icon         String?
+  processSteps Json?
+  order        Int      @default(0)
+  image        String?
+  theme        String?
+  attributes   Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model TeamMember {
+  id          String   @id @default(uuid())
+  name        String
+  role        String
+  bio         String?  @db.Text
+  image       String?
+  socialLinks Json?
+  order       Int      @default(0)
+  theme       String?
+  attributes  Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id            String   @id @default(uuid())
+  clientName    String
+  clientRole    String?
+  clientCompany String?
+  clientPhoto   String?
+  content       String   @db.Text
+  rating        Int      @default(5)
+  theme         String?
+  attributes    Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Design {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  thumbnail   String?
+  path        String
+  version     String   @default("1.0.0")
+  status      String   @default("ACTIVE")
+  settings    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

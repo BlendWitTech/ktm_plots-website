@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Theme zip exports
+themes/*.zip
+
+# Environment files (never commit secrets)
+.env
+.env.local
+.env.*.local
+
+# OS / Editor
+.DS_Store
+.idea/
+.vscode/
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test coverage
+coverage/
+
+# Claude Code memory
+.claude/
+
+# Media uploads (user-generated content)
+backend/uploads/
+
+# Temp / packaging directories
+temp_theme/
+temp_website_repo/
+tmp/
+
+# Prisma generated client (regenerated on build)
+backend/node_modules/.prisma/
+
+# Theme build artifacts
+themes/*/node_modules/
+themes/*/.next/
+themes/*/out/

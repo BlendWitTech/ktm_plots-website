@@ -6,6 +6,16 @@ import { getPlots, getImageUrl, getSiteData, getSection, type PageRecord } from 
 export const metadata: Metadata = {
   title: 'Available Plots',
   description: 'Browse all available land plots across Kathmandu Valley. Verified titles, transparent pricing, and professional support.',
+  openGraph: {
+    title: 'Available Plots | KTM Plots',
+    description: 'Browse all available land plots across Kathmandu Valley. Verified titles, transparent pricing, and professional support.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Available Plots | KTM Plots',
+    description: 'Browse all available land plots across Kathmandu Valley. Verified titles, transparent pricing, and professional support.',
+  },
 };
 
 function StatusBadge({ status }: { status: string | null }) {

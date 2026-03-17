@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { getSiteData, getSection, type PageRecord } from '@/lib/cms';
 import ContactForm from './ContactForm';
 import ContactActions from './ContactActions';
@@ -113,7 +114,9 @@ export default async function ContactPage() {
             </div>
 
             {/* Contact form */}
-            <ContactForm />
+            <Suspense fallback={<div style={{ height: '400px' }} />}>
+              <ContactForm />
+            </Suspense>
           </div>
         </div>
       </section>

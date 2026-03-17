@@ -1,14 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { submitLead } from '@/lib/cms';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
 export default function ContactForm() {
+  const searchParams = useSearchParams();
+  const plotSlug = searchParams.get('plot');
+
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+
+  useEffect(() => {
+    if (plotSlug) {
+      const plotName = plotSlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+      setForm((prev) => ({ ...prev, message: `I am interested in the plot: ${plotName}. Please contact me with more details.` }));
+    }
+  }, [plotSlug]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -18,7 +29,8 @@ export default function ContactForm() {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) return;
     setStatus('loading');
-    const result = await submitLead({ ...form, source: 'contact-page' });
+    const source = plotSlug ? `plot-enquiry:${plotSlug}` : 'contact-page';
+    const result = await submitLead({ ...form, source });
     if (result.success) {
       setStatus('success');
       setForm({ name: '', email: '', phone: '', message: '' });

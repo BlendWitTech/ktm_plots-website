@@ -280,10 +280,11 @@ export async function submitLead(data: {
   source?: string;
 }): Promise<{ success: boolean; message?: string }> {
   try {
-    const res = await fetch(`${API}/public/leads`, {
+    const { source, ...rest } = data;
+    const res = await fetch(`${API}/leads/public/submit`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...rest, originPage: source }),
     });
     const json = await res.json();
     if (!res.ok || json.success === false) return { success: false, message: json.message || 'Failed to submit.' };

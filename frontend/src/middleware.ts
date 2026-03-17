@@ -8,10 +8,8 @@ const PROTECTED_PATHS = ['/dashboard', '/settings'];
 /** Routes accessible only when setup is NOT complete. */
 const SETUP_ONLY_PATH = '/setup';
 
-/** Routes always allowed (no auth, no setup gate). */
-const PUBLIC_PATHS = ['/', '/register'];
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // ── 1. Check setup status ────────────────────────────────────────────────

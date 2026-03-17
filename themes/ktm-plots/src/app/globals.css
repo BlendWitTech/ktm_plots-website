@@ -289,8 +289,6 @@ body {
   /* Page hero band: tighter */
   .page-hero-band { padding: 2rem 0 1.5rem !important; }
 
-  /* Services grid: allow single column on small phones */
-  .services-detail-grid { grid-template-columns: 1fr !important; }
 }
 
 /* 900px and below — 2 columns for services + blog preview stacks */
@@ -299,4 +297,10 @@ body {
   .blog-preview-grid { grid-template-columns: 1fr !important; }
   .blog-preview-featured { grid-column: 1 !important; grid-template-columns: 1fr !important; }
   .blog-preview-featured > div:first-child { min-height: 200px !important; }
+}
+
+/* 640px and below — single column (must come after 900px rule to win) */
+@media (max-width: 640px) {
+  .services-detail-grid { grid-template-columns: 1fr !important; }
+  .services-grid { grid-template-columns: 1fr !important; }
 }

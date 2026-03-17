@@ -321,7 +321,7 @@ export default function SettingsPage() {
                                     />
                                 )}
 
-                                {isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text']) && editModes['branding'] && (
+                                {isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text']) && (
                                     <div className="flex gap-4 pt-4">
                                         <button
                                             onClick={() => handleSave('branding')}
@@ -405,7 +405,7 @@ export default function SettingsPage() {
                                     />
                                 </div>
                             </div>
-                            {isSectionEditing('contact', ['contact_email', 'contact_phone', 'address']) && editModes['contact'] && (
+                            {isSectionEditing('contact', ['contact_email', 'contact_phone', 'address']) && (
                                 <div className="flex gap-4 pt-4">
                                     <button onClick={() => handleSave('contact')} className="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-blue-500/20 hover:bg-blue-700 transition-all">Save</button>
                                     <button onClick={() => handleCancel('contact')} className="bg-slate-100 text-slate-500 px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
@@ -456,7 +456,7 @@ export default function SettingsPage() {
                                     </div>
                                 ))}
                             </div>
-                            {isSectionEditing('social', ['social_facebook', 'social_instagram']) && editModes['social'] && (
+                            {isSectionEditing('social', ['social_facebook', 'social_instagram']) && (
                                 <div className="flex gap-4 pt-4">
                                     <button onClick={() => handleSave('social')} className="bg-violet-600 text-white px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-violet-500/20 hover:bg-violet-700 transition-all">Save Social Links</button>
                                     <button onClick={() => handleCancel('social')} className="bg-slate-100 text-slate-500 px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
@@ -620,14 +620,12 @@ export default function SettingsPage() {
                                 >
                                     Save Email Settings
                                 </button>
-                                {editModes['email'] && (
-                                    <button
-                                        onClick={() => handleCancel('email')}
-                                        className="bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all font-bold"
-                                    >
-                                        Cancel
-                                    </button>
-                                )}
+                                <button
+                                    onClick={() => handleCancel('email')}
+                                    className="bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all"
+                                >
+                                    Cancel
+                                </button>
                             </div>
                         )}
                     </div>
@@ -693,7 +691,7 @@ export default function SettingsPage() {
                                 </div>
                             </div>
 
-                            {isSectionEditing('cloudinary', ['cloudinary_cloud_name', 'cloudinary_api_key', 'cloudinary_api_secret']) && editModes['cloudinary'] && (
+                            {isSectionEditing('cloudinary', ['cloudinary_cloud_name', 'cloudinary_api_key', 'cloudinary_api_secret']) && (
                                 <div className="flex gap-4 pt-8 relative z-10">
                                     <button
                                         onClick={() => handleSave('cloudinary')}
@@ -779,7 +777,7 @@ export default function SettingsPage() {
                                 </div>
                             </div>
 
-                            {isSectionEditing('s3', ['s3_access_key', 's3_bucket']) && editModes['s3'] && (
+                            {isSectionEditing('s3', ['s3_access_key', 's3_bucket']) && (
                                 <div className="flex gap-4 pt-8 relative z-10">
                                     <button
                                         onClick={() => handleSave('s3')}
@@ -975,7 +973,7 @@ export default function SettingsPage() {
                                 </div>
                             </label>
 
-                            {isSectionEditing('performance', ['performance_edge_caching']) && editModes['performance'] && (
+                            {isSectionEditing('performance', ['performance_edge_caching']) && (
                                 <div className="flex gap-4 pt-4">
                                     <button
                                         onClick={() => handleSave('performance')}
@@ -1057,7 +1055,7 @@ export default function SettingsPage() {
                                 ))}
                             </div>
 
-                            {isSectionEditing('security', ['security_session_locking', 'security_failed_login_limit', 'security_token_rotation']) && editModes['security'] && (
+                            {isSectionEditing('security', ['security_session_locking', 'security_failed_login_limit', 'security_token_rotation']) && (
                                 <div className="flex gap-4 pt-4">
                                     <button
                                         onClick={() => handleSave('security')}

@@ -16,10 +16,16 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [revocationMessage, setRevocationMessage] = useState<string | null>(null);
     const pathname = usePathname();
     const router = useRouter();
     const isMediaPage = pathname?.includes('/media');
+
+    // Close mobile sidebar on route change
+    useEffect(() => {
+        setIsMobileOpen(false);
+    }, [pathname]);
 
     useEffect(() => {
         const handleSessionRevoked = (event: any) => {
@@ -49,9 +55,25 @@ export default function AdminLayout({
                         <Sidebar isCollapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
                     </div>
 
+                    {/* Mobile Sidebar Overlay */}
+                    {isMobileOpen && (
+                        <div
+                            className="fixed inset-0 z-50 lg:hidden"
+                            onClick={() => setIsMobileOpen(false)}
+                        >
+                            <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" />
+                            <div
+                                className="absolute inset-y-0 left-0 w-72 flex flex-col"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <Sidebar isCollapsed={false} onToggle={() => setIsMobileOpen(false)} />
+                            </div>
+                        </div>
+                    )}
+
                     {/* Main Content Area */}
                     <div className={`relative flex min-h-screen flex-1 flex-col overflow-x-hidden bg-mesh custom-scrollbar transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
-                        <Header isCollapsed={isCollapsed} />
+                        <Header isCollapsed={isCollapsed} onMobileMenuToggle={() => setIsMobileOpen(true)} />
                         <main className="flex-1 flex flex-col">
                             <div className={`relative flex-1 ${isMediaPage ? 'p-0' : 'p-8'}`}>
                                 {/* Subtle background glow */}

@@ -7,15 +7,30 @@ interface Props {
   siteData: SiteData;
 }
 
+const DEFAULT_LINKS = [
+  { label: 'Home', href: '/' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Plots', href: '/plots' },
+  { label: 'Services', href: '/services' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Contact', href: '/contact' },
+];
+
 export default function Footer({ siteData }: Props) {
   const { settings } = siteData;
   const year = new Date().getFullYear();
 
-  // Read individual social settings set via Admin -> Theme Settings
-  const fbUrl = (settings as any).social_facebook || '';
-  const igUrl = (settings as any).social_instagram || '';
-  const ytUrl = (settings as any).social_youtube || '';
-  const waUrl = (settings as any).social_whatsapp || '';
+  const footerMenu = siteData.menus.find((m) => m.slug === 'footer-nav');
+  const quickLinks = footerMenu?.items?.length
+    ? footerMenu.items.map((item) => ({ label: item.label, href: item.url }))
+    : DEFAULT_LINKS;
+
+  // Social links come from settings.socialLinks (aggregated by the API)
+  const sl = settings.socialLinks || {};
+  const fbUrl = (sl as any).facebook || '';
+  const igUrl = (sl as any).instagram || '';
+  const ytUrl = (sl as any).youtube || '';
+  const waUrl = (sl as any).whatsapp || '';
   const hasSocial = fbUrl || igUrl || ytUrl || waUrl;
 
   return (
@@ -28,7 +43,7 @@ export default function Footer({ siteData }: Props) {
               {settings.siteTitle || 'KTM Plots'}
             </div>
             <p style={{ fontSize: '0.875rem', lineHeight: '1.7', color: '#9CA3AF' }}>
-              {settings.tagline || "Kathmandu Valley's Trusted Land Partner"}
+              {settings.footerText || settings.tagline || "Kathmandu Valley's Trusted Land Partner"}
             </p>
             {/* Social links */}
             {hasSocial && (
@@ -69,14 +84,7 @@ export default function Footer({ siteData }: Props) {
           <div>
             <h4 style={{ color: '#F9FAFB', fontWeight: 700, marginBottom: '1rem', fontSize: '0.95rem' }}>Quick Links</h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {[
-                { label: 'Home', href: '/' },
-                { label: 'About Us', href: '/about' },
-                { label: 'Plots', href: '/plots' },
-                { label: 'Services', href: '#services' },
-                { label: 'Blog', href: '/blog' },
-                { label: 'Contact', href: '/contact' },
-              ].map((l) => (
+              {quickLinks.map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} style={{ color: '#9CA3AF', textDecoration: 'none', fontSize: '0.875rem', transition: 'color 0.2s' }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = '#CC1414')}
@@ -123,7 +131,7 @@ export default function Footer({ siteData }: Props) {
 
         {/* Bottom bar */}
         <div style={{ borderTop: '1px solid #1F2937', paddingTop: '1.25rem', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '0.5rem', fontSize: '0.8rem' }}>
-          <span>© {year} {settings.siteTitle || 'KTM Plots'}. All rights reserved.</span>
+          <span>{(settings as any).copyrightText || `© ${year} ${settings.siteTitle || 'KTM Plots'}. All rights reserved.`}</span>
           <div style={{ display: 'flex', gap: '1.5rem' }}>
             <Link href="/privacy" style={{ color: '#6B7280', textDecoration: 'none' }}>Privacy Policy</Link>
             <Link href="/terms" style={{ color: '#6B7280', textDecoration: 'none' }}>Terms</Link>

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
 import { getPlotBySlug, getImageUrl } from '@/lib/cms';
+import PlotGallery from '@/components/PlotGallery';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -37,8 +37,12 @@ export default async function PlotDetailPage({ params }: Props) {
   const plot = await getPlotBySlug(slug);
   if (!plot) notFound();
 
-  const imgUrl = getImageUrl(plot.featuredImageUrl);
   const status = plot.status?.toLowerCase() ?? 'available';
+  // Build full image list: featured first, then gallery
+  const allImages = [
+    ...(plot.featuredImageUrl ? [getImageUrl(plot.featuredImageUrl)!] : []),
+    ...(plot.images ?? []).map((img: string) => getImageUrl(img)).filter(Boolean) as string[],
+  ];
 
   return (
     <>
@@ -56,34 +60,9 @@ export default async function PlotDetailPage({ params }: Props) {
       <section style={{ padding: '3rem 0 5rem', background: '#F4F4F4' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem', alignItems: 'start' }}>
-            {/* Left: Images + description */}
+            {/* Left: Gallery + description */}
             <div>
-              {/* Main image */}
-              <div style={{ borderRadius: '12px', overflow: 'hidden', marginBottom: '1.5rem', background: '#A01010', aspectRatio: '16/9', position: 'relative' }}>
-                {imgUrl ? (
-                  <Image src={imgUrl} alt={plot.title} fill style={{ objectFit: 'cover' }} priority />
-                ) : (
-                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '260px' }}>
-                    <svg width="64" height="64" fill="none" stroke="#E82020" strokeWidth="1.5" viewBox="0 0 24 24">
-                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    </svg>
-                  </div>
-                )}
-              </div>
-
-              {/* Additional images */}
-              {plot.images && plot.images.length > 0 && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '2rem' }}>
-                  {plot.images.slice(0, 6).map((img, i) => {
-                    const url = getImageUrl(img);
-                    return url ? (
-                      <div key={i} style={{ borderRadius: '8px', overflow: 'hidden', aspectRatio: '1', position: 'relative', background: '#A01010' }}>
-                        <Image src={url} alt={`${plot.title} ${i + 2}`} fill style={{ objectFit: 'cover' }} />
-                      </div>
-                    ) : null;
-                  })}
-                </div>
-              )}
+              <PlotGallery images={allImages} title={plot.title} />
 
               {/* Content */}
               {plot.content && (

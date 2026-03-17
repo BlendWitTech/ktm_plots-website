@@ -201,7 +201,7 @@ export default function SettingsPage() {
                                         <h3 className="text-xl font-bold text-slate-900 font-display">Identity & SEO</h3>
                                         <p className="text-sm font-medium text-slate-400">Configure how your site appears to engines and users.</p>
                                     </div>
-                                    {!isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text']) && (
+                                    {!isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text']) && (
                                         <button
                                             onClick={() => toggleEdit('branding')}
                                             className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all"
@@ -216,19 +216,30 @@ export default function SettingsPage() {
                                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Master Site Title</label>
                                         <input
                                             type="text"
-                                            disabled={!isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text'])}
+                                            disabled={!isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text'])}
                                             value={settings.site_title || ''}
                                             onChange={(e) => setSettings({ ...settings, site_title: e.target.value })}
                                             className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-blue-600/5 focus:bg-white focus:border-blue-600/20 transition-all disabled:opacity-60"
                                         />
                                     </div>
                                     <div className="space-y-3">
-                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">App Tagline</label>
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">App Tagline <span className="normal-case text-slate-300">(SEO / meta)</span></label>
                                         <input
                                             type="text"
-                                            disabled={!isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text'])}
+                                            disabled={!isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text'])}
                                             value={settings.site_tagline || ''}
                                             onChange={(e) => setSettings({ ...settings, site_tagline: e.target.value })}
+                                            className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-blue-600/5 focus:bg-white focus:border-blue-600/20 transition-all disabled:opacity-60"
+                                        />
+                                    </div>
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Footer Text / Tagline <span className="normal-case text-slate-300">(shown in footer)</span></label>
+                                        <input
+                                            type="text"
+                                            disabled={!isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text'])}
+                                            value={settings.footer_text || ''}
+                                            onChange={(e) => setSettings({ ...settings, footer_text: e.target.value })}
+                                            placeholder="Kathmandu Valley's Trusted Land Partner"
                                             className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-blue-600/5 focus:bg-white focus:border-blue-600/20 transition-all disabled:opacity-60"
                                         />
                                     </div>
@@ -238,7 +249,7 @@ export default function SettingsPage() {
                                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Copyright Disclaimer</label>
                                     <input
                                         type="text"
-                                        disabled={!isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text'])}
+                                        disabled={!isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text'])}
                                         value={settings.copyright_text || ''}
                                         onChange={(e) => setSettings({ ...settings, copyright_text: e.target.value })}
                                         className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:ring-[12px] focus:ring-blue-600/5 transition-all disabled:opacity-60"
@@ -250,8 +261,8 @@ export default function SettingsPage() {
                                     <div className="space-y-3">
                                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Logo</label>
                                         <div
-                                            onClick={() => isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text']) && setMediaPickerTarget('logo')}
-                                            className={`relative flex items-center gap-4 p-4 bg-slate-50/50 border border-slate-100 rounded-2xl transition-all ${isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text']) ? 'cursor-pointer hover:border-blue-400 hover:bg-blue-50/30' : 'opacity-60'}`}
+                                            onClick={() => isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text']) && setMediaPickerTarget('logo')}
+                                            className={`relative flex items-center gap-4 p-4 bg-slate-50/50 border border-slate-100 rounded-2xl transition-all ${isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text']) ? 'cursor-pointer hover:border-blue-400 hover:bg-blue-50/30' : 'opacity-60'}`}
                                         >
                                             <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0">
                                                 {settings.logo_url
@@ -262,11 +273,11 @@ export default function SettingsPage() {
                                             <div className="flex-1 min-w-0">
                                                 <p className="text-xs font-bold text-slate-700 mb-1">{settings.logo_url ? 'Logo set' : 'No logo'}</p>
                                                 {settings.logo_url && <p className="text-[10px] text-slate-400 truncate">{settings.logo_url}</p>}
-                                                {isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text']) && (
+                                                {isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text']) && (
                                                     <span className="text-[10px] font-bold text-blue-600 mt-1 block">Click to choose from media library</span>
                                                 )}
                                             </div>
-                                            {settings.logo_url && isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text']) && (
+                                            {settings.logo_url && isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text']) && (
                                                 <button
                                                     onClick={(e) => { e.stopPropagation(); setSettings({ ...settings, logo_url: '' }); }}
                                                     className="absolute top-2 right-2 w-5 h-5 bg-red-100 rounded-full flex items-center justify-center text-red-500 hover:bg-red-200"
@@ -280,8 +291,8 @@ export default function SettingsPage() {
                                     <div className="space-y-3">
                                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Favicon</label>
                                         <div
-                                            onClick={() => isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text']) && setMediaPickerTarget('favicon')}
-                                            className={`relative flex items-center gap-4 p-4 bg-slate-50/50 border border-slate-100 rounded-2xl transition-all ${isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text']) ? 'cursor-pointer hover:border-blue-400 hover:bg-blue-50/30' : 'opacity-60'}`}
+                                            onClick={() => isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text']) && setMediaPickerTarget('favicon')}
+                                            className={`relative flex items-center gap-4 p-4 bg-slate-50/50 border border-slate-100 rounded-2xl transition-all ${isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text']) ? 'cursor-pointer hover:border-blue-400 hover:bg-blue-50/30' : 'opacity-60'}`}
                                         >
                                             <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0">
                                                 {settings.favicon_url
@@ -292,11 +303,11 @@ export default function SettingsPage() {
                                             <div className="flex-1 min-w-0">
                                                 <p className="text-xs font-bold text-slate-700 mb-1">{settings.favicon_url ? 'Favicon set' : 'No favicon'}</p>
                                                 {settings.favicon_url && <p className="text-[10px] text-slate-400 truncate">{settings.favicon_url}</p>}
-                                                {isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text']) && (
+                                                {isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text']) && (
                                                     <span className="text-[10px] font-bold text-blue-600 mt-1 block">Click to choose from media library</span>
                                                 )}
                                             </div>
-                                            {settings.favicon_url && isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text']) && (
+                                            {settings.favicon_url && isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text']) && (
                                                 <button
                                                     onClick={(e) => { e.stopPropagation(); setSettings({ ...settings, favicon_url: '' }); }}
                                                     className="absolute top-2 right-2 w-5 h-5 bg-red-100 rounded-full flex items-center justify-center text-red-500 hover:bg-red-200"
@@ -321,7 +332,7 @@ export default function SettingsPage() {
                                     />
                                 )}
 
-                                {isSectionEditing('branding', ['site_title', 'site_tagline', 'copyright_text']) && (
+                                {isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text']) && (
                                     <div className="flex gap-4 pt-4">
                                         <button
                                             onClick={() => handleSave('branding')}
@@ -378,7 +389,6 @@ export default function SettingsPage() {
                                 {[
                                     { key: 'contact_email', label: 'Contact Email', placeholder: 'info@yourcompany.com', type: 'email' },
                                     { key: 'contact_phone', label: 'Phone Number', placeholder: '+977 9800000000', type: 'text' },
-                                    { key: 'footer_text', label: 'Footer Text / Tagline', placeholder: 'Your tagline here', type: 'text' },
                                     { key: 'primary_color', label: 'Brand Primary Color', placeholder: '#1B4332', type: 'text' },
                                 ].map(f => (
                                     <div key={f.key} className="space-y-2">

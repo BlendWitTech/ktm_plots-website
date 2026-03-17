@@ -110,7 +110,7 @@ export default async function ServicesPage() {
       {/* Services grid */}
       <section style={{ padding: '5rem 0', background: '#F4F4F4' }}>
         <div className="container">
-          <div className="services-detail-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.75rem' }}>
+          <div className="services-detail-grid">
             {(cmsServices.length > 0 ? cmsServices.map((s: any, i) => ({
               icon: ALL_SERVICES[i % ALL_SERVICES.length]?.icon,
               title: s.title,
@@ -160,6 +160,11 @@ export default async function ServicesPage() {
             })}
           </div>
         </div>
+        <style>{`
+          .services-detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; }
+          @media (max-width: 900px) { .services-detail-grid { grid-template-columns: repeat(2, 1fr); } }
+          @media (max-width: 560px) { .services-detail-grid { grid-template-columns: 1fr; } }
+        `}</style>
       </section>
 
       {/* CTA — contact method cards */}

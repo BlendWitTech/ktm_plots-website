@@ -11,7 +11,7 @@ const SETUP_ONLY_PATH = '/setup';
 /** Routes always allowed (no auth, no setup gate). */
 const PUBLIC_PATHS = ['/', '/register'];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // ── 1. Check setup status ────────────────────────────────────────────────

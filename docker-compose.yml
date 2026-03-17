@@ -1,12 +1,12 @@
 services:
   db:
     image: postgres:15-alpine
-    container_name: ${ORG_NAME:-mero}-cms-db
+    container_name: ${ORG_NAME:-ktm-plots}-cms-db
     restart: always
     environment:
       POSTGRES_USER: ${DB_USER:-admin}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-password123}
-      POSTGRES_DB: ${DB_NAME:-mero_cms}
+      POSTGRES_DB: ${DB_NAME:-ktm-plots}
     ports:
       - "5432:5432"
     volumes:
@@ -15,13 +15,13 @@ services:
   backend:
     build:
       context: .
-      dockerfile: backend/Dockerfile
-    container_name: ${ORG_NAME:-mero}-cms-backend
+      dockerfile: backend/Dockerfile.dev
+    container_name: ${ORG_NAME:-ktm-plots}-cms-backend
     restart: always
     ports:
       - "3001:3001"
     environment:
-      DATABASE_URL: postgresql://${DB_USER:-admin}:${DB_PASSWORD:-password123}@db:5432/${DB_NAME:-mero_cms}?schema=public
+      DATABASE_URL: postgresql://${DB_USER:-admin}:${DB_PASSWORD:-password123}@db:5432/${DB_NAME:-ktm-plots}?schema=public
       JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
       PORT: 3001
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:3002}
@@ -41,7 +41,7 @@ services:
   frontend:
     build:
       context: ./frontend
-    container_name: ${ORG_NAME:-mero}-cms-frontend
+    container_name: ${ORG_NAME:-ktm-plots}-cms-frontend
     restart: always
     ports:
       - "3000:3000"
@@ -52,7 +52,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: ${ORG_NAME:-mero}-cms-pgadmin
+    container_name: ${ORG_NAME:-ktm-plots}-cms-pgadmin
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@example.com}

@@ -43,9 +43,22 @@ const MODULE_SCHEMA_MAP = {
   themes: ['themes'],
 };
 
+/**
+ * ALL schema files are always included in the assembled schema.prisma.
+ *
+ * Reason: every NestJS module in app.module.ts is TypeScript-compiled
+ * unconditionally (even when gated by `when()` at runtime). TypeScript
+ * type-checks prisma.lead / prisma.post / etc. at build time, so all
+ * Prisma models must exist in the schema regardless of ENABLED_MODULES.
+ *
+ * ENABLED_MODULES only controls which API endpoints are ACTIVE at runtime —
+ * it does NOT control which DB tables exist.
+ */
+const ALWAYS_INCLUDED = Object.values(MODULE_SCHEMA_MAP).flat();
+
 function buildSchema(enabledModules) {
   // Resolve which .prisma module files to include (deduplicated)
-  const schemaFiles = new Set();
+  const schemaFiles = new Set(ALWAYS_INCLUDED);
   for (const mod of enabledModules) {
     const files = MODULE_SCHEMA_MAP[mod];
     if (files === undefined) {

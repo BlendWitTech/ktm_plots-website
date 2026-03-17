@@ -18,6 +18,7 @@ const fs = require('fs');
 
 const API_URL = process.env.CMS_API_URL || 'http://localhost:3001';
 const THEMES_DIR = path.join(__dirname, '..', 'themes');
+const UPLOADS_THEMES_DIR = path.join(__dirname, '..', 'backend', 'uploads', 'themes');
 const PLACEHOLDER_THEME = 'mero-starter-theme';
 const STARTUP_WAIT_MS = 15000;
 const WATCH_INTERVAL_MS = 4000;
@@ -54,23 +55,36 @@ async function waitForBackend() {
     return null;
 }
 
+function findThemePath(name) {
+    if (!name) return null;
+    const builtIn = path.join(THEMES_DIR, name);
+    if (fs.existsSync(builtIn)) return builtIn;
+    const uploaded = path.join(UPLOADS_THEMES_DIR, name);
+    if (fs.existsSync(uploaded)) return uploaded;
+    return null;
+}
+
 function themeExists(name) {
-    return name && fs.existsSync(path.join(THEMES_DIR, name));
+    return !!findThemePath(name);
 }
 
 /** Returns the theme to start: the active theme if it exists, otherwise the placeholder. */
 function resolveTheme(activeTheme) {
     if (themeExists(activeTheme)) return activeTheme;
     if (fs.existsSync(path.join(THEMES_DIR, PLACEHOLDER_THEME))) return PLACEHOLDER_THEME;
-    // Last resort: any available theme
-    const dirs = fs.readdirSync(THEMES_DIR, { withFileTypes: true })
-        .filter(d => d.isDirectory() && !d.name.startsWith('.') && !d.name.startsWith('_'))
-        .map(d => d.name);
-    return dirs[0] || PLACEHOLDER_THEME;
+    // Last resort: any available theme in built-in or uploads dirs
+    for (const dir of [THEMES_DIR, UPLOADS_THEMES_DIR]) {
+        if (!fs.existsSync(dir)) continue;
+        const dirs = fs.readdirSync(dir, { withFileTypes: true })
+            .filter(d => d.isDirectory() && !d.name.startsWith('.') && !d.name.startsWith('_'))
+            .map(d => d.name);
+        if (dirs[0]) return dirs[0];
+    }
+    return PLACEHOLDER_THEME;
 }
 
 function prepareTheme(themeName) {
-    const themePath = path.join(THEMES_DIR, themeName);
+    const themePath = findThemePath(themeName) || path.join(THEMES_DIR, themeName);
     if (!fs.existsSync(path.join(themePath, 'node_modules'))) {
         console.log(`\n   Installing dependencies for "${themeName}"...`);
         execSync('npm install', { cwd: themePath, stdio: 'inherit' });
@@ -84,7 +98,7 @@ function prepareTheme(themeName) {
 }
 
 function startTheme(themeName) {
-    const themePath = path.join(THEMES_DIR, themeName);
+    const themePath = findThemePath(themeName) || path.join(THEMES_DIR, themeName);
     console.log(`\n🚀  Starting theme "${themeName}" on port 3002...\n`);
     return spawn('npm', ['run', 'dev'], {
         cwd: themePath,

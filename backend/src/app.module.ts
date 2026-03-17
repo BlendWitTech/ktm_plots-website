@@ -80,6 +80,10 @@ function when(...keys: string[]) {
     TasksModule,
     SetupModule,
     PublicModule,
+    // Theme system and navigation are fundamental CMS infrastructure
+    ThemesModule,
+    MenusModule,
+    PagesModule,
 
     // ── Optional modules — loaded only when ENABLED_MODULES contains the key ──
 
@@ -97,11 +101,7 @@ function when(...keys: string[]) {
     ...when('team')(TeamModule),
     ...when('services')(ServicesModule),
     ...when('testimonials')(TestimonialsModule),
-
-    ...when('menus')(MenusModule),
-    ...when('pages')(PagesModule),
     ...when('leads')(LeadsModule),
-    ...when('themes')(ThemesModule),
 
     ...when('seo')(SeoMetaModule),
     ...when('redirects')(RedirectsModule),

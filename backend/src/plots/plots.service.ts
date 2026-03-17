@@ -14,10 +14,21 @@ export class PlotsService {
         return s?.value ?? null;
     }
 
+    private buildPlotData(dto: any) {
+        const { categoryId, ...rest } = dto;
+        const data: any = { ...rest };
+        if (categoryId) {
+            data.category = { connect: { id: categoryId } };
+        } else if ('categoryId' in dto) {
+            data.category = { disconnect: true };
+        }
+        return data;
+    }
+
     async create(dto: any) {
         const activeTheme = await this.getActiveTheme();
         const plot = await (this.prisma as any).plot.create({
-            data: { ...dto, theme: activeTheme },
+            data: { ...this.buildPlotData(dto), theme: activeTheme },
             include: { category: true },
         });
         await this.notificationsService.create({
@@ -61,7 +72,7 @@ export class PlotsService {
     async update(id: string, dto: any) {
         const plot = await (this.prisma as any).plot.update({
             where: { id },
-            data: dto,
+            data: this.buildPlotData(dto),
             include: { category: true },
         });
         await this.notificationsService.create({

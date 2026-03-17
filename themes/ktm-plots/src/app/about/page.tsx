@@ -141,7 +141,7 @@ export default async function AboutPage() {
             <h2 className="section-title">{teamTitle}</h2>
             <p className="section-subtitle">{teamSubtitle}</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
+          <div className="team-grid">
             {teamList.map((member: any, idx: number) => {
               const photoUrl = member.image ? getImageUrl(member.image) : null;
               return (
@@ -163,6 +163,12 @@ export default async function AboutPage() {
           <p style={{ textAlign: 'center', marginTop: '2rem', fontSize: '0.8rem', color: '#9CA3AF' }}>
             Manage team members in <strong>Admin → Content → Team</strong>
           </p>
+          <style>{`
+            .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+            @media (max-width: 1024px) { .team-grid { grid-template-columns: repeat(3, 1fr); } }
+            @media (max-width: 700px)  { .team-grid { grid-template-columns: repeat(2, 1fr); } }
+            @media (max-width: 420px)  { .team-grid { grid-template-columns: 1fr; } }
+          `}</style>
         </div>
       </section>
 

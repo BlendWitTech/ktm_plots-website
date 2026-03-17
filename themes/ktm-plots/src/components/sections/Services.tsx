@@ -76,17 +76,18 @@ export default function Services({ services, secData = {} }: Props) {
           </p>
         </div>
 
-        {/* Grid — exactly 3 per row */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '2rem',
-        }}>
+        {/* Grid — 3 per row desktop, 2 tablet, 1 mobile */}
+        <div className="services-grid">
           {list.map((service, i) => (
             <ServiceCard key={service.id || i} service={service} index={i} />
           ))}
         </div>
       </div>
+      <style>{`
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        @media (max-width: 900px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 560px) { .services-grid { grid-template-columns: 1fr; } }
+      `}</style>
     </section>
   );
 }

@@ -52,7 +52,7 @@ export default function Testimonials({ testimonials, secData = {} }: Props) {
 
   const t = list[current];
   const avatarUrl = getImageUrl(t.avatarUrl);
-  const initials = t.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  const initials = (t.name || '?').split(' ').filter(Boolean).map((n: string) => n[0]).join('').toUpperCase().slice(0, 2) || '?';
 
   return (
     <section style={{ padding: '5rem 0', background: '#1E1E1E' }}>

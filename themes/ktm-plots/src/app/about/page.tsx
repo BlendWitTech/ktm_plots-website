@@ -18,8 +18,8 @@ const FALLBACK_TEAM = [
   { name: 'Anita Shrestha', role: 'Customer Relations',         bio: 'Dedicated to providing a smooth experience from inquiry to final handover.', image: null },
 ];
 
-function initials(name: string) {
-  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+function initials(name: string | null | undefined) {
+  return (name || '?').split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?';
 }
 
 export default async function AboutPage() {

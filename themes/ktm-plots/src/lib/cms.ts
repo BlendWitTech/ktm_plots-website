@@ -98,6 +98,7 @@ export interface Project {
   areaFrom: string | null;
   areaTo: string | null;
   category?: { name: string; slug: string };
+  seo?: { title?: string; description?: string } | null;
   createdAt: string;
 }
 

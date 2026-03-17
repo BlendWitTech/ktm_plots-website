@@ -12,20 +12,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const plot = await getPlotBySlug(slug);
   if (!plot) return { title: 'Plot Not Found' };
-  const description = plot.description || `${plot.title} — verified land plot in Kathmandu Valley. Clear legal title, transparent pricing.`;
+  const seo = plot.seo;
+  const metaTitle = seo?.title || plot.title;
+  const description = seo?.description || plot.description || `${plot.title} — verified land plot in Kathmandu Valley. Clear legal title, transparent pricing.`;
   const imageUrl = getImageUrl(plot.featuredImageUrl);
   return {
-    title: plot.title,
+    title: metaTitle,
     description,
     openGraph: {
-      title: plot.title,
+      title: metaTitle,
       description,
       type: 'article',
       ...(imageUrl && { images: [{ url: imageUrl, width: 1200, height: 630, alt: plot.title }] }),
     },
     twitter: {
       card: 'summary_large_image',
-      title: plot.title,
+      title: metaTitle,
       description,
       ...(imageUrl && { images: [imageUrl] }),
     },

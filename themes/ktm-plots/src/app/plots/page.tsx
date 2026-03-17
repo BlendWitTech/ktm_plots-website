@@ -138,9 +138,7 @@ export default async function PlotsPage({ searchParams }: Props) {
                     <Link
                       key={plot.id}
                       href={`/plots/${plot.slug}`}
-                      style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: '#FFFFFF', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 2px 16px rgba(0,0,0,0.07)', transition: 'transform 0.22s ease, box-shadow 0.22s ease' }}
-                      onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(204,20,20,0.13)'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
+                      className="plot-card"
                     >
                       <div style={{ position: 'relative', height: '220px', background: 'linear-gradient(135deg, #2a0a0a 0%, #A01010 100%)', flexShrink: 0 }}>
                         {imgUrl
@@ -216,6 +214,7 @@ export default async function PlotsPage({ searchParams }: Props) {
           )}
         </div>
       </section>
+      <style>{`.plot-card{text-decoration:none;display:flex;flex-direction:column;background:#FFFFFF;border-radius:14px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.07);transition:transform 0.22s ease,box-shadow 0.22s ease}.plot-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(204,20,20,0.13)}`}</style>
     </>
   );
 }

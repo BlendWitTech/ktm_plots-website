@@ -79,9 +79,7 @@ export default async function BlogPage({ searchParams }: Props) {
                     <Link
                       key={post.id}
                       href={`/blog/${post.slug}`}
-                      style={{ display: 'flex', flexDirection: 'column', background: '#FFFFFF', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 2px 16px rgba(0,0,0,0.07)', textDecoration: 'none', transition: 'transform 0.22s, box-shadow 0.22s' }}
-                      onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 14px 36px rgba(0,0,0,0.11)'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
+                      className="blog-card"
                     >
                       {/* Image */}
                       <div style={{ position: 'relative', height: '200px', background: 'linear-gradient(135deg, #1A0505 0%, #A01010 100%)', flexShrink: 0 }}>
@@ -154,6 +152,7 @@ export default async function BlogPage({ searchParams }: Props) {
           )}
         </div>
       </section>
+      <style>{`.blog-card{display:flex;flex-direction:column;background:#FFFFFF;border-radius:14px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.07);text-decoration:none;transition:transform 0.22s,box-shadow 0.22s}.blog-card:hover{transform:translateY(-5px);box-shadow:0 14px 36px rgba(0,0,0,0.11)}`}</style>
     </>
   );
 }

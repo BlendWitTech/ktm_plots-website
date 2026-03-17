@@ -88,12 +88,15 @@ export class PlotsService {
     }
 
     // Public methods
-    async findPublished(page = 1, limit = 10, category?: string) {
-        const activeTheme = await this.getActiveTheme();
+    async findPublished(page = 1, limit = 10, category?: string, status?: string, search?: string) {
         const skip = (page - 1) * limit;
         const where: any = { NOT: { status: 'hidden' } };
-        if (activeTheme) where.theme = activeTheme;
         if (category) where.category = { slug: category };
+        if (status) where.status = status;
+        if (search) where.OR = [
+            { title: { contains: search, mode: 'insensitive' } },
+            { location: { contains: search, mode: 'insensitive' } },
+        ];
         const [plots, total] = await Promise.all([
             (this.prisma as any).plot.findMany({
                 where,

@@ -56,11 +56,15 @@ export class PlotsController {
         @Query('page') page?: string,
         @Query('limit') limit?: string,
         @Query('category') category?: string,
+        @Query('status') status?: string,
+        @Query('search') search?: string,
     ) {
         return this.plotsService.findPublished(
             page ? parseInt(page) : 1,
             limit ? parseInt(limit) : 10,
             category,
+            status,
+            search,
         );
     }
 

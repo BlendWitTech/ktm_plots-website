@@ -141,7 +141,7 @@ export default async function AboutPage() {
             <h2 className="section-title">{teamTitle}</h2>
             <p className="section-subtitle">{teamSubtitle}</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
             {teamList.map((member: any, idx: number) => {
               const photoUrl = member.image ? getImageUrl(member.image) : null;
               return (

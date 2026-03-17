@@ -48,3 +48,4 @@ backend/node_modules/.prisma/
 themes/*/node_modules/
 themes/*/.next/
 themes/*/out/
+themes/*/media/

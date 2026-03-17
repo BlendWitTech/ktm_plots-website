@@ -9,7 +9,8 @@ import {
     ExclamationCircleIcon,
     PencilIcon,
     MagnifyingGlassIcon,
-    CubeIcon
+    CubeIcon,
+    MapPinIcon,
 } from '@heroicons/react/24/outline';
 import { apiRequest } from '@/lib/api';
 import Link from 'next/link';
@@ -99,6 +100,10 @@ export default function MetaManagement() {
                                             <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-100">
                                                 <CubeIcon className="h-3 w-3" /> Project
                                             </span>
+                                        ) : item.type === 'plot' ? (
+                                            <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+                                                <MapPinIcon className="h-3 w-3" /> Plot
+                                            </span>
                                         ) : (
                                             <span className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-100">
                                                 <DocumentTextIcon className="h-3 w-3" /> Post
@@ -131,6 +136,8 @@ export default function MetaManagement() {
                                             href={
                                                 item.type === 'post'
                                                     ? `/dashboard/blog?action=edit&id=${item.id}&from=seo`
+                                                    : item.type === 'plot'
+                                                    ? `/dashboard/plots?action=edit&id=${item.id}&from=seo`
                                                     : `/dashboard/pages/${item.id}?from=seo`
                                             }
                                             className="inline-flex items-center gap-1 text-xs font-bold text-slate-600 hover:text-blue-600 transition-colors"

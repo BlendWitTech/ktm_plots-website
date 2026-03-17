@@ -57,7 +57,7 @@ export default function SEODashboard() {
                             <span className="text-2xl font-bold opacity-75">/100</span>
                         </div>
                         <p className="mt-3 text-sm opacity-90">
-                            {stats.postsWithSeo} of {stats.totalPosts} posts have SEO metadata
+                            {stats.postsWithSeo} of {stats.totalPosts} items have SEO metadata
                         </p>
                     </div>
                     <div className="h-32 w-32 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">

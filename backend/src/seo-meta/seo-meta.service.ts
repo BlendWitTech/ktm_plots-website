@@ -6,36 +6,32 @@ export class SeoMetaService {
     constructor(private prisma: PrismaService) { }
 
     async getDashboardStats() {
-        // 1. Count total posts, pages and projects
-        const totalPosts = await (this.prisma as any).post.count();
-        const totalPages = await (this.prisma as any).page.count();
-        const totalProjects = await (this.prisma as any).project.count();
-        const combinedTotal = totalPosts + totalPages + totalProjects;
+        // 1. Count total posts, pages, projects, and plots
+        const [totalPosts, totalPages, totalProjects, totalPlots] = await Promise.all([
+            (this.prisma as any).post.count().catch(() => 0),
+            (this.prisma as any).page.count().catch(() => 0),
+            (this.prisma as any).project.count().catch(() => 0),
+            (this.prisma as any).plot.count().catch(() => 0),
+        ]);
+        const combinedTotal = totalPosts + totalPages + totalProjects + totalPlots;
 
-        // 2. Count items with SEO metadata (only those that actually exist in their respective tables)
-        const [postsWithSeo, pagesWithSeo, projectsWithSeo] = await Promise.all([
+        // 2. Count items with SEO metadata
+        const [postsWithSeo, pagesWithSeo, projectsWithSeo, plotsWithSeo] = await Promise.all([
             (this.prisma as any).seoMeta.count({
-                where: {
-                    pageType: { in: ['post', 'POST'] },
-                    pageId: { not: null },
-                }
+                where: { pageType: { in: ['post', 'POST'] }, pageId: { not: null } }
             }),
             (this.prisma as any).seoMeta.count({
-                where: {
-                    pageType: { in: ['page', 'PAGE'] },
-                    pageId: { not: null }
-                }
+                where: { pageType: { in: ['page', 'PAGE'] }, pageId: { not: null } }
             }),
             (this.prisma as any).seoMeta.count({
-                where: {
-                    pageType: { in: ['project', 'PROJECT', 'Project'] }
-                }
-            })
+                where: { pageType: { in: ['project', 'PROJECT', 'Project'] } }
+            }),
+            (this.prisma as any).plot.count({
+                where: { seo: { not: null } }
+            }).catch(() => 0),
         ]);
 
-        // To be 100% accurate, we should count occurrences in metaMap
-        // But for dashboard stats, we'll cap it at the total content count to avoid score > 100
-        const itemsWithSeo = Math.min(combinedTotal, postsWithSeo + pagesWithSeo + projectsWithSeo);
+        const itemsWithSeo = Math.min(combinedTotal, postsWithSeo + pagesWithSeo + projectsWithSeo + plotsWithSeo);
 
         // 3. Count active redirects
         const activeRedirects = await (this.prisma as any).redirect.count({
@@ -51,20 +47,24 @@ export class SeoMetaService {
     }
 
     async getContentList() {
-        const posts = await (this.prisma as any).post.findMany({
-            select: { id: true, title: true, slug: true, status: true },
-            orderBy: { updatedAt: 'desc' }
-        });
-
-        const pages = await (this.prisma as any).page.findMany({
-            select: { id: true, title: true, slug: true, status: true },
-            orderBy: { updatedAt: 'desc' }
-        });
-
-        const projects = await (this.prisma as any).project.findMany({
-            select: { id: true, title: true, slug: true, status: true },
-            orderBy: { updatedAt: 'desc' }
-        });
+        const [posts, pages, projects, plots] = await Promise.all([
+            (this.prisma as any).post.findMany({
+                select: { id: true, title: true, slug: true, status: true },
+                orderBy: { updatedAt: 'desc' }
+            }).catch(() => []),
+            (this.prisma as any).page.findMany({
+                select: { id: true, title: true, slug: true, status: true },
+                orderBy: { updatedAt: 'desc' }
+            }).catch(() => []),
+            (this.prisma as any).project.findMany({
+                select: { id: true, title: true, slug: true, status: true },
+                orderBy: { updatedAt: 'desc' }
+            }).catch(() => []),
+            (this.prisma as any).plot.findMany({
+                select: { id: true, title: true, slug: true, status: true, seo: true },
+                orderBy: { updatedAt: 'desc' }
+            }).catch(() => []),
+        ]);
 
         const allMeta = await (this.prisma as any).seoMeta.findMany({
             where: {
@@ -110,7 +110,16 @@ export class SeoMetaService {
                 status: p.status,
                 seo: metaMap.get(`project:${p.id}`) || null,
                 lastModified: new Date(),
-            }))
+            })),
+            ...plots.map(p => ({
+                id: p.id,
+                title: p.title,
+                slug: `/plots/${p.slug}`,
+                type: 'plot',
+                status: p.status,
+                seo: p.seo || null,
+                lastModified: new Date(),
+            })),
         ];
     }
 

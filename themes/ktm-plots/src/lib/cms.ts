@@ -1,4 +1,4 @@
-const API = process.env.CMS_API_URL || 'http://localhost:3001';
+const API = process.env.NEXT_PUBLIC_CMS_API_URL || process.env.CMS_API_URL || 'http://localhost:3001';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

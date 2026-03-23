@@ -47,7 +47,7 @@ function AnimatedStat({ value, label, delay }: Stat & { delay: number }) {
 
 export default function AnimatedStatsStrip({ stats }: { stats: Stat[] }) {
   return (
-    <section style={{ background: '#CC1414', padding: '4rem 0' }}>
+    <section style={{ background: 'var(--color-primary)', padding: '4rem 0' }}>
       <div className="container">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '2rem' }}>
           {stats.map((s, i) => (

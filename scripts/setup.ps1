@@ -27,7 +27,7 @@ DATABASE_URL=postgresql://admin:password123@localhost:5432/ktm-plots
 
 JWT_SECRET=dev-jwt-secret-change-in-production
 
-CORS_ORIGINS=http://localhost:3000
+CORS_ORIGINS=http://localhost:3000,http://localhost:3002
 
 THEMES_DIR=../themes
 UPLOAD_DIR=./uploads
@@ -46,7 +46,7 @@ NODE_ENV=development
 DATABASE_URL=postgresql://admin:password123@localhost:5432/ktm-plots
 JWT_SECRET=dev-jwt-secret-change-in-production
 PORT=3001
-CORS_ORIGINS=http://localhost:3000
+CORS_ORIGINS=http://localhost:3000,http://localhost:3002
 ENABLED_MODULES=
 SETUP_COMPLETE=false
 "@ | Out-File -FilePath "backend/.env" -Encoding utf8
@@ -107,7 +107,7 @@ Write-Host "[4/5] Initializing database..." -ForegroundColor Gray
 node scripts/build-schema.js all
 Set-Location backend
 npx prisma generate
-npx prisma db push --accept-data-loss
+npx prisma migrate dev --name initial --skip-seed
 npm run seed
 Set-Location ..
 

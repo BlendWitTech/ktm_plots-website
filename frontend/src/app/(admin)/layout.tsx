@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { clearAuthToken } from '@/lib/auth';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
+import HelpFAB from '@/components/ui/HelpFAB';
 import { PermissionsProvider } from '@/context/PermissionsContext';
 import { FormProvider } from '@/context/FormContext';
 import { ModulesProvider } from '@/context/ModulesContext';
@@ -19,7 +20,6 @@ export default function AdminLayout({
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [revocationMessage, setRevocationMessage] = useState<string | null>(null);
     const pathname = usePathname();
-    const router = useRouter();
     const isMediaPage = pathname?.includes('/media');
 
     // Close mobile sidebar on route change
@@ -51,7 +51,7 @@ export default function AdminLayout({
                     <div className="fixed bottom-[-5%] right-[-5%] w-[35%] h-[35%] bg-indigo-400/5 rounded-full blur-[100px] pointer-events-none"></div>
 
                     {/* Sidebar - Desktop */}
-                    <div className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isCollapsed ? 'lg:w-20' : 'lg:w-72'}`}>
+                    <div className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col min-h-0 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isCollapsed ? 'lg:w-20' : 'lg:w-72'}`}>
                         <Sidebar isCollapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
                     </div>
 
@@ -72,20 +72,22 @@ export default function AdminLayout({
                     )}
 
                     {/* Main Content Area */}
-                    <div className={`relative flex min-h-screen flex-1 flex-col overflow-x-hidden bg-mesh custom-scrollbar transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
+                    <div className={`relative flex h-screen flex-col overflow-hidden bg-mesh transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
                         <Header isCollapsed={isCollapsed} onMobileMenuToggle={() => setIsMobileOpen(true)} />
-                        <main className="flex-1 flex flex-col">
-                            <div className={`relative flex-1 ${isMediaPage ? 'p-0' : 'p-8'}`}>
+                        <main className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
+                            <div className={`relative ${isMediaPage ? '' : 'p-8'}`}>
                                 {/* Subtle background glow */}
                                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-100/10 rounded-full blur-[120px] pointer-events-none" />
                                 <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-100/10 rounded-full blur-[120px] pointer-events-none" />
 
-                                <div className="relative z-10 flex-1 h-full">
+                                <div className="relative z-10">
                                     {children}
                                 </div>
                             </div>
                         </main>
                     </div>
+
+                    <HelpFAB />
 
                     <ConfirmationModal
                         isOpen={!!revocationMessage}

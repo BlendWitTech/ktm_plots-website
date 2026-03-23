@@ -171,7 +171,7 @@ export default function MenuEditor({ params }: { params: Promise<{ id: string }>
             )}
 
             {/* Header */}
-            <div className="flex items-center justify-between bg-white/80 backdrop-blur-md p-4 rounded-[2rem] border border-slate-200/50 shadow-sm sticky top-4 z-20 mx-2">
+            <div className="flex items-center justify-between bg-white/80 backdrop-blur-md p-4 rounded-[2rem] border border-slate-200/50 shadow-sm sticky top-0 z-20 mx-2">
                 <div className="flex items-center gap-4">
                     <button onClick={handleBack} className="p-3 hover:bg-slate-50 rounded-2xl text-slate-500 transition-all hover:scale-105 active:scale-95">
                         <ArrowLeftIcon className="h-5 w-5" strokeWidth={2.5} />

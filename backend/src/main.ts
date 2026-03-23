@@ -17,7 +17,7 @@ async function bootstrap() {
     console.error('Failed to prepare uploads directory:', e.message);
   }
 
-  const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000,http://localhost:3002')
+  const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000,http://localhost:3001,http://localhost:3002')
     .split(',')
     .map(o => o.trim().replace(/\/$/, ''))  // strip trailing slashes
     .filter(Boolean);

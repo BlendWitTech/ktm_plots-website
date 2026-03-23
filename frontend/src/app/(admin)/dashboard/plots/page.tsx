@@ -264,7 +264,7 @@ function PlotsPageContent() {
                     <ThemeCompatibilityBanner moduleName="plots" />
 
                     {/* Sticky header toolbar */}
-                    <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-4 z-10">
+                    <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-0 z-10">
                         <div className="flex items-center gap-4">
                             <button onClick={handleBackClick} className="p-2 hover:bg-slate-50 rounded-xl text-slate-500 transition-colors">
                                 <ArrowLeftIcon className="h-5 w-5" />
@@ -520,12 +520,15 @@ function PlotsPageContent() {
                 <MediaPickerModal
                     isOpen={isMediaOpen}
                     onClose={() => setIsMediaOpen(false)}
+                    multiple={mediaTarget === 'gallery'}
                     onSelect={(url: string) => {
-                        if (mediaTarget === 'cover') {
-                            handleField('coverImage', url);
-                        } else {
-                            setFormData((prev: any) => ({ ...prev, gallery: [...(prev.gallery || []), url] }));
-                        }
+                        // Single select — used for cover image
+                        handleField('coverImage', url);
+                        setIsMediaOpen(false);
+                    }}
+                    onSelectMultiple={(urls: string[]) => {
+                        // Multi-select — used for gallery
+                        setFormData((prev: any) => ({ ...prev, gallery: [...(prev.gallery || []), ...urls] }));
                         setIsMediaOpen(false);
                     }}
                 />

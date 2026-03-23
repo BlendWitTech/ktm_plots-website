@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { getSiteData, getSection, type PageRecord } from '@/lib/cms';
+import { getSiteData, getSection, isSectionEnabled, type PageRecord } from '@/lib/cms';
 import ContactForm from './ContactForm';
 import ContactActions from './ContactActions';
 
@@ -14,6 +14,7 @@ export default async function ContactPage() {
   const { settings } = siteData;
 
   const pages = (siteData as any).pages as PageRecord[] ?? [];
+  const show  = (id: string) => isSectionEnabled(pages, 'contact', id);
   const heroSec  = getSection(pages, 'contact', 'hero');
   const formSec  = getSection(pages, 'contact', 'form');
   const infoSec  = getSection(pages, 'contact', 'info');
@@ -35,27 +36,27 @@ export default async function ContactPage() {
   return (
     <>
       {/* Header */}
-      <div className="page-hero-band" style={{ background: '#1E1E1E', padding: '4rem 0 3rem', position: 'relative', overflow: 'hidden' }}>
+      {show('hero') && <div className="page-hero-band" style={{ background: 'var(--color-secondary)', padding: '4rem 0 3rem', position: 'relative', overflow: 'hidden' }}>
         {/* Red left accent — brand marker */}
-        <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '5px', background: '#CC1414' }} />
+        <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '5px', background: 'var(--color-primary)' }} />
         <div className="container">
-          <div className="tag-label">Get In Touch</div>
-          <h1 style={{ color: '#FFFFFF', fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 900, marginBottom: '1rem' }}>{heroTitle}</h1>
-          <p style={{ color: '#A0A0A0', maxWidth: '480px', lineHeight: 1.7 }}>
+          <div className="tag-label animate-slide-right">Get In Touch</div>
+          <h1 className="animate-slide-up delay-100" style={{ color: '#FFFFFF', fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 900, marginBottom: '1rem' }}>{heroTitle}</h1>
+          <p className="animate-fade-in delay-200" style={{ color: '#A0A0A0', maxWidth: '480px', lineHeight: 1.7 }}>
             {heroSubtitle}
           </p>
         </div>
-      </div>
+      </div>}
 
-      <section style={{ padding: '4rem 0 5rem', background: '#F4F4F4' }}>
+      <section style={{ padding: '4rem 0 5rem', background: 'var(--color-accent)' }}>
         <div className="container">
           {/* Quick action cards */}
           <ContactActions />
 
           <div className="contact-info-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'start' }}>
             {/* Contact info */}
-            <div>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1E1E1E', marginBottom: '1.5rem' }}>{formTitle}</h2>
+            {show('info') && <div className="animate-slide-right">
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-secondary)', marginBottom: '1.5rem' }}>{formTitle}</h2>
               <p style={{ color: '#4B5563', lineHeight: 1.8, marginBottom: '2rem' }}>
                 {formDescription}
               </p>
@@ -64,7 +65,7 @@ export default async function ContactPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2.5rem' }}>
                   {contactItems.map((item) => (
                     <div key={item.label} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                      <div style={{ width: '42px', height: '42px', background: '#CC1414', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <div style={{ width: '42px', height: '42px', background: 'var(--color-primary)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         {item.icon === 'location' && (
                           <svg width="18" height="18" fill="none" stroke="#FFFFFF" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                         )}
@@ -78,9 +79,9 @@ export default async function ContactPage() {
                       <div>
                         <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.15rem' }}>{item.label}</div>
                         {item.href ? (
-                          <a href={item.href} style={{ color: '#CC1414', fontWeight: 600, textDecoration: 'none', fontSize: '0.95rem' }}>{item.value}</a>
+                          <a href={item.href} style={{ color: 'var(--color-primary)', fontWeight: 600, textDecoration: 'none', fontSize: '0.95rem' }}>{item.value}</a>
                         ) : (
-                          <span style={{ color: '#CC1414', fontWeight: 600, fontSize: '0.95rem' }}>{item.value}</span>
+                          <span style={{ color: 'var(--color-primary)', fontWeight: 600, fontSize: '0.95rem' }}>{item.value}</span>
                         )}
                       </div>
                     </div>
@@ -90,9 +91,9 @@ export default async function ContactPage() {
 
               {/* Office hours */}
               <div style={{ background: '#FFFFFF', borderRadius: '12px', padding: '1.5rem', border: '1px solid #E5E7EB' }}>
-                <h4 style={{ fontWeight: 700, color: '#CC1414', marginBottom: '1rem' }}>Office Hours</h4>
+                <h4 style={{ fontWeight: 700, color: 'var(--color-primary)', marginBottom: '1rem' }}>Office Hours</h4>
                 {officeHours ? (
-                  <p style={{ fontSize: '0.875rem', color: '#4B5563', lineHeight: 1.7 }}>{officeHours}</p>
+                  <p style={{ fontSize: '0.875rem', color: '#4B5563', lineHeight: 1.7, whiteSpace: 'pre-line' }}>{officeHours}</p>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.875rem', color: '#4B5563' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -106,17 +107,19 @@ export default async function ContactPage() {
               </div>
 
               {/* Map embed */}
-              {mapEmbedUrl && (
+              {show('map') && mapEmbedUrl && (
                 <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid #E5E7EB', marginTop: '0.5rem' }}>
                   <iframe src={mapEmbedUrl} width="100%" height="220" style={{ border: 0, display: 'block' }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
                 </div>
               )}
-            </div>
+            </div>}
 
             {/* Contact form */}
-            <Suspense fallback={<div style={{ height: '400px' }} />}>
-              <ContactForm />
-            </Suspense>
+            {show('form') && <div className="animate-slide-up delay-200">
+              <Suspense fallback={<div style={{ height: '400px' }} />}>
+                <ContactForm />
+              </Suspense>
+            </div>}
           </div>
         </div>
       </section>

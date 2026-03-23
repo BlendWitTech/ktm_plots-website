@@ -84,7 +84,7 @@ function BlogPageContent() {
         fetchInitialData();
     }, []);
 
-    // Effect to handle URL-based data loading for Edit/New mode
+    // Effect to handle URL-based data loading for Edit mode
     useEffect(() => {
         if (view === 'editor' && action === 'edit' && actionId) {
             const post = posts.find(p => p.id === actionId);
@@ -94,12 +94,17 @@ function BlogPageContent() {
                 // If loaded but not found (pagination?), fetch specific
                 fetchPost(actionId);
             }
-        } else if (view === 'editor' && action === 'new') {
-            if (currentPostId !== null) {
-                resetForm();
-            }
         }
     }, [view, action, actionId, posts, isLoading]);
+
+    // Reset form whenever entering 'new' mode (tracks action transitions via ref)
+    const prevActionRef = React.useRef<string | null>(null);
+    useEffect(() => {
+        if (action === 'new' && prevActionRef.current !== 'new') {
+            resetForm();
+        }
+        prevActionRef.current = action;
+    }, [action]);
 
     // Sync isDirty with FormContext
     useEffect(() => {
@@ -305,7 +310,7 @@ function BlogPageContent() {
                 )}
 
                 {/* Editor Header */}
-                <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-4 z-10">
+                <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-0 z-10">
                     <div className="flex items-center gap-4">
                         <button onClick={handleBackClick} className="p-2 hover:bg-slate-50 rounded-xl text-slate-500 transition-colors">
                             <ArrowLeftIcon className="h-5 w-5" />
@@ -373,7 +378,7 @@ function BlogPageContent() {
 
                         {/* Rich Text Editor */}
                         <div className={isReadOnly ? "pointer-events-none opacity-80" : ""}>
-                            <PostEditor content={formData.content} onChange={(html) => setFormData({ ...formData, content: html })} />
+                            <PostEditor key={action === 'new' ? 'new' : currentPostId ?? 'new'} content={formData.content} onChange={(html) => setFormData({ ...formData, content: html })} />
                         </div>
                     </div>
 

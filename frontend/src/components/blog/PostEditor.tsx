@@ -263,7 +263,7 @@ export default function PostEditor({ content, onChange }: { content: string, onC
                 },
             }).configure({
                 HTMLAttributes: {
-                    class: 'bg-transparent my-8 mx-auto transition-all duration-300'
+                    class: 'bg-transparent transition-all duration-300'
                 }
             }),
             Link.configure({
@@ -371,90 +371,174 @@ export default function PostEditor({ content, onChange }: { content: string, onC
                     editor={editor}
                     tippyOptions={{ duration: 100, zIndex: 999, maxWidth: 'none', placement: 'top' }}
                     shouldShow={({ editor }: any) => editor.isActive('image')}
-
                 >
-                    <div className="flex items-center gap-1 p-1 bg-white rounded-2xl shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200 overflow-hidden">
-                        {/* Alignment */}
-                        <div className="flex items-center gap-0.5 border-r border-slate-100 pr-1 mr-1">
-                            <BubbleButton
-                                onClick={() => {
-                                    const currentWidthStr = editor.getAttributes('image').width || '100%';
-                                    const currentWidth = parseInt(currentWidthStr);
-                                    const updates: any = { align: 'left' };
-                                    // If current width is greater than 60, auto-resize to 50% for better wrapping
-                                    if (currentWidth > 60) updates.width = '50%';
-                                    editor.chain().focus().updateAttributes('image', updates).run();
-                                }}
-                                isActive={editor.getAttributes('image').align === 'left'}
-                                icon={Bars3BottomLeftIcon}
-                                label="Left (Wrap)"
-                            />
-                            <BubbleButton
-                                onClick={() => editor.chain().focus().updateAttributes('image', { align: 'center', width: '75%' }).run()}
-                                isActive={editor.getAttributes('image').align === 'center' || editor.getAttributes('image').align === 'full'}
-                                icon={Bars3Icon}
-                                label="Center"
-                            />
-                            <BubbleButton
-                                onClick={() => {
-                                    const currentWidthStr = editor.getAttributes('image').width || '100%';
-                                    const currentWidth = parseInt(currentWidthStr);
-                                    const updates: any = { align: 'right' };
-                                    // If current width is greater than 60, auto-resize to 50% for better wrapping
-                                    if (currentWidth > 60) updates.width = '50%';
-                                    editor.chain().focus().updateAttributes('image', updates).run();
-                                }}
-                                isActive={editor.getAttributes('image').align === 'right'}
-                                icon={Bars3BottomRightIcon}
-                                label="Right (Wrap)"
-                            />
-                        </div>
-                        {/* Sizing */}
-                        <div className="flex items-center gap-1 px-1">
-                            {(() => {
-                                const align = editor.getAttributes('image').align;
-                                const isWrap = align === 'left' || align === 'right';
-                                const sizes = isWrap ? [25, 35, 50, 60] : [25, 50, 75, 100];
+                    {(() => {
+                        const align = editor.getAttributes('image').align || 'center';
+                        const isFloat = align === 'left' || align === 'right';
 
-                                return sizes.map(size => (
-                                    <button
-                                        key={size}
-                                        onClick={() => editor.chain().focus().updateAttributes('image', { width: `${size}%` }).run()}
-                                        className={`px-2 py-1.5 text-[10px] font-black rounded-lg transition-all ${editor.getAttributes('image').width === `${size}%`
-                                            ? 'bg-blue-600 text-white'
-                                            : 'hover:bg-slate-50 text-slate-500'
-                                            }`}
-                                    >
-                                        {size}%
-                                    </button>
-                                ));
-                            })()}
-                        </div>
-                    </div>
+                        const presets = [
+                            {
+                                label: '1/row',
+                                title: 'Full width — one image per row',
+                                icon: (
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                        <rect x="1" y="4" width="14" height="8" rx="1.5"/>
+                                    </svg>
+                                ),
+                                active: align === 'center' && (editor.getAttributes('image').width === '100%' || !editor.getAttributes('image').width),
+                                onClick: () => editor.chain().focus().updateAttributes('image', { align: 'center', width: '100%' }).run(),
+                            },
+                            {
+                                label: '2/row',
+                                title: '2 images per row — place two with this layout side by side',
+                                icon: (
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                        <rect x="1" y="4" width="6" height="8" rx="1.5"/>
+                                        <rect x="9" y="4" width="6" height="8" rx="1.5"/>
+                                    </svg>
+                                ),
+                                active: align === 'half',
+                                onClick: () => editor.chain().focus().updateAttributes('image', { align: 'half', width: '49%' }).run(),
+                            },
+                            {
+                                label: '3/row',
+                                title: '3 images per row — place three with this layout side by side',
+                                icon: (
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                        <rect x="1" y="4" width="3.5" height="8" rx="1"/>
+                                        <rect x="6.25" y="4" width="3.5" height="8" rx="1"/>
+                                        <rect x="11.5" y="4" width="3.5" height="8" rx="1"/>
+                                    </svg>
+                                ),
+                                active: align === 'third',
+                                onClick: () => editor.chain().focus().updateAttributes('image', { align: 'third', width: '31%' }).run(),
+                            },
+                            {
+                                label: 'Float L',
+                                title: 'Float left — text wraps around the right side',
+                                icon: (
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                        <rect x="1" y="2" width="6" height="7" rx="1.5"/>
+                                        <rect x="9" y="3" width="6" height="1.5" rx="0.75" opacity="0.5"/>
+                                        <rect x="9" y="6" width="6" height="1.5" rx="0.75" opacity="0.5"/>
+                                        <rect x="1" y="11" width="14" height="1.5" rx="0.75" opacity="0.5"/>
+                                        <rect x="1" y="13.5" width="10" height="1.5" rx="0.75" opacity="0.5"/>
+                                    </svg>
+                                ),
+                                active: align === 'left',
+                                onClick: () => {
+                                    const w = editor.getAttributes('image').width;
+                                    const pct = parseInt(w);
+                                    editor.chain().focus().updateAttributes('image', { align: 'left', width: (!w || pct > 55) ? '40%' : w }).run();
+                                },
+                            },
+                            {
+                                label: 'Float R',
+                                title: 'Float right — text wraps around the left side',
+                                icon: (
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                        <rect x="9" y="2" width="6" height="7" rx="1.5"/>
+                                        <rect x="1" y="3" width="6" height="1.5" rx="0.75" opacity="0.5"/>
+                                        <rect x="1" y="6" width="6" height="1.5" rx="0.75" opacity="0.5"/>
+                                        <rect x="1" y="11" width="14" height="1.5" rx="0.75" opacity="0.5"/>
+                                        <rect x="5" y="13.5" width="10" height="1.5" rx="0.75" opacity="0.5"/>
+                                    </svg>
+                                ),
+                                active: align === 'right',
+                                onClick: () => {
+                                    const w = editor.getAttributes('image').width;
+                                    const pct = parseInt(w);
+                                    editor.chain().focus().updateAttributes('image', { align: 'right', width: (!w || pct > 55) ? '40%' : w }).run();
+                                },
+                            },
+                        ];
+
+                        return (
+                            <div className="flex flex-col gap-1 p-1.5 bg-white rounded-2xl shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200">
+                                {/* Layout presets */}
+                                <div className="flex items-center gap-0.5">
+                                    {presets.map(p => (
+                                        <button
+                                            key={p.label}
+                                            onClick={p.onClick}
+                                            title={p.title}
+                                            className={`flex flex-col items-center gap-1 px-2.5 py-1.5 rounded-xl transition-all ${p.active ? 'bg-blue-600 text-white' : 'hover:bg-slate-100 text-slate-500 hover:text-slate-800'}`}
+                                        >
+                                            {p.icon}
+                                            <span className="text-[9px] font-black leading-none">{p.label}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                                {/* Width picker — only shown for float layouts */}
+                                {isFloat && (
+                                    <div className="flex items-center gap-1 pt-1 border-t border-slate-100">
+                                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider px-1">Width</span>
+                                        {[25, 33, 40, 50].map(size => (
+                                            <button
+                                                key={size}
+                                                onClick={() => editor.chain().focus().updateAttributes('image', { width: `${size}%` }).run()}
+                                                className={`px-2 py-1 text-[10px] font-black rounded-lg transition-all ${editor.getAttributes('image').width === `${size}%` ? 'bg-blue-600 text-white' : 'hover:bg-slate-100 text-slate-500'}`}
+                                            >
+                                                {size}%
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })()}
                 </AnyBubbleMenu>
-            )
-            }
+            )}
 
             <MenuBar editor={editor} onOpenMedia={() => setIsMediaOpen(true)} />
             <div className="custom-scrollbar overflow-y-auto max-h-[800px] prose-img-custom">
                 <style jsx global>{`
-                    .prose-img-custom .image-align-left {
-                        float: left;
-                        margin-right: 2rem;
-                        margin-top: 0.5rem;
-                        margin-bottom: 0.5rem;
-                    }
-                    .prose-img-custom .image-align-right {
-                        float: right;
-                        margin-left: 2rem;
-                        margin-top: 0.5rem;
-                        margin-bottom: 0.5rem;
-                    }
+                    /* ── Image layout presets ─────────────────────────────── */
+
+                    /* Full width — one per row */
                     .prose-img-custom .image-align-center {
                         display: block;
                         margin-left: auto;
                         margin-right: auto;
+                        margin-top: 1.5rem;
+                        margin-bottom: 1.5rem;
                     }
+
+                    /* 2 images per row */
+                    .prose-img-custom .image-align-half {
+                        display: inline-block;
+                        vertical-align: top;
+                        width: 49% !important;
+                        margin: 0.25% 0.5%;
+                        box-sizing: border-box;
+                    }
+
+                    /* 3 images per row */
+                    .prose-img-custom .image-align-third {
+                        display: inline-block;
+                        vertical-align: top;
+                        width: 31% !important;
+                        margin: 0.25% 1%;
+                        box-sizing: border-box;
+                    }
+
+                    /* Float left — text wraps right */
+                    .prose-img-custom .image-align-left {
+                        float: left;
+                        margin-right: 1.75rem;
+                        margin-top: 0.25rem;
+                        margin-bottom: 0.75rem;
+                    }
+
+                    /* Float right — text wraps left */
+                    .prose-img-custom .image-align-right {
+                        float: right;
+                        margin-left: 1.75rem;
+                        margin-top: 0.25rem;
+                        margin-bottom: 0.75rem;
+                    }
+
+                    /* Legacy full-width class */
                     .prose-img-custom .image-align-full {
                         display: block;
                         width: 100% !important;
@@ -462,7 +546,16 @@ export default function PostEditor({ content, onChange }: { content: string, onC
                         margin-top: 2rem;
                         margin-bottom: 2rem;
                     }
-                    .prose-img-custom .ProseMirror:after {
+
+                    /* Inline-block parent needs font-size reset to remove whitespace gaps */
+                    .prose-img-custom .ProseMirror p:has(.image-align-half),
+                    .prose-img-custom .ProseMirror p:has(.image-align-third) {
+                        font-size: 0;
+                        line-height: 0;
+                    }
+
+                    /* Clearfix after floats */
+                    .prose-img-custom .ProseMirror::after {
                         content: "";
                         display: table;
                         clear: both;

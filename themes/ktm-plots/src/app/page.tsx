@@ -44,9 +44,6 @@ export default async function HomePage() {
   };
   const enrichedSiteData = { ...siteData, settings: mergedSettings };
 
-  // Stats: from Site Pages hero section, fallback to null (Hero.tsx has defaults)
-  const heroStats = heroSec.data.stats as Array<{ value: string; label: string }> | undefined;
-
   // Banner items for bottom strip when image is set
   const heroBannerItems = heroSec.data.bannerItems as Array<{ value: string; label: string }> | undefined;
 
@@ -56,7 +53,7 @@ export default async function HomePage() {
 
   return (
     <>
-      {show('hero')         && <Hero siteData={enrichedSiteData} stats={heroStats} bannerItems={heroBannerItems} featuredPlot={featuredPlots[0] ?? null} />}
+      {show('hero')         && <Hero siteData={enrichedSiteData} bannerItems={heroBannerItems} featuredPlot={featuredPlots[0] ?? null} />}
       {show('about')        && <About siteData={enrichedSiteData} secData={sec('about').data} />}
       {show('services')     && <Services services={siteData.services} secData={sec('services').data} />}
       {show('plots')        && <Plots plots={limitedPlots} secData={sec('plots').data} />}

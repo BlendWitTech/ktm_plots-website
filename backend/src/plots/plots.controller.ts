@@ -29,28 +29,7 @@ export class PlotsController {
         return this.plotsService.findAll(status, category, featured !== undefined ? featured === 'true' : undefined);
     }
 
-    @UseGuards(JwtAuthGuard, PermissionsGuard)
-    @RequirePermissions(Permission.CONTENT_VIEW)
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.plotsService.findById(id);
-    }
-
-    @UseGuards(JwtAuthGuard, PermissionsGuard)
-    @RequirePermissions(Permission.CONTENT_EDIT)
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() dto: any) {
-        return this.plotsService.update(id, dto);
-    }
-
-    @UseGuards(JwtAuthGuard, PermissionsGuard)
-    @RequirePermissions(Permission.CONTENT_DELETE)
-    @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.plotsService.remove(id);
-    }
-
-    // Public routes
+    // Public routes — must be declared before @Get(':id') to avoid NestJS route shadowing
     @Get('public/list')
     getPublished(
         @Query('page') page?: string,
@@ -76,5 +55,26 @@ export class PlotsController {
     @Get('public/:slug')
     getBySlug(@Param('slug') slug: string) {
         return this.plotsService.findOne(slug);
+    }
+
+    @UseGuards(JwtAuthGuard, PermissionsGuard)
+    @RequirePermissions(Permission.CONTENT_VIEW)
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.plotsService.findById(id);
+    }
+
+    @UseGuards(JwtAuthGuard, PermissionsGuard)
+    @RequirePermissions(Permission.CONTENT_EDIT)
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() dto: any) {
+        return this.plotsService.update(id, dto);
+    }
+
+    @UseGuards(JwtAuthGuard, PermissionsGuard)
+    @RequirePermissions(Permission.CONTENT_DELETE)
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.plotsService.remove(id);
     }
 }

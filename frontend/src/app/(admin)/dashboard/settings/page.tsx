@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Cog6ToothIcon,
     GlobeAltIcon,
@@ -44,6 +44,56 @@ interface ModuleMeta {
     group: string;
 }
 
+function ClearThemeCacheCard() {
+    const { showToast } = useNotification();
+    const [clearing, setClearing] = React.useState(false);
+    const [lastCleared, setLastCleared] = React.useState<string | null>(null);
+
+    const handleClear = async () => {
+        setClearing(true);
+        try {
+            await apiRequest('/settings/clear-theme-cache', { method: 'POST' });
+            const now = new Date().toLocaleTimeString();
+            setLastCleared(now);
+            showToast('Theme cache cleared. Visitors will see the latest content.', 'success');
+        } catch (err: any) {
+            showToast(err.message || 'Failed to clear theme cache.', 'error');
+        } finally {
+            setClearing(false);
+        }
+    };
+
+    return (
+        <div className="bg-white rounded-[3rem] p-10 shadow-2xl shadow-slate-200/40 border border-slate-200/60 space-y-6">
+            <div className="flex items-center gap-4">
+                <div className="p-3 bg-emerald-500 rounded-2xl shadow-xl shadow-emerald-500/20 text-white">
+                    <ArrowPathIcon className="h-6 w-6" />
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold text-slate-900 font-display">Theme Cache</h3>
+                    <p className="text-xs text-slate-400 font-semibold mt-0.5">Force visitors to see your latest changes immediately</p>
+                </div>
+            </div>
+            <div className="p-6 bg-amber-50 rounded-2xl border border-amber-100">
+                <p className="text-xs text-amber-700 font-semibold leading-relaxed">
+                    The theme caches pages for performance. After updating content, colors, or settings, click below to clear the cache so visitors see your latest changes without waiting.
+                </p>
+            </div>
+            {lastCleared && (
+                <p className="text-xs text-emerald-600 font-bold">Last cleared at {lastCleared}</p>
+            )}
+            <button
+                onClick={handleClear}
+                disabled={clearing}
+                className="w-full flex items-center justify-center gap-2 bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all disabled:opacity-60"
+            >
+                <ArrowPathIcon className={`h-4 w-4 ${clearing ? 'animate-spin' : ''}`} />
+                {clearing ? 'Clearing Cache…' : 'Clear Theme Cache'}
+            </button>
+        </div>
+    );
+}
+
 export default function SettingsPage() {
     const [settings, setSettings] = useState<any>({});
     const [isLoading, setIsLoading] = useState(true);
@@ -61,6 +111,9 @@ export default function SettingsPage() {
     const [isLogsLoading, setIsLogsLoading] = useState(false);
     const [logsPagination, setLogsPagination] = useState({ skip: 0, take: 10 });
     const [editModes, setEditModes] = useState<Record<string, boolean>>({});
+    const [showSmtpPass, setShowSmtpPass] = useState(false);
+    // Track sections that auto-entered edit mode from being all-empty, so they stay editable while typing
+    const autoEditSections = useRef<Set<string>>(new Set());
     const [mediaPickerTarget, setMediaPickerTarget] = useState<'logo' | 'favicon' | null>(null);
     const [cancelModal, setCancelModal] = useState<{ isOpen: boolean, section: string | null }>({
         isOpen: false,
@@ -69,8 +122,14 @@ export default function SettingsPage() {
 
     const isSectionEditing = (section: string, keys: string[]) => {
         if (editModes[section]) return true;
-        // If all keys in this section are empty, assume we are in "add" mode
-        return keys.every(key => !settings[key]);
+        const allEmpty = keys.every(key => !settings[key]);
+        if (allEmpty) {
+            // Auto-enter edit mode when all fields are empty — and remember this section
+            autoEditSections.current.add(section);
+            return true;
+        }
+        // Stay editable if user started typing from an all-empty state this session
+        return autoEditSections.current.has(section);
     };
 
     const toggleEdit = (section: string) => {
@@ -84,6 +143,7 @@ export default function SettingsPage() {
     const confirmCancel = () => {
         if (cancelModal.section) {
             toggleEdit(cancelModal.section);
+            autoEditSections.current.delete(cancelModal.section);
             // Reload settings to revert local state
             apiRequest('/settings').then(setSettings);
         }
@@ -142,6 +202,7 @@ export default function SettingsPage() {
             });
             showToast('Settings successfully synchronized cross-platform.', 'success');
             setEditModes(prev => ({ ...prev, [section]: false }));
+            autoEditSections.current.delete(section);
         } catch (error: any) {
             console.error(error);
             showToast(error.message || 'Failed to update system configurations.', 'error');
@@ -172,7 +233,7 @@ export default function SettingsPage() {
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-[2rem] border border-slate-200/50 backdrop-blur-sm sticky top-4 z-50">
+            <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-[2rem] border border-slate-200/50 backdrop-blur-sm sticky top-0 z-50">
                 {tabs.map(tab => (
                     <button
                         key={tab.id}
@@ -194,7 +255,7 @@ export default function SettingsPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                         <div className="lg:col-span-2 space-y-8">
                             <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 space-y-10 relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-3xl group-hover:bg-indigo-500/10 transition-colors"></div>
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-3xl group-hover:bg-indigo-500/10 transition-colors pointer-events-none"></div>
 
                                 <div className="flex items-center justify-between">
                                     <div className="space-y-2">
@@ -232,17 +293,18 @@ export default function SettingsPage() {
                                             className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-blue-600/5 focus:bg-white focus:border-blue-600/20 transition-all disabled:opacity-60"
                                         />
                                     </div>
-                                    <div className="space-y-3">
-                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Footer Text / Tagline <span className="normal-case text-slate-300">(shown in footer)</span></label>
-                                        <input
-                                            type="text"
-                                            disabled={!isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text'])}
-                                            value={settings.footer_text || ''}
-                                            onChange={(e) => setSettings({ ...settings, footer_text: e.target.value })}
-                                            placeholder="Kathmandu Valley's Trusted Land Partner"
-                                            className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-blue-600/5 focus:bg-white focus:border-blue-600/20 transition-all disabled:opacity-60"
-                                        />
-                                    </div>
+                                </div>
+
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Footer Text / Tagline <span className="normal-case text-slate-300">(shown in footer)</span></label>
+                                    <textarea
+                                        rows={3}
+                                        disabled={!isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text'])}
+                                        value={settings.footer_text || ''}
+                                        onChange={(e) => setSettings({ ...settings, footer_text: e.target.value })}
+                                        placeholder="Kathmandu Valley's Trusted Land Partner"
+                                        className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-blue-600/5 focus:bg-white focus:border-blue-600/20 transition-all disabled:opacity-60 resize-none"
+                                    />
                                 </div>
 
                                 <div className="space-y-3">
@@ -349,11 +411,160 @@ export default function SettingsPage() {
                                     </div>
                                 )}
                             </div>
+
+                            {/* Design System Card */}
+                            <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 space-y-10 relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/5 rounded-full blur-3xl pointer-events-none" />
+                                <div className="flex items-center justify-between">
+                                    <div className="space-y-2">
+                                        <h3 className="text-xl font-bold text-slate-900">Design System</h3>
+                                        <p className="text-sm font-medium text-slate-400">Global brand color and typography applied to the public website.</p>
+                                    </div>
+                                    {!isSectionEditing('design', ['primary_color', 'heading_font', 'body_font']) && (
+                                        <button onClick={() => toggleEdit('design')} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all">Edit</button>
+                                    )}
+                                </div>
+
+                                {/* Primary Color */}
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Brand Primary Color</label>
+                                    <div className="flex items-center gap-4">
+                                        <input
+                                            type="color"
+                                            disabled={!isSectionEditing('design', ['primary_color', 'heading_font', 'body_font'])}
+                                            value={settings.primary_color || '#CC1414'}
+                                            onChange={(e) => setSettings({ ...settings, primary_color: e.target.value })}
+                                            className="w-14 h-14 rounded-2xl border-2 border-slate-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed p-1"
+                                        />
+                                        <div className="flex-1">
+                                            <input
+                                                type="text"
+                                                disabled={!isSectionEditing('design', ['primary_color', 'heading_font', 'body_font'])}
+                                                value={settings.primary_color || '#CC1414'}
+                                                onChange={(e) => setSettings({ ...settings, primary_color: e.target.value })}
+                                                placeholder="#CC1414"
+                                                className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-blue-600/5 focus:bg-white focus:border-blue-600/20 transition-all disabled:opacity-60 font-mono"
+                                            />
+                                            <p className="text-[10px] text-slate-400 mt-1.5 ml-2">Applied to buttons, links, accents, and headings across the website.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Secondary & Accent Colors */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Secondary Color <span className="text-slate-300 normal-case tracking-normal font-medium">(dark/charcoal)</span></label>
+                                        <div className="flex items-center gap-3">
+                                            <input
+                                                type="color"
+                                                disabled={!isSectionEditing('design', ['primary_color', 'heading_font', 'body_font'])}
+                                                value={settings.secondary_color || '#1E1E1E'}
+                                                onChange={(e) => setSettings({ ...settings, secondary_color: e.target.value })}
+                                                className="w-12 h-12 rounded-xl border-2 border-slate-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed p-1"
+                                            />
+                                            <input
+                                                type="text"
+                                                disabled={!isSectionEditing('design', ['primary_color', 'heading_font', 'body_font'])}
+                                                value={settings.secondary_color || '#1E1E1E'}
+                                                onChange={(e) => setSettings({ ...settings, secondary_color: e.target.value })}
+                                                placeholder="#1E1E1E"
+                                                className="flex-1 bg-slate-50/50 border border-slate-100 rounded-2xl py-3 px-4 text-sm font-bold text-slate-900 focus:outline-none focus:bg-white focus:border-blue-600/20 transition-all disabled:opacity-60 font-mono"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Accent / Background Color</label>
+                                        <div className="flex items-center gap-3">
+                                            <input
+                                                type="color"
+                                                disabled={!isSectionEditing('design', ['primary_color', 'heading_font', 'body_font'])}
+                                                value={settings.accent_color || '#F4F4F4'}
+                                                onChange={(e) => setSettings({ ...settings, accent_color: e.target.value })}
+                                                className="w-12 h-12 rounded-xl border-2 border-slate-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed p-1"
+                                            />
+                                            <input
+                                                type="text"
+                                                disabled={!isSectionEditing('design', ['primary_color', 'heading_font', 'body_font'])}
+                                                value={settings.accent_color || '#F4F4F4'}
+                                                onChange={(e) => setSettings({ ...settings, accent_color: e.target.value })}
+                                                placeholder="#F4F4F4"
+                                                className="flex-1 bg-slate-50/50 border border-slate-100 rounded-2xl py-3 px-4 text-sm font-bold text-slate-900 focus:outline-none focus:bg-white focus:border-blue-600/20 transition-all disabled:opacity-60 font-mono"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Font pickers */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Heading Font</label>
+                                        <select
+                                            disabled={!isSectionEditing('design', ['primary_color', 'heading_font', 'body_font'])}
+                                            value={settings.heading_font || ''}
+                                            onChange={(e) => setSettings({ ...settings, heading_font: e.target.value })}
+                                            className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-blue-600/5 focus:bg-white focus:border-blue-600/20 transition-all disabled:opacity-60"
+                                        >
+                                            <option value="">Inter (default)</option>
+                                            <option value="Poppins">Poppins — Modern &amp; Clean</option>
+                                            <option value="Montserrat">Montserrat — Bold &amp; Strong</option>
+                                            <option value="Raleway">Raleway — Elegant</option>
+                                            <option value="Playfair Display">Playfair Display — Serif</option>
+                                            <option value="Nunito">Nunito — Friendly &amp; Rounded</option>
+                                            <option value="Lato">Lato — Light &amp; Clean</option>
+                                            <option value="Roboto">Roboto — Standard</option>
+                                            <option value="Open Sans">Open Sans — Readable</option>
+                                        </select>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Body Font</label>
+                                        <select
+                                            disabled={!isSectionEditing('design', ['primary_color', 'heading_font', 'body_font'])}
+                                            value={settings.body_font || ''}
+                                            onChange={(e) => setSettings({ ...settings, body_font: e.target.value })}
+                                            className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-blue-600/5 focus:bg-white focus:border-blue-600/20 transition-all disabled:opacity-60"
+                                        >
+                                            <option value="">Inter (default)</option>
+                                            <option value="Poppins">Poppins — Modern &amp; Clean</option>
+                                            <option value="Montserrat">Montserrat — Bold &amp; Strong</option>
+                                            <option value="Raleway">Raleway — Elegant</option>
+                                            <option value="Nunito">Nunito — Friendly &amp; Rounded</option>
+                                            <option value="Lato">Lato — Light &amp; Clean</option>
+                                            <option value="Roboto">Roboto — Standard</option>
+                                            <option value="Open Sans">Open Sans — Readable</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {/* Preview swatch */}
+                                {isSectionEditing('design', ['primary_color', 'heading_font', 'body_font']) && (
+                                    <div className="p-5 rounded-2xl border-2 border-dashed border-slate-200 space-y-2">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Live Preview</p>
+                                        <div className="flex items-center gap-3 flex-wrap">
+                                            <div className="w-8 h-8 rounded-lg" style={{ background: settings.primary_color || '#CC1414' }} title="Primary" />
+                                            <div className="w-8 h-8 rounded-lg border border-slate-200" style={{ background: settings.secondary_color || '#1E1E1E' }} title="Secondary" />
+                                            <div className="w-8 h-8 rounded-lg border border-slate-200" style={{ background: settings.accent_color || '#F4F4F4' }} title="Accent" />
+                                            <span className="text-sm font-bold" style={{ color: settings.primary_color || '#CC1414', fontFamily: settings.heading_font || 'inherit' }}>
+                                                Heading: {settings.heading_font || 'Inter (default)'}
+                                            </span>
+                                        </div>
+                                        <p className="text-sm" style={{ color: settings.secondary_color || '#1E1E1E', fontFamily: settings.body_font || 'inherit' }}>
+                                            Body: {settings.body_font || 'Inter (default)'} — The quick brown fox jumps over the lazy dog.
+                                        </p>
+                                    </div>
+                                )}
+
+                                {isSectionEditing('design', ['primary_color', 'heading_font', 'body_font']) && (
+                                    <div className="flex gap-4 pt-2">
+                                        <button onClick={() => handleSave('design')} className="bg-violet-600 text-white px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-violet-500/20 hover:bg-violet-700 transition-all">Save Design</button>
+                                        <button onClick={() => handleCancel('design')} className="bg-slate-100 text-slate-500 px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <div className="space-y-8">
                             <div className="bg-slate-900 rounded-[3rem] p-10 text-white relative overflow-hidden shadow-2xl shadow-slate-900/40 group">
-                                <div className="absolute top-[-20%] right-[-10%] w-32 h-32 bg-blue-500/20 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000" />
+                                <div className="absolute top-[-20%] right-[-10%] w-32 h-32 bg-blue-500/20 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000 pointer-events-none" />
                                 <h3 className="text-xl font-bold font-display relative z-10">Sync Configuration</h3>
                                 <p className="text-xs font-semibold text-slate-400 mt-2 relative z-10 leading-relaxed mb-8">Updates are broadcasted instantly to all active frontend instances via the core hub.</p>
                                 <button onClick={() => handleSave('global')} className="w-full bg-white text-slate-900 hover:bg-blue-600 hover:text-white py-5 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all active:scale-95 shadow-xl relative z-10">
@@ -389,7 +600,6 @@ export default function SettingsPage() {
                                 {[
                                     { key: 'contact_email', label: 'Contact Email', placeholder: 'info@yourcompany.com', type: 'email' },
                                     { key: 'contact_phone', label: 'Phone Number', placeholder: '+977 9800000000', type: 'text' },
-                                    { key: 'primary_color', label: 'Brand Primary Color', placeholder: '#1B4332', type: 'text' },
                                 ].map(f => (
                                     <div key={f.key} className="space-y-2">
                                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">{f.label}</label>
@@ -419,6 +629,46 @@ export default function SettingsPage() {
                                 <div className="flex gap-4 pt-4">
                                     <button onClick={() => handleSave('contact')} className="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-blue-500/20 hover:bg-blue-700 transition-all">Save</button>
                                     <button onClick={() => handleCancel('contact')} className="bg-slate-100 text-slate-500 px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Listing Display Mode */}
+                        <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 space-y-8">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-3 bg-teal-600 rounded-2xl shadow-xl shadow-teal-500/20 text-white">
+                                        <AdjustmentsHorizontalIcon className="h-6 w-6" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-bold text-slate-900">Listing Display Mode</h3>
+                                        <p className="text-sm text-slate-400">Controls how plots and blog posts are paginated on public listing pages.</p>
+                                    </div>
+                                </div>
+                                {!isSectionEditing('listing', ['listing_mode']) && (
+                                    <button onClick={() => toggleEdit('listing')} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all">
+                                        Edit
+                                    </button>
+                                )}
+                            </div>
+                            <div className="space-y-3">
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Listing Mode</label>
+                                <select
+                                    disabled={!isSectionEditing('listing', ['listing_mode'])}
+                                    value={settings.listing_mode || 'load-more'}
+                                    onChange={(e) => setSettings({ ...settings, listing_mode: e.target.value })}
+                                    className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-teal-500/5 focus:bg-white focus:border-teal-500/20 transition-all disabled:opacity-60"
+                                >
+                                    <option value="load-more">Load More — Show a button to append the next page</option>
+                                    <option value="pagination">Pagination — Classic numbered page links</option>
+                                    <option value="infinite">Infinite Scroll — Auto-load as the user scrolls down</option>
+                                </select>
+                                <p className="text-[10px] text-slate-400 ml-2">Applies to both the Plots and Blog listing pages.</p>
+                            </div>
+                            {isSectionEditing('listing', ['listing_mode']) && (
+                                <div className="flex gap-4 pt-4">
+                                    <button onClick={() => handleSave('listing')} className="bg-teal-600 text-white px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-teal-500/20 hover:bg-teal-700 transition-all">Save</button>
+                                    <button onClick={() => handleCancel('listing')} className="bg-slate-100 text-slate-500 px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
                                 </div>
                             )}
                         </div>
@@ -532,7 +782,7 @@ export default function SettingsPage() {
                 {/* Email Services Tab */}
                 {activeTab === 'email' && (
                     <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl"></div>
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
                         <div className="flex items-center justify-between mb-8 relative z-10">
                             <div className="flex items-center gap-4">
@@ -599,14 +849,31 @@ export default function SettingsPage() {
                                 />
                             </div>
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Password</label>
-                                <input
-                                    type="password"
-                                    disabled={!isSectionEditing('email', ['smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
-                                    value={settings.smtp_pass || ''}
-                                    onChange={(e) => setSettings({ ...settings, smtp_pass: e.target.value })}
-                                    className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-emerald-500/5 focus:bg-white focus:border-emerald-500/20 transition-all disabled:opacity-60"
-                                />
+                                <div className="flex items-center justify-between ml-2">
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Password</label>
+                                    <span className="text-[9px] font-semibold text-amber-600 bg-amber-50 border border-amber-100 rounded-full px-2 py-0.5">Gmail App Password: paste without spaces</span>
+                                </div>
+                                <div className="relative">
+                                    <input
+                                        type={showSmtpPass ? 'text' : 'password'}
+                                        disabled={!isSectionEditing('email', ['smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
+                                        value={settings.smtp_pass || ''}
+                                        onChange={(e) => setSettings({ ...settings, smtp_pass: e.target.value.replace(/\s/g, '') })}
+                                        className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 pl-6 pr-14 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-emerald-500/5 focus:bg-white focus:border-emerald-500/20 transition-all disabled:opacity-60"
+                                        placeholder="Paste App Password (spaces auto-removed)"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowSmtpPass(v => !v)}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors"
+                                        tabIndex={-1}
+                                    >
+                                        {showSmtpPass
+                                            ? <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                                            : <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                        }
+                                    </button>
+                                </div>
                             </div>
                             <div className="md:col-span-2">
                                 <label className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100 cursor-pointer hover:bg-white transition-colors">
@@ -646,7 +913,7 @@ export default function SettingsPage() {
                     <div className="space-y-10">
                         {/* Cloudinary Section */}
                         <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl"></div>
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
                             <div className="flex items-center justify-between mb-8 relative z-10">
                                 <div className="flex items-center gap-4">
@@ -721,7 +988,7 @@ export default function SettingsPage() {
 
                         {/* S3 / R2 Section */}
                         <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl"></div>
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
                             <div className="flex items-center justify-between mb-8 relative z-10">
                                 <div className="flex items-center gap-4">
@@ -1001,13 +1268,7 @@ export default function SettingsPage() {
                             )}
                         </div>
 
-                        <div className="bg-white rounded-[3rem] p-10 shadow-2xl shadow-slate-200/40 border border-slate-200/60 p-10 flex flex-col items-center justify-center text-center space-y-4">
-                            <div className="h-24 w-24 bg-blue-50 rounded-full flex items-center justify-center">
-                                <AdjustmentsHorizontalIcon className="h-10 w-10 text-blue-600 animate-spin" style={{ animationDuration: '4s' }} />
-                            </div>
-                            <h4 className="text-sm font-bold text-slate-900 font-display">Under Development</h4>
-                            <p className="text-xs font-bold text-slate-400 leading-relaxed max-w-xs">Additional performance metrics and cluster controls are being calibrated.</p>
-                        </div>
+                        <ClearThemeCacheCard />
                     </div>
                 )}
 

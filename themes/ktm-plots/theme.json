@@ -14,7 +14,12 @@
         "team",
         "plots",
         "plot-categories",
-        "pages"
+        "pages",
+        "seo",
+        "redirects",
+        "sitemap",
+        "robots",
+        "analytics"
     ],
     "seedData": {
         "menus": [
@@ -194,6 +199,33 @@
                 "content": "# Understanding Land Measurement Units in Nepal\n\nNepal uses a traditional land measurement system that can confuse first-time buyers. Here's a simple guide.\n\n## The Hilly System (Used in Kathmandu Valley)\n\n| Unit | Equivalent |\n|------|------------|\n| 1 Ropani | 16 Anna |\n| 1 Anna | 4 Paisa |\n| 1 Paisa | 4 Dam |\n| 1 Ropani | ~508.72 sq. meters |\n\n## The Terai System\nIn the Terai (plains), land is measured in Bigha, Kattha, and Dhur — a different system entirely.\n\n## Quick Conversions\n- 1 Anna ≈ 31.8 sq. meters\n- 1 Ropani ≈ 508.72 sq. meters ≈ 0.12 acres\n\n## Why This Matters\nAlways confirm with the seller which unit is being used and double-check against the Lalpurja (title deed) which shows the official measurement.",
                 "status": "published",
                 "featured": false
+            },
+            {
+                "title": "The Future of Smart Cities in Nepal",
+                "slug": "future-of-smart-cities-nepal",
+                "category": "market-updates",
+                "excerpt": "An overview of how smart city initiatives are shaping the real estate market in the Kathmandu Valley.",
+                "content": "# The Future of Smart Cities in Nepal\n\nSmart city developments are beginning to take root in the Kathmandu Valley, promising better infrastructure and improved living standards.\n\n## Key Infrastructure Projects\nRoad expansions, reliable water supply projects like Melamchi, and better electricity distribution are laying the groundwork.\n\n## Impact on Real Estate Prices\nAreas earmarked for smart city development are already seeing a 15-20% appreciation in land values year-on-year.",
+                "status": "published",
+                "featured": false
+            },
+            {
+                "title": "5 Things to Check Before Signing a Land Deed",
+                "slug": "5-things-check-before-signing-land-deed",
+                "category": "land-buying-guide",
+                "excerpt": "Don't sign until you've verified these 5 critical elements of your land registration.",
+                "content": "# 5 Things to Check Before Signing a Land Deed\n\nProtect your investment by ensuring these five details are correct before you sign.\n\n1. **Name and Details:** Ensure your name matches your citizenship exactly.\n2. **Plot Map (Napi Naksha):** Verify the physical boundaries match the map.\n3. **Road Access:** The deed must clearly state minimum road access (e.g., 10 feet, 13 feet, 20 feet).\n4. **Area Measurement:** Double-check the total Anna/Paisa/Ropani.\n5. **Encumbrance Check:** Make sure there are no pending loans or liens against the Lalpurja.",
+                "status": "published",
+                "featured": true
+            },
+            {
+                "title": "Why NRIs are Investing Heavily in Kathmandu",
+                "slug": "why-nris-investing-kathmandu",
+                "category": "investment-tips",
+                "excerpt": "Non-Resident Nepalis (NRNs) are driving demand in premium residential sectors. Here is why.",
+                "content": "# Why NRNs are Investing Heavily in Kathmandu\n\nDespite living abroad, many Non-Resident Nepalis prefer to park their savings in domestic real estate.\n\n## Emotional Connection and Retirement\nHaving a home in Nepal is a major draw for NRNs planning to retire or return eventually.\n\n## High ROI\nKathmandu real estate has historically offered higher returns than many international housing markets, bypassing global recessions.",
+                "status": "published",
+                "featured": false
             }
         ],
         "team": [
@@ -227,13 +259,57 @@
                 "slug": "privacy",
                 "title": "Privacy Policy",
                 "status": "PUBLISHED",
+                "data": {
+                    "sections": [
+                        {
+                            "id": "hero",
+                            "enabled": true,
+                            "data": {
+                                "title": "Privacy Policy",
+                                "subtitle": "Last updated: January 2025"
+                            }
+                        },
+                        {
+                            "id": "content",
+                            "enabled": true,
+                            "data": {
+                                "body": "<h2>Privacy Policy</h2><p>KTM Plots (\"we\", \"us\", or \"our\") is committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard data when you visit our website or contact us about land plots in the Kathmandu Valley.</p><h3>1. Information We Collect</h3><p>We may collect the following types of information:</p><ul><li><p><strong>Contact Details:</strong> Name, email address, phone number when you submit an enquiry or contact form.</p></li><li><p><strong>Enquiry Data:</strong> Details of your property requirements, preferred location, budget range, and messages you send us.</p></li><li><p><strong>Usage Data:</strong> Pages visited, time spent, and referring URLs collected via analytics tools.</p></li></ul><h3>2. How We Use Your Information</h3><ul><li><p>To respond to your enquiries and arrange site visits.</p></li><li><p>To send relevant property updates and listings (you may opt out at any time).</p></li><li><p>To improve our website and services based on usage patterns.</p></li><li><p>To comply with legal obligations under Nepali law.</p></li></ul><h3>3. Data Sharing</h3><p>We do not sell, trade, or rent your personal information to third parties. We may share data with trusted partners (legal consultants, site visit coordinators) solely to fulfil your request.</p><h3>4. Data Security</h3><p>We implement appropriate technical and organisational measures to protect your data against unauthorised access, loss, or misuse.</p><h3>5. Your Rights</h3><p>You may request access to, correction of, or deletion of your personal data by contacting us at <strong>info@ktmplots.com.np</strong>.</p><h3>6. Changes to This Policy</h3><p>We may update this Privacy Policy from time to time. The latest version will always be published on this page.</p><h3>7. Contact Us</h3><p>If you have any questions about this Privacy Policy, please contact us at <strong>info@ktmplots.com.np</strong> or visit our office in Kathmandu, Nepal.</p>"
+                            }
+                        }
+                    ]
+                },
                 "content": "<h2>Privacy Policy</h2><p>Last updated: January 2025</p><p>KTM Plots (&ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;) is committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard data when you visit our website or contact us about land plots in the Kathmandu Valley.</p><h3>1. Information We Collect</h3><p>We may collect the following types of information:</p><ul><li><strong>Contact Details:</strong> Name, email address, phone number when you submit an enquiry or contact form.</li><li><strong>Enquiry Data:</strong> Details of your property requirements, preferred location, budget range, and messages you send us.</li><li><strong>Usage Data:</strong> Pages visited, time spent, and referring URLs collected via analytics tools.</li></ul><h3>2. How We Use Your Information</h3><ul><li>To respond to your enquiries and arrange site visits.</li><li>To send relevant property updates and listings (you may opt out at any time).</li><li>To improve our website and services based on usage patterns.</li><li>To comply with legal obligations under Nepali law.</li></ul><h3>3. Data Sharing</h3><p>We do not sell, trade, or rent your personal information to third parties. We may share data with trusted partners (legal consultants, site visit coordinators) solely to fulfil your request.</p><h3>4. Data Security</h3><p>We implement appropriate technical and organisational measures to protect your data against unauthorised access, loss, or misuse.</p><h3>5. Your Rights</h3><p>You may request access to, correction of, or deletion of your personal data by contacting us at <strong>info@ktmplots.com.np</strong>.</p><h3>6. Changes to This Policy</h3><p>We may update this Privacy Policy from time to time. The latest version will always be published on this page.</p><h3>7. Contact Us</h3><p>If you have any questions about this Privacy Policy, please contact us at <strong>info@ktmplots.com.np</strong> or visit our office in Kathmandu, Nepal.</p>"
             },
             {
                 "slug": "terms",
                 "title": "Terms of Service",
                 "status": "PUBLISHED",
+                "data": {
+                    "sections": [
+                        {
+                            "id": "hero",
+                            "enabled": true,
+                            "data": {
+                                "title": "Terms of Service",
+                                "subtitle": "Last updated: January 2025"
+                            }
+                        },
+                        {
+                            "id": "content",
+                            "enabled": true,
+                            "data": {
+                                "body": "<h2>Terms of Service</h2><p>By accessing or using the KTM Plots website and services, you agree to be bound by the following Terms of Service. Please read them carefully before proceeding.</p><h3>1. Services Provided</h3><p>KTM Plots facilitates the buying, selling, and consulting of land plots in the Kathmandu Valley. We act as an intermediary and property consultant. Final ownership transfers are governed by the laws of Nepal and conducted at the relevant Land Revenue Office.</p><h3>2. Information Accuracy</h3><p>While we strive to provide accurate and up-to-date information about available plots, prices, and specifications, we cannot guarantee that all information on this website is error-free. Prices and availability are subject to change without notice. Always confirm details directly with our team before making any financial commitment.</p><h3>3. No Legal Advice</h3><p>Content on this website is for informational purposes only and does not constitute legal or financial advice. Always consult a qualified legal professional before entering into any land transaction in Nepal.</p><h3>4. Enquiry and Contact Forms</h3><p>By submitting an enquiry form, you consent to being contacted by our team via phone or email regarding your property interest. We will not contact you for unrelated matters without your consent.</p><h3>5. Intellectual Property</h3><p>All content on this website — including text, images, logos, and graphics — is the property of KTM Plots and may not be reproduced without written permission.</p><h3>6. Limitation of Liability</h3><p>KTM Plots shall not be liable for any direct, indirect, or consequential damages arising from the use of this website or reliance on information provided herein.</p><h3>7. Governing Law</h3><p>These Terms of Service are governed by the laws of Nepal. Any disputes shall be resolved in the courts of Kathmandu.</p><h3>8. Changes to Terms</h3><p>We reserve the right to update these Terms at any time. Continued use of the website after changes constitutes your acceptance of the updated Terms.</p><h3>9. Contact Us</h3><p>For questions about these Terms, contact us at <strong>info@ktmplots.com.np</strong>.</p>"
+                            }
+                        }
+                    ]
+                },
                 "content": "<h2>Terms of Service</h2><p>Last updated: January 2025</p><p>By accessing or using the KTM Plots website and services, you agree to be bound by the following Terms of Service. Please read them carefully before proceeding.</p><h3>1. Services Provided</h3><p>KTM Plots facilitates the buying, selling, and consulting of land plots in the Kathmandu Valley. We act as an intermediary and property consultant. Final ownership transfers are governed by the laws of Nepal and conducted at the relevant Land Revenue Office.</p><h3>2. Information Accuracy</h3><p>While we strive to provide accurate and up-to-date information about available plots, prices, and specifications, we cannot guarantee that all information on this website is error-free. Prices and availability are subject to change without notice. Always confirm details directly with our team before making any financial commitment.</p><h3>3. No Legal Advice</h3><p>Content on this website is for informational purposes only and does not constitute legal or financial advice. Always consult a qualified legal professional before entering into any land transaction in Nepal.</p><h3>4. Enquiry and Contact Forms</h3><p>By submitting an enquiry form, you consent to being contacted by our team via phone or email regarding your property interest. We will not contact you for unrelated matters without your consent.</p><h3>5. Intellectual Property</h3><p>All content on this website&mdash;including text, images, logos, and graphics&mdash;is the property of KTM Plots and may not be reproduced without written permission.</p><h3>6. Limitation of Liability</h3><p>KTM Plots shall not be liable for any direct, indirect, or consequential damages arising from the use of this website or reliance on information provided herein.</p><h3>7. Governing Law</h3><p>These Terms of Service are governed by the laws of Nepal. Any disputes shall be resolved in the courts of Kathmandu.</p><h3>8. Changes to Terms</h3><p>We reserve the right to update these Terms at any time. Continued use of the website after changes constitutes your acceptance of the updated Terms.</p><h3>9. Contact Us</h3><p>For questions about these Terms, contact us at <strong>info@ktmplots.com.np</strong>.</p>"
+            },
+            {
+                "slug": "services",
+                "title": "Our Services",
+                "status": "PUBLISHED",
+                "content": "<h2>Premium Real Estate Services</h2><p>At KTM Plots, we provide comprehensive real estate services including land sales, legal documentation, site visits, and investment consulting. Our team of experts ensures a transparent and hassle-free experience.</p>"
             }
         ],
         "plots": [
@@ -288,6 +364,84 @@
                 "priceFrom": "4000000",
                 "areaFrom": "2 Ropani",
                 "areaTo": "20 Ropani"
+            },
+            {
+                "title": "Thankot Prime Residential Area",
+                "slug": "thankot-prime-residential",
+                "description": "Accessible residential plots in Thankot with stunning views and excellent air quality.",
+                "content": "# Thankot Prime Residential Area\n\nPerfect for a peaceful suburban life just outside the main city hustle.\n\n## Highlights\n- 4 to 8 Anna plots\n- 13 feet pitch road access\n- Water supply ready",
+                "featured": false,
+                "category": "residential",
+                "status": "available",
+                "location": "Thankot, Kathmandu",
+                "priceFrom": "1800000",
+                "areaFrom": "4 Anna",
+                "areaTo": "8 Anna"
+            },
+            {
+                "title": "Imadol Fast Track Junction",
+                "slug": "imadol-fast-track-junction",
+                "description": "Commercial and residential mix plots near the upcoming Fast Track.",
+                "content": "# Imadol Fast Track Junction\n\nInvest where the future lies. These plots are strategically located near major upcoming highway projects.\n\n## Highlights\n- High appreciation potential\n- 20 feet road access\n- Suitable for commerce or residence",
+                "featured": true,
+                "category": "commercial",
+                "status": "limited",
+                "location": "Imadol, Lalitpur",
+                "priceFrom": "3500000",
+                "areaFrom": "3 Anna",
+                "areaTo": "6 Anna"
+            },
+            {
+                "title": "Chobhar Heights Eco Village",
+                "slug": "chobhar-heights-eco",
+                "description": "Eco-friendly lifestyle plots in Chobhar with unobstructed views of the city.",
+                "content": "# Chobhar Heights Eco Village\n\nA premium eco-village setup ideal for luxury villas.",
+                "featured": false,
+                "category": "residential",
+                "status": "available",
+                "location": "Chobhar, Kathmandu",
+                "priceFrom": "2800000",
+                "areaFrom": "5 Anna",
+                "areaTo": "10 Anna"
+            },
+            {
+                "title": "Bhaisepati VIP Enclave",
+                "slug": "bhaisepati-vip-enclave",
+                "description": "The most sought-after residential zone in Lalitpur.",
+                "content": "# Bhaisepati VIP Enclave\n\nJoin an elite community with premium infrastructure.",
+                "featured": true,
+                "category": "residential",
+                "status": "available",
+                "location": "Bhaisepati, Lalitpur",
+                "priceFrom": "7500000",
+                "areaFrom": "4 Anna",
+                "areaTo": "12 Anna"
+            },
+            {
+                "title": "Tokha Agricultural Farm Plots",
+                "slug": "tokha-agri-plots",
+                "description": "Large parcels of land suitable for organic farming and agro-tourism.",
+                "content": "# Tokha Agricultural Farm Plots\n\nPerfect for investors looking into modern agriculture or weekend farming retreats.",
+                "featured": false,
+                "category": "agricultural",
+                "status": "available",
+                "location": "Tokha, Kathmandu",
+                "priceFrom": "800000",
+                "areaFrom": "1 Ropani",
+                "areaTo": "5 Ropani"
+            },
+            {
+                "title": "Suryabinayak Commercial Hub",
+                "slug": "suryabinayak-commercial-hub",
+                "description": "Prime highway-touching plots in Bhaktapur.",
+                "content": "# Suryabinayak Commercial Hub\n\nUnbeatable visibility for your next commercial venture.",
+                "featured": true,
+                "category": "commercial",
+                "status": "available",
+                "location": "Suryabinayak, Bhaktapur",
+                "priceFrom": "5000000",
+                "areaFrom": "5 Anna",
+                "areaTo": "10 Anna"
             }
         ],
         "plotCategories": [
@@ -359,8 +513,12 @@
                             "label": "Bottom Banner Items",
                             "type": "stats",
                             "max": 6,
-                            "description": "Only visible when a Background Image is set",
-                            "showWhen": { "field": "bgImage", "hasValue": true },
+                            "emojiPicker": true,
+                            "description": "Only visible when a Background Image is set. Click the emoji button to pick an icon, then enter the label text.",
+                            "showWhen": {
+                                "field": "bgImage",
+                                "hasValue": true
+                            },
                             "defaultValue": [
                                 {
                                     "value": "🏡",
@@ -377,30 +535,6 @@
                                 {
                                     "value": "📞",
                                     "label": "24/7 Support"
-                                }
-                            ]
-                        },
-                        {
-                            "key": "stats",
-                            "label": "Stats Counters",
-                            "type": "stats",
-                            "max": 6,
-                            "defaultValue": [
-                                {
-                                    "value": "500+",
-                                    "label": "Plots Sold"
-                                },
-                                {
-                                    "value": "50+",
-                                    "label": "Locations"
-                                },
-                                {
-                                    "value": "10+",
-                                    "label": "Yrs Experience"
-                                },
-                                {
-                                    "value": "100%",
-                                    "label": "Legal Titles"
                                 }
                             ]
                         },
@@ -431,7 +565,7 @@
                         {
                             "key": "content",
                             "label": "Content",
-                            "type": "richtext",
+                            "type": "textarea",
                             "defaultValue": "Founded with a vision to make land ownership accessible and transparent, KTM Plots has helped over 500 families and investors secure their piece of the Kathmandu Valley."
                         },
                         {
@@ -458,58 +592,116 @@
                             "defaultValue": "Our team of legal experts, property consultants, and local specialists ensures that every transaction is smooth, secure, and stress-free — from your first site visit to the final registration at the Land Revenue Office."
                         },
                         {
+                            "key": "_divider_cards",
+                            "label": "Feature Cards (shown when no image set)",
+                            "type": "divider"
+                        },
+                        {
+                            "key": "_divider_card1",
+                            "label": "Card 1",
+                            "type": "divider"
+                        },
+                        {
+                            "key": "card1Icon",
+                            "label": "Icon",
+                            "type": "icon"
+                        },
+                        {
                             "key": "card1Title",
-                            "label": "Card 1 Title",
+                            "label": "Title",
                             "type": "text",
                             "defaultValue": "Verified Legal Titles"
                         },
                         {
                             "key": "card1Desc",
-                            "label": "Card 1 Description",
+                            "label": "Description",
                             "type": "textarea",
                             "defaultValue": "Every plot we sell comes with a verified Lalpurja and clean ownership record."
                         },
                         {
+                            "key": "_divider_card2",
+                            "label": "Card 2",
+                            "type": "divider"
+                        },
+                        {
+                            "key": "card2Icon",
+                            "label": "Icon",
+                            "type": "icon"
+                        },
+                        {
                             "key": "card2Title",
-                            "label": "Card 2 Title",
+                            "label": "Title",
                             "type": "text",
                             "defaultValue": "10+ Years Experience"
                         },
                         {
                             "key": "card2Desc",
-                            "label": "Card 2 Description",
+                            "label": "Description",
                             "type": "textarea",
                             "defaultValue": "Over a decade of helping families and investors find the right land in Nepal."
                         },
                         {
+                            "key": "_divider_card3",
+                            "label": "Card 3",
+                            "type": "divider"
+                        },
+                        {
+                            "key": "card3Icon",
+                            "label": "Icon",
+                            "type": "icon"
+                        },
+                        {
                             "key": "card3Title",
-                            "label": "Card 3 Title",
+                            "label": "Title",
                             "type": "text",
                             "defaultValue": "Dedicated Support"
                         },
                         {
                             "key": "card3Desc",
-                            "label": "Card 3 Description",
+                            "label": "Description",
                             "type": "textarea",
                             "defaultValue": "A personal property advisor guides you from first inquiry to final registration."
                         },
                         {
+                            "key": "_divider_card4",
+                            "label": "Card 4",
+                            "type": "divider"
+                        },
+                        {
+                            "key": "card4Icon",
+                            "label": "Icon",
+                            "type": "icon"
+                        },
+                        {
                             "key": "card4Title",
-                            "label": "Card 4 Title",
+                            "label": "Title",
                             "type": "text",
                             "defaultValue": "Transparent Pricing"
                         },
                         {
                             "key": "card4Desc",
-                            "label": "Card 4 Description",
+                            "label": "Description",
                             "type": "textarea",
                             "defaultValue": "No hidden fees. All prices are published and include applicable government taxes."
+                        },
+                        {
+                            "key": "_divider_stats",
+                            "label": "Stats Strip",
+                            "type": "divider"
+                        },
+                        {
+                            "key": "stats",
+                            "label": "Stats Counters",
+                            "type": "stats",
+                            "max": 6,
+                            "description": "Animated counters shown below the text (e.g. 500+ Plots Sold)"
                         }
                     ]
                 },
                 {
                     "id": "services",
                     "label": "Services Section",
+                    "description": "Service cards are managed under Content → Services. Edit titles and icons there.",
                     "fields": [
                         {
                             "key": "title",
@@ -528,6 +720,7 @@
                 {
                     "id": "plots",
                     "label": "Featured Plots",
+                    "description": "Plot cards are managed under Content → Plots. Mark a plot as Featured to include it here.",
                     "fields": [
                         {
                             "key": "title",
@@ -552,6 +745,7 @@
                 {
                     "id": "testimonials",
                     "label": "Testimonials",
+                    "description": "Testimonial cards are managed under Content → Testimonials.",
                     "fields": [
                         {
                             "key": "title",
@@ -612,6 +806,7 @@
                 {
                     "id": "blog",
                     "label": "Blog Preview",
+                    "description": "Blog posts are managed under Content → Blog. The latest published posts are shown here.",
                     "fields": [
                         {
                             "key": "title",
@@ -676,7 +871,7 @@
                         {
                             "key": "content",
                             "label": "Story Content",
-                            "type": "richtext",
+                            "type": "textarea",
                             "defaultValue": "KTM Plots was founded with a simple belief: buying land in Nepal should be transparent, legal, and accessible to everyone — not just those with connections.\n\nWe started with a small team of property consultants and legal experts in Kathmandu, and have grown to serve clients across Nepal and internationally.\n\nToday, KTM Plots manages over 50 active plot locations across Kathmandu, Lalitpur, and Bhaktapur, with a reputation built entirely on trust, verified titles, and honest dealing."
                         },
                         {
@@ -685,38 +880,58 @@
                             "type": "image"
                         },
                         {
+                            "key": "_divider_cards",
+                            "label": "Value Cards (shown when no image set)",
+                            "type": "divider"
+                        },
+                        {
+                            "key": "_divider_card1",
+                            "label": "Card 1",
+                            "type": "divider"
+                        },
+                        {
                             "key": "card1Title",
-                            "label": "Card 1 Title (shown when no image)",
+                            "label": "Title",
                             "type": "text",
                             "defaultValue": "Our Mission"
                         },
                         {
                             "key": "card1Text",
-                            "label": "Card 1 Text",
+                            "label": "Text",
                             "type": "textarea",
                             "defaultValue": "To make land ownership simple, transparent, and accessible for every Nepali family and investor."
                         },
                         {
+                            "key": "_divider_card2",
+                            "label": "Card 2",
+                            "type": "divider"
+                        },
+                        {
                             "key": "card2Title",
-                            "label": "Card 2 Title (shown when no image)",
+                            "label": "Title",
                             "type": "text",
                             "defaultValue": "Our Vision"
                         },
                         {
                             "key": "card2Text",
-                            "label": "Card 2 Text",
+                            "label": "Text",
                             "type": "textarea",
                             "defaultValue": "A Nepal where every land transaction is backed by verified titles, fair prices, and professional guidance."
                         },
                         {
+                            "key": "_divider_card3",
+                            "label": "Card 3",
+                            "type": "divider"
+                        },
+                        {
                             "key": "card3Title",
-                            "label": "Card 3 Title (shown when no image)",
+                            "label": "Title",
                             "type": "text",
                             "defaultValue": "Our Values"
                         },
                         {
                             "key": "card3Text",
-                            "label": "Card 3 Text",
+                            "label": "Text",
                             "type": "textarea",
                             "defaultValue": "Transparency · Integrity · Legal Compliance · Customer First · Community Growth"
                         }
@@ -725,6 +940,7 @@
                 {
                     "id": "stats",
                     "label": "Stats Strip",
+                    "description": "Animated number counters shown on the About page. Pre-loaded with theme defaults — save this section to persist your values.",
                     "fields": [
                         {
                             "key": "items",
@@ -759,6 +975,7 @@
                 {
                     "id": "team",
                     "label": "Team Section",
+                    "description": "Team member profiles are managed under Content → Team.",
                     "fields": [
                         {
                             "key": "title",
@@ -777,7 +994,14 @@
                 {
                     "id": "services",
                     "label": "Services Section",
+                    "description": "Service cards are managed under Content → Services. Edit titles and icons there.",
                     "fields": [
+                        {
+                            "key": "label",
+                            "label": "Tag Label",
+                            "type": "text",
+                            "defaultValue": "What We Offer"
+                        },
                         {
                             "key": "title",
                             "label": "Section Title",
@@ -803,12 +1027,27 @@
                             "defaultValue": "Ready to Find Your Plot?"
                         },
                         {
+                            "key": "subtitle",
+                            "label": "Subtext",
+                            "type": "text",
+                            "defaultValue": "Browse our available plots or get in touch for a free consultation."
+                        },
+                        {
                             "key": "button",
-                            "label": "CTA Button",
+                            "label": "Primary Button",
                             "type": "button",
                             "defaultValue": {
                                 "text": "Browse Plots",
                                 "url": "/plots"
+                            }
+                        },
+                        {
+                            "key": "secondaryButton",
+                            "label": "Secondary Button",
+                            "type": "button",
+                            "defaultValue": {
+                                "text": "Contact Us",
+                                "url": "/contact"
                             }
                         }
                     ]
@@ -866,13 +1105,13 @@
                 {
                     "id": "info",
                     "label": "Contact Info",
-                    "description": "Details beside the form",
+                    "description": "Office Hours are editable here. Address, Phone, and Email are managed under Settings → Contact Info.",
                     "fields": [
                         {
                             "key": "hours",
                             "label": "Office Hours",
-                            "type": "text",
-                            "placeholder": "Sun-Fri, 9am-6pm",
+                            "type": "textarea",
+                            "placeholder": "Sun-Fri, 9am-6pm\nSaturday, 10am-2pm",
                             "defaultValue": "Sun-Fri, 9am-6pm"
                         }
                     ]
@@ -933,7 +1172,8 @@
                         {
                             "key": "subtitle",
                             "label": "Subtitle",
-                            "type": "text"
+                            "type": "text",
+                            "defaultValue": "Expert insights, guides, and market updates on land investment in Nepal."
                         }
                     ]
                 }

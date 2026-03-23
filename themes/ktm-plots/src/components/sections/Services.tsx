@@ -1,6 +1,7 @@
 'use client';
 
 import type { Service } from '@/lib/cms';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   'map-pin': (
@@ -55,11 +56,11 @@ export default function Services({ services, secData = {} }: Props) {
       <div className="container">
 
         {/* Header */}
-        <div className="animate-slide-up" style={{ textAlign: 'center', marginBottom: '4rem' }}>
+        <ScrollReveal animation="up" style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <span style={{
             display: 'inline-block',
             background: 'rgba(204,20,20,0.08)',
-            color: '#CC1414',
+            color: 'var(--color-primary)',
             fontWeight: 700,
             letterSpacing: '0.12em',
             fontSize: '0.72rem',
@@ -74,12 +75,14 @@ export default function Services({ services, secData = {} }: Props) {
           <p className="section-subtitle" style={{ maxWidth: '520px', margin: '0 auto' }}>
             {secData.subtitle || 'From finding the right plot to completing the registration, we support you at every step of the journey.'}
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* Grid — 3 per row desktop, 2 tablet, 1 mobile */}
         <div className="services-grid">
           {list.map((service, i) => (
-            <ServiceCard key={service.id || i} service={service} index={i} />
+            <ScrollReveal key={service.id || i} animation="up" delay={i * 80}>
+              <ServiceCard service={service} index={i} />
+            </ScrollReveal>
           ))}
         </div>
       </div>
@@ -95,7 +98,6 @@ export default function Services({ services, secData = {} }: Props) {
 function ServiceCard({ service, index }: { service: any; index: number }) {
   return (
     <div
-      className={`animate-slide-up delay-${Math.min(index * 100, 500)}`}
       style={{
         position: 'relative',
         background: '#FFFFFF',
@@ -120,7 +122,7 @@ function ServiceCard({ service, index }: { service: any; index: number }) {
         position: 'absolute',
         top: 0, left: 0, right: 0,
         height: '4px',
-        background: 'linear-gradient(90deg, #CC1414, #8B0000)',
+        background: 'linear-gradient(90deg, var(--color-primary), #8B0000)',
         borderRadius: '20px 20px 0 0',
       }} />
 
@@ -143,7 +145,7 @@ function ServiceCard({ service, index }: { service: any; index: number }) {
         width: '64px',
         height: '64px',
         borderRadius: '16px',
-        background: 'linear-gradient(135deg, #CC1414 0%, #8B0000 100%)',
+        background: 'linear-gradient(135deg, var(--color-primary) 0%, #8B0000 100%)',
         color: '#FFFFFF',
         display: 'flex',
         alignItems: 'center',

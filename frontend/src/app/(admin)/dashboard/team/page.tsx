@@ -46,7 +46,7 @@ function TeamPageContent() {
         role: '',
         bio: '',
         image: '',
-        socialLinks: { linkedin: '', twitter: '', instagram: '' },
+        socialLinks: { linkedin: '', twitter: '', instagram: '', facebook: '', youtube: '', whatsapp: '', email: '', phone: '' },
         order: 0
     };
 
@@ -132,7 +132,7 @@ function TeamPageContent() {
             role: member.role,
             bio: member.bio || '',
             image: member.image || '',
-            socialLinks: member.socialLinks || { linkedin: '', twitter: '', instagram: '' },
+            socialLinks: { linkedin: '', twitter: '', instagram: '', facebook: '', youtube: '', whatsapp: '', email: '', phone: '', ...(member.socialLinks || {}) },
             order: member.order
         };
         setFormData(data);
@@ -257,7 +257,7 @@ function TeamPageContent() {
 
                 <ThemeCompatibilityBanner moduleName="team" />
 
-                <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-4 z-10">
+                <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-0 z-10">
                     <div className="flex items-center gap-4">
                         <button onClick={handleBackClick} className="p-2 hover:bg-slate-50 rounded-xl text-slate-500 transition-colors">
                             <ArrowLeftIcon className="h-5 w-5" />
@@ -317,32 +317,28 @@ function TeamPageContent() {
                         </div>
 
                         <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
-                            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Social Links</h3>
+                            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Contact & Social Links</h3>
                             <div className="space-y-3">
-                                 <input
-                                    type="text"
-                                    value={formData.socialLinks.linkedin}
-                                    disabled={isReadOnly}
-                                    onChange={(e) => setFormData({ ...formData, socialLinks: { ...formData.socialLinks, linkedin: e.target.value } })}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-blue-600/10 disabled:opacity-50"
-                                    placeholder="LinkedIn URL"
-                                />
-                                <input
-                                    type="text"
-                                    value={formData.socialLinks.twitter}
-                                    disabled={isReadOnly}
-                                    onChange={(e) => setFormData({ ...formData, socialLinks: { ...formData.socialLinks, twitter: e.target.value } })}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-blue-600/10 disabled:opacity-50"
-                                    placeholder="Twitter URL"
-                                />
-                                <input
-                                    type="text"
-                                    value={formData.socialLinks.instagram}
-                                    disabled={isReadOnly}
-                                    onChange={(e) => setFormData({ ...formData, socialLinks: { ...formData.socialLinks, instagram: e.target.value } })}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-blue-600/10 disabled:opacity-50"
-                                    placeholder="Instagram URL"
-                                />
+                                {[
+                                    { key: 'email',     placeholder: 'Email address',  type: 'email' },
+                                    { key: 'phone',     placeholder: 'Phone / WhatsApp number', type: 'text' },
+                                    { key: 'linkedin',  placeholder: 'LinkedIn URL',   type: 'text' },
+                                    { key: 'twitter',   placeholder: 'Twitter / X URL', type: 'text' },
+                                    { key: 'instagram', placeholder: 'Instagram URL',  type: 'text' },
+                                    { key: 'facebook',  placeholder: 'Facebook URL',   type: 'text' },
+                                    { key: 'youtube',   placeholder: 'YouTube URL',    type: 'text' },
+                                    { key: 'whatsapp',  placeholder: 'WhatsApp number (digits only)', type: 'text' },
+                                ].map(({ key, placeholder, type }) => (
+                                    <input
+                                        key={key}
+                                        type={type}
+                                        value={formData.socialLinks[key] || ''}
+                                        disabled={isReadOnly}
+                                        onChange={(e) => setFormData({ ...formData, socialLinks: { ...formData.socialLinks, [key]: e.target.value } })}
+                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-blue-600/10 disabled:opacity-50"
+                                        placeholder={placeholder}
+                                    />
+                                ))}
                             </div>
                         </div>
                     </div>

@@ -6,20 +6,23 @@ async function main() {
     console.log('--- Seeding Database ---');
 
     // 1. Create Roles (structural data required by the app)
+    // level 0 = Super Admin (highest privilege), higher number = lower privilege
     await prisma.role.upsert({
         where: { name: 'Super Admin' },
-        update: {},
+        update: { level: 0 },
         create: {
             name: 'Super Admin',
+            level: 0,
             permissions: { all: true },
         },
     });
 
     await prisma.role.upsert({
         where: { name: 'Admin' },
-        update: {},
+        update: { level: 5 },
         create: {
             name: 'Admin',
+            level: 5,
             permissions: { manage_content: true, manage_media: true },
         },
     });

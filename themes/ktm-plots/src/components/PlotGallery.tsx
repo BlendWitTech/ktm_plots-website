@@ -63,7 +63,7 @@ export default function PlotGallery({ images, title }: Props) {
               key={i}
               onClick={() => setActive(i)}
               aria-label={`View image ${i + 1}`}
-              style={{ flexShrink: 0, width: '72px', height: '54px', borderRadius: '7px', overflow: 'hidden', position: 'relative', border: `2px solid ${i === active ? '#CC1414' : 'transparent'}`, padding: 0, cursor: 'pointer', background: '#1a0505', transition: 'border-color 0.15s', outline: 'none' }}
+              style={{ flexShrink: 0, width: '72px', height: '54px', borderRadius: '7px', overflow: 'hidden', position: 'relative', border: `2px solid ${i === active ? 'var(--color-primary)' : 'transparent'}`, padding: 0, cursor: 'pointer', background: '#1a0505', transition: 'border-color 0.15s', outline: 'none' }}
             >
               <Image src={src} alt={`Thumbnail ${i + 1}`} fill style={{ objectFit: 'cover', opacity: i === active ? 1 : 0.65, transition: 'opacity 0.15s' }} />
             </button>

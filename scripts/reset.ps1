@@ -6,19 +6,25 @@ if ($confirm -ne "y") {
     exit
 }
 
-Write-Host "`n[1/4] Cleaning root..." -ForegroundColor Gray
+Write-Host "`n[1/5] Cleaning root..." -ForegroundColor Gray
 Remove-Item -Path "node_modules", "package-lock.json" -Recurse -Force -ErrorAction SilentlyContinue
 
-Write-Host "[2/4] Cleaning backend..." -ForegroundColor Gray
+Write-Host "[2/5] Cleaning backend..." -ForegroundColor Gray
 Remove-Item -Path "backend/node_modules", "backend/dist", "backend/.env", "backend/prisma/migrations" -Recurse -Force -ErrorAction SilentlyContinue
 
-Write-Host "[3/4] Cleaning frontend..." -ForegroundColor Gray
+Write-Host "[3/5] Cleaning frontend..." -ForegroundColor Gray
 Remove-Item -Path "frontend/node_modules", "frontend/.next", "frontend/.env", "frontend/.env.local" -Recurse -Force -ErrorAction SilentlyContinue
 
-Write-Host "[4/4] Resetting database infrastructure..." -ForegroundColor Gray
-if (Get-Command "docker-compose" -ErrorAction SilentlyContinue) {
-    docker-compose down -v --remove-orphans 2>$null
+Write-Host "[4/5] Cleaning theme build caches..." -ForegroundColor Gray
+Get-ChildItem -Path "themes" -Filter ".next" -Recurse -Directory -Force -ErrorAction SilentlyContinue | ForEach-Object {
+    Remove-Item -Path $_.FullName -Recurse -Force -ErrorAction SilentlyContinue
 }
+Get-ChildItem -Path "themes" -Filter "node_modules" -Recurse -Directory -Force -ErrorAction SilentlyContinue | ForEach-Object {
+    Remove-Item -Path $_.FullName -Recurse -Force -ErrorAction SilentlyContinue
+}
+
+Write-Host "[5/5] Resetting database infrastructure..." -ForegroundColor Gray
+docker compose down -v --remove-orphans 2>$null
 
 Write-Host "`nProject reset complete." -ForegroundColor Green
 Write-Host "To start fresh, run: npm run setup" -ForegroundColor Yellow

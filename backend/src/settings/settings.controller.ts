@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Patch, UseGuards } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Post, UseGuards } from '@nestjs/common';
 import { SettingsService } from './settings.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
@@ -18,7 +18,13 @@ export class SettingsController {
     @UseGuards(JwtAuthGuard, PermissionsGuard)
     @RequirePermissions(Permission.SETTINGS_EDIT)
     updateMany(@Body() settings: Record<string, string>) {
-        // In a real app, we'd check if the user is a Super Admin here
         return this.settingsService.updateMany(settings);
+    }
+
+    @Post('clear-theme-cache')
+    @UseGuards(JwtAuthGuard, PermissionsGuard)
+    @RequirePermissions(Permission.SETTINGS_EDIT)
+    clearThemeCache() {
+        return this.settingsService.clearThemeCache();
     }
 }

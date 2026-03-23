@@ -152,7 +152,7 @@ function ContentEditorContent({ params }: { params: Promise<{ slug: string, item
             />
 
             {/* Header */}
-            <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-4 z-20">
+            <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-0 z-20">
                 <div className="flex items-center gap-4">
                     <button onClick={handleBack} className="p-2 hover:bg-slate-50 rounded-xl text-slate-500 transition-colors">
                         <ArrowLeftIcon className="h-5 w-5" />

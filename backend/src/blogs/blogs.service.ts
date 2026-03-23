@@ -237,7 +237,7 @@ export class BlogsService {
     }
 
     async findPublishedBySlug(slug: string) {
-        const post = await (this.prisma as any).post.findUnique({
+        const post = await (this.prisma as any).post.findFirst({
             where: { slug, status: 'PUBLISHED' },
             include: {
                 author: { select: { name: true, avatar: true, bio: true } },
@@ -278,6 +278,7 @@ export class BlogsService {
 
         return {
             ...post,
+            featuredImageUrl: post.coverImage ?? null,
             seo: await this.seoMetaService.findByPage('post', post.id),
             relatedPosts,
         };

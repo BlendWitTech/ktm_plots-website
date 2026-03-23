@@ -25,15 +25,27 @@ export default async function GenericPage({ params }: PageProps) {
     notFound();
   }
 
+  // Prefer section-editor content (data.sections[content].data.body) over legacy page.content
+  const sections: any[] = (page as any).data?.sections ?? [];
+  const contentSection = sections.find((s: any) => s.id === 'content');
+  const heroSection    = sections.find((s: any) => s.id === 'hero');
+  const body        = contentSection?.data?.body || page.content;
+  const pageTitle   = heroSection?.data?.title    || page.title;
+  const pageSubtitle = heroSection?.data?.subtitle || null;
+
   return (
     <div style={{ paddingBottom: '5rem', background: '#F8F9FA' }}>
       {/* Header */}
-      <div style={{ background: '#CC1414', color: '#fff', padding: '5rem 0 3rem', textAlign: 'center' }}>
+      <div style={{ background: 'var(--color-primary)', color: '#fff', padding: '5rem 0 3rem', textAlign: 'center' }}>
         <div className="container">
-          <h1 className="section-title" style={{ color: '#fff', marginBottom: '0.5rem' }}>{page.title}</h1>
-          <p style={{ opacity: 0.8, fontSize: '0.9rem' }}>
-            Last updated: {new Date(page.updatedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </p>
+          <h1 className="section-title" style={{ color: '#fff', marginBottom: '0.5rem' }}>{pageTitle}</h1>
+          {pageSubtitle ? (
+            <p style={{ opacity: 0.8, fontSize: '0.9rem' }}>{pageSubtitle}</p>
+          ) : (
+            <p style={{ opacity: 0.8, fontSize: '0.9rem' }}>
+              Last updated: {new Date(page.updatedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+          )}
         </div>
       </div>
 
@@ -50,7 +62,7 @@ export default async function GenericPage({ params }: PageProps) {
               color: '#4B5563',
               fontSize: '1.05rem',
             }}
-            dangerouslySetInnerHTML={{ __html: page.content }}
+            dangerouslySetInnerHTML={{ __html: body }}
           />
         </div>
       </div>

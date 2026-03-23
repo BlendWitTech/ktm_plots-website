@@ -25,6 +25,11 @@ export interface SiteSettings {
   ctaText: string | null;
   ctaUrl: string | null;
   metaDescription: string | null;
+  headingFont: string | null;
+  bodyFont: string | null;
+  secondaryColor: string | null;
+  accentColor: string | null;
+  listingMode: string | null;
 }
 
 export interface SiteData {
@@ -81,6 +86,7 @@ export interface Post {
   createdAt: string;
   author?: { name: string };
   categories?: { name: string; slug: string }[];
+  seo?: { title?: string; description?: string; ogImage?: string } | null;
 }
 
 export interface Project {
@@ -95,11 +101,22 @@ export interface Project {
   status: string | null;
   location: string | null;
   priceFrom: string | null;
+  priceTo: string | null;
   areaFrom: string | null;
   areaTo: string | null;
+  facing: string | null;
+  roadAccess: string | null;
+  attributes: Record<string, string | number | boolean> | null;
   category?: { name: string; slug: string };
   seo?: { title?: string; description?: string } | null;
   createdAt: string;
+  plotNumber: string | null;
+  landType: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  mapUrl: string | null;
+  totalPlots: number | null;
+  availablePlots: number | null;
 }
 
 export interface Page {
@@ -144,6 +161,11 @@ const FALLBACK_SITE_DATA: SiteData = {
     ctaText: null,
     ctaUrl: null,
     metaDescription: null,
+    headingFont: null,
+    bodyFont: null,
+    secondaryColor: null,
+    accentColor: null,
+    listingMode: null,
   },
   menus: [],
   services: [],
@@ -244,6 +266,16 @@ export async function getPlotBySlug(slug: string): Promise<Project | null> {
   }
 }
 
+export async function getPostCategories(): Promise<{ id: string; name: string; slug: string }[]> {
+  try {
+    const res = await fetch(`${API}/categories`, { next: { revalidate: 120 } });
+    if (!res.ok) return [];
+    return res.json();
+  } catch {
+    return [];
+  }
+}
+
 export async function getPosts(params?: {
   page?: number;
   limit?: number;
@@ -254,9 +286,14 @@ export async function getPosts(params?: {
   if (params?.limit) q.set('limit', String(params.limit));
   if (params?.category) q.set('category', params.category);
   try {
-    const res = await fetch(`${API}/public/posts?${q}`, { next: { revalidate: 120 } });
+    const res = await fetch(`${API}/posts/public?${q}`, { next: { revalidate: 120 } });
     if (!res.ok) return { data: [], total: 0 };
-    return res.json();
+    const json = await res.json();
+    // Backend returns { posts, pagination: { total } } — normalise to { data, total }
+    const mapPost = (p: any): Post => ({ ...p, featuredImageUrl: p.featuredImageUrl ?? p.coverImage ?? null });
+    if (Array.isArray(json)) return { data: json.map(mapPost), total: json.length };
+    if (json.posts) return { data: json.posts.map(mapPost), total: json.pagination?.total ?? json.posts.length };
+    return { data: (json.data ?? []).map(mapPost), total: json.total ?? 0 };
   } catch {
     return { data: [], total: 0 };
   }
@@ -264,9 +301,11 @@ export async function getPosts(params?: {
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   try {
-    const res = await fetch(`${API}/public/posts/${slug}`, { next: { revalidate: 120 } });
+    const res = await fetch(`${API}/posts/public/${slug}`, { next: { revalidate: 120 } });
     if (!res.ok) return null;
-    return res.json();
+    const p = await res.json();
+    if (!p) return null;
+    return { ...p, featuredImageUrl: p.featuredImageUrl ?? p.coverImage ?? null };
   } catch {
     return null;
   }
@@ -281,7 +320,9 @@ export async function submitLead(data: {
 }): Promise<{ success: boolean; message?: string }> {
   try {
     const { source, ...rest } = data;
-    const res = await fetch(`${API}/leads/public/submit`, {
+    // Use the local Next.js API proxy so browser requests are same-origin (no CORS).
+    // The proxy route forwards server-to-server to the backend.
+    const res = await fetch('/api/submit-lead', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...rest, originPage: source }),
@@ -349,4 +390,105 @@ export function isSectionEnabled(
   sectionId: string
 ): boolean {
   return getSection(pages, pageSlug, sectionId).enabled;
+}
+
+/**
+ * Render CMS content (plain text, markdown-like, or HTML) to safe HTML string.
+ * - If the content already contains block-level HTML tags, returns it as-is.
+ * - Otherwise, parses basic markdown: headings, bold, italic, lists, paragraphs.
+ */
+export function renderContent(raw: string | null | undefined): string {
+  if (!raw) return '';
+
+  // If it already looks like HTML, return as-is
+  if (/<(p|h[1-6]|ul|ol|li|div|table|blockquote|pre)\b/i.test(raw)) {
+    return raw;
+  }
+
+  const lines = raw.split('\n');
+  const result: string[] = [];
+  let inList = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+
+    // Inline transforms
+    const inline = (s: string) =>
+      s
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/`(.*?)`/g, '<code>$1</code>')
+        .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+
+    // Headings
+    if (/^### /.test(line)) {
+      if (inList) { result.push('</ul>'); inList = false; }
+      result.push(`<h3>${inline(line.slice(4))}</h3>`);
+      continue;
+    }
+    if (/^## /.test(line)) {
+      if (inList) { result.push('</ul>'); inList = false; }
+      result.push(`<h2>${inline(line.slice(3))}</h2>`);
+      continue;
+    }
+    if (/^# /.test(line)) {
+      if (inList) { result.push('</ul>'); inList = false; }
+      result.push(`<h2>${inline(line.slice(2))}</h2>`);
+      continue;
+    }
+
+    // Unordered list items
+    if (/^[-*] /.test(line)) {
+      if (!inList) { result.push('<ul>'); inList = true; }
+      result.push(`<li>${inline(line.slice(2))}</li>`);
+      continue;
+    }
+
+    // Close list if we hit a non-list line
+    if (inList) {
+      result.push('</ul>');
+      inList = false;
+    }
+
+    // Horizontal rule
+    if (/^---+$/.test(line.trim())) {
+      result.push('<hr/>');
+      continue;
+    }
+
+    // Blank line = paragraph break
+    if (line.trim() === '') {
+      // skip, handled by paragraph grouping below
+      result.push('');
+      continue;
+    }
+
+    result.push(inline(line));
+  }
+
+  if (inList) result.push('</ul>');
+
+  // Group non-empty, non-tag lines into <p> blocks
+  const html: string[] = [];
+  let para: string[] = [];
+
+  for (const r of result) {
+    if (r === '') {
+      if (para.length > 0) {
+        html.push(`<p>${para.join('<br/>')}</p>`);
+        para = [];
+      }
+    } else if (/^<(h[1-6]|ul|ol|hr|blockquote|pre)/.test(r)) {
+      if (para.length > 0) {
+        html.push(`<p>${para.join('<br/>')}</p>`);
+        para = [];
+      }
+      html.push(r);
+    } else {
+      para.push(r);
+    }
+  }
+  if (para.length > 0) html.push(`<p>${para.join('<br/>')}</p>`);
+
+  return html.join('\n');
 }

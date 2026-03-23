@@ -12,6 +12,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { apiRequest } from '@/lib/api';
 import { useNotification } from '@/context/NotificationContext';
+import AlertDialog from '@/components/ui/AlertDialog';
 
 function CommentsContent() {
     const searchParams = useSearchParams();
@@ -21,6 +22,7 @@ function CommentsContent() {
     const [comments, setComments] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [deleteDialog, setDeleteDialog] = useState<{ isOpen: boolean; id: string | null }>({ isOpen: false, id: null });
 
     useEffect(() => {
         fetchComments();
@@ -64,7 +66,6 @@ function CommentsContent() {
     };
 
     const deleteComment = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this comment?')) return;
         try {
             await apiRequest(`/comments/${id}`, {
                 method: 'DELETE',
@@ -95,6 +96,15 @@ function CommentsContent() {
                         {postIdFilter ? 'Showing comments for selected post.' : 'Moderate and manage user interaction.'}
                     </p>
                 </div>
+            </div>
+
+            {/* Email notification note */}
+            <div className="mx-2 flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-2xl px-5 py-4">
+                <svg className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <p className="text-xs font-semibold text-blue-700 leading-relaxed">
+                    Comment notification emails are sent to your company&apos;s contact email address configured in{' '}
+                    <a href="/dashboard/settings" className="underline underline-offset-2 hover:text-blue-900">Settings → Website &amp; Social</a>.
+                </p>
             </div>
 
             {/* List */}
@@ -166,7 +176,7 @@ function CommentsContent() {
                                                 <button onClick={() => updateStatus(comment.id, 'SPAM')} title="Mark Spam" className="p-2 rounded-lg bg-white border border-slate-200 text-amber-500 hover:bg-amber-50 hover:border-amber-200 transition-all">
                                                     <XCircleIcon className="h-4 w-4" />
                                                 </button>
-                                                <button onClick={() => deleteComment(comment.id)} title="Delete" className="p-2 rounded-lg bg-white border border-slate-200 text-red-400 hover:text-red-500 hover:border-red-200 transition-all">
+                                                <button onClick={() => setDeleteDialog({ isOpen: true, id: comment.id })} title="Delete" className="p-2 rounded-lg bg-white border border-slate-200 text-red-400 hover:text-red-500 hover:border-red-200 transition-all">
                                                     <TrashIcon className="h-4 w-4" />
                                                 </button>
                                             </div>
@@ -178,6 +188,20 @@ function CommentsContent() {
                     </table>
                 </div>
             </div>
+
+            <AlertDialog
+                isOpen={deleteDialog.isOpen}
+                variant="danger"
+                title="Delete Comment"
+                description="Are you sure you want to delete this comment? This action cannot be undone."
+                confirmLabel="Delete"
+                cancelLabel="Cancel"
+                onConfirm={() => {
+                    if (deleteDialog.id) deleteComment(deleteDialog.id);
+                    setDeleteDialog({ isOpen: false, id: null });
+                }}
+                onCancel={() => setDeleteDialog({ isOpen: false, id: null })}
+            />
         </div>
     );
 }

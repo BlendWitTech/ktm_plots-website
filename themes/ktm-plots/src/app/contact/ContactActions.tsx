@@ -51,13 +51,13 @@ export default function ContactActions() {
               transition: 'border-color 0.2s, box-shadow 0.2s',
               boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
             }}
-            onMouseEnter={e => { const el = e.currentTarget; el.style.borderColor = '#CC1414'; el.style.boxShadow = '0 4px 16px rgba(204,20,20,0.12)'; }}
+            onMouseEnter={e => { const el = e.currentTarget; el.style.borderColor = 'var(--color-primary)'; el.style.boxShadow = '0 4px 16px rgba(204,20,20,0.12)'; }}
             onMouseLeave={e => { const el = e.currentTarget; el.style.borderColor = '#E5E7EB'; el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; }}
           >
             <div style={{ fontSize: '1.75rem', marginBottom: '0.75rem' }}>{action.icon}</div>
-            <h3 style={{ fontWeight: 800, fontSize: '1rem', color: '#1E1E1E', marginBottom: '0.4rem' }}>{action.title}</h3>
+            <h3 style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--color-secondary)', marginBottom: '0.4rem' }}>{action.title}</h3>
             <p style={{ fontSize: '0.8rem', color: '#6B7280', lineHeight: 1.6, marginBottom: '0.75rem' }}>{action.description}</p>
-            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#CC1414', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--color-primary)', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
               {action.title} →
             </span>
           </button>

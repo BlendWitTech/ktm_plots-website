@@ -354,7 +354,9 @@ function UsersPageContent() {
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                             {users.map((user) => {
-                                const roleName = user.type === 'User' ? user.role?.name : user.roleId;
+                                const roleName = user.type === 'User'
+                                    ? user.role?.name
+                                    : (roles.find((r: any) => r.id === user.roleId)?.name ?? user.roleId);
 
                                 // Dynamic Mapping for UI aesthetics
                                 const roleStyles: Record<string, { icon: any, color: string }> = {

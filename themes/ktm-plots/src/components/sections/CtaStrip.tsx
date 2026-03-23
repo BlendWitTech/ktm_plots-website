@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { SiteData } from '@/lib/cms';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 interface Props { siteData: SiteData; secData?: Record<string, any>; }
 
@@ -19,9 +20,9 @@ export default function CtaStrip({ siteData, secData = {} }: Props) {
   ];
 
   return (
-    <section style={{ padding: '5rem 0', background: '#F4F4F4' }}>
+    <section style={{ padding: '5rem 0', background: 'var(--color-accent)' }}>
       <div className="container">
-        <div style={{
+        <ScrollReveal animation="scale" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
           borderRadius: '20px',
@@ -30,8 +31,8 @@ export default function CtaStrip({ siteData, secData = {} }: Props) {
         }}>
 
           {/* Left panel — Red */}
-          <div style={{
-            background: 'linear-gradient(140deg, #CC1414 0%, #8B0000 100%)',
+          <div className="cta-left-panel" style={{
+            background: 'linear-gradient(140deg, var(--color-primary) 0%, #8B0000 100%)',
             padding: 'clamp(3rem, 5vw, 4.5rem)',
             display: 'flex',
             flexDirection: 'column',
@@ -66,7 +67,7 @@ export default function CtaStrip({ siteData, secData = {} }: Props) {
           </div>
 
           {/* Right panel — Dark */}
-          <div style={{
+          <div className="cta-right-panel" style={{
             background: '#1A1A1A',
             padding: 'clamp(3rem, 5vw, 4.5rem)',
             display: 'flex',
@@ -81,7 +82,7 @@ export default function CtaStrip({ siteData, secData = {} }: Props) {
             {/* Phone */}
             {settings.contactPhone && (
               <a href={`tel:${settings.contactPhone}`} style={{ display: 'flex', alignItems: 'center', gap: '1rem', textDecoration: 'none' }}>
-                <div style={{ width: '48px', height: '48px', background: '#CC1414', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div style={{ width: '48px', height: '48px', background: 'var(--color-primary)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <svg width="20" height="20" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                   </svg>
@@ -95,7 +96,7 @@ export default function CtaStrip({ siteData, secData = {} }: Props) {
 
             {/* Buttons */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <Link href={ctaUrl} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', background: '#CC1414', color: '#FFFFFF', fontWeight: 800, padding: '1rem 2rem', borderRadius: '10px', textDecoration: 'none', fontSize: '0.975rem', boxShadow: '0 4px 16px rgba(204,20,20,0.35)', transition: 'all 0.2s' }}>
+              <Link href={ctaUrl} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', background: 'var(--color-primary)', color: '#FFFFFF', fontWeight: 800, padding: '1rem 2rem', borderRadius: '10px', textDecoration: 'none', fontSize: '0.975rem', boxShadow: '0 4px 16px rgba(204,20,20,0.35)', transition: 'all 0.2s' }}>
                 {ctaText}
                 <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
               </Link>
@@ -105,7 +106,7 @@ export default function CtaStrip({ siteData, secData = {} }: Props) {
             </div>
           </div>
 
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

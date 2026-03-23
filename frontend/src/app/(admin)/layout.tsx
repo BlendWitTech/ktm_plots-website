@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import { clearAuthToken } from '@/lib/auth';
 import Sidebar from '@/components/layout/Sidebar';
@@ -52,7 +52,9 @@ export default function AdminLayout({
 
                     {/* Sidebar - Desktop */}
                     <div className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col min-h-0 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isCollapsed ? 'lg:w-20' : 'lg:w-72'}`}>
-                        <Sidebar isCollapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
+                        <Suspense fallback={null}>
+                            <Sidebar isCollapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
+                        </Suspense>
                     </div>
 
                     {/* Mobile Sidebar Overlay */}
@@ -66,7 +68,9 @@ export default function AdminLayout({
                                 className="absolute inset-y-0 left-0 w-72 flex flex-col"
                                 onClick={(e) => e.stopPropagation()}
                             >
-                                <Sidebar isCollapsed={false} onToggle={() => setIsMobileOpen(false)} />
+                                <Suspense fallback={null}>
+                                    <Sidebar isCollapsed={false} onToggle={() => setIsMobileOpen(false)} />
+                                </Suspense>
                             </div>
                         </div>
                     )}

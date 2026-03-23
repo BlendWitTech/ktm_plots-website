@@ -41,7 +41,7 @@ const sections = [
     { id: 'pages', label: 'Pages', icon: DocumentTextIcon },
     { id: 'users', label: 'Users & Roles', icon: UserGroupIcon },
     { id: 'settings', label: 'Settings', icon: Cog6ToothIcon },
-    { id: 'email', label: 'Email / SMTP', icon: EnvelopeIcon },
+    { id: 'email', label: 'Email', icon: EnvelopeIcon },
     { id: 'seo', label: 'SEO', icon: MagnifyingGlassIcon },
     { id: 'analytics', label: 'Analytics', icon: ChartBarIcon },
     { id: 'themes', label: 'Themes', icon: SwatchIcon },
@@ -485,46 +485,68 @@ export default function DocsPage() {
                     </div>
                 </Card>
 
-                {/* ── Email / SMTP ─────────────────────────────────────── */}
+                {/* ── Email ────────────────────────────────────────────── */}
                 <Card>
-                    <SectionHeading id="email" icon={EnvelopeIcon} title="Email / SMTP Setup" subtitle="How to configure email so the CMS can send notifications" />
+                    <SectionHeading id="email" icon={EnvelopeIcon} title="Email Setup" subtitle="Configure how the CMS sends lead and comment notifications" />
                     <p className="text-sm text-slate-700 leading-relaxed mb-5">
-                        The CMS sends automatic email notifications for new leads and new blog comments. Email delivery requires a working SMTP server. You can configure SMTP either through the Dashboard or via environment variables.
+                        The CMS sends automatic email notifications for new leads and new blog comments. Go to <strong>Settings → Email Services</strong> and choose one of two providers.
                     </p>
 
-                    <h3 className="text-sm font-bold text-slate-800 mb-3 uppercase tracking-widest">Option A — Dashboard (Recommended)</h3>
-                    <div className="flex flex-col gap-2 mb-5">
-                        <Step n={1} text="Go to Dashboard → Settings → Website & Social tab → scroll to Email / SMTP." />
-                        <Step n={2} text="Enter SMTP Host (e.g. smtp.gmail.com for Gmail, smtp.mailgun.org for Mailgun)." />
-                        <Step n={3} text="Set SMTP Port: 587 for TLS (recommended), 465 for SSL, 25 for unencrypted (not recommended)." />
-                        <Step n={4} text="Enter SMTP Username — usually your full email address (e.g. hello@ktmplots.com)." />
-                        <Step n={5} text="Enter SMTP Password — for Gmail, this must be an App Password, not your regular account password." />
-                        <Step n={6} text="Set Sender Email — the 'From' address recipients see (can be the same as SMTP Username)." />
-                        <Step n={7} text="Toggle SMTP Secure ON if using port 465. Leave OFF for port 587." />
-                        <Step n={8} text="Save. Submit a test lead from the website to confirm emails are being delivered." />
+                    {/* Provider A: Resend */}
+                    <h3 className="text-sm font-bold text-slate-800 mb-3 uppercase tracking-widest">Provider A — Resend (Recommended)</h3>
+                    <p className="text-sm text-slate-700 leading-relaxed mb-3">
+                        Resend uses an HTTP API instead of SMTP so it works on all hosting platforms including Railway. Free tier includes 3,000 emails/month.
+                    </p>
+                    <div className="flex flex-col gap-2 mb-4">
+                        <Step n={1} text="Sign up at resend.com → Dashboard → API Keys → Create API Key → copy the key (starts with re_)." />
+                        <Step n={2} text="Add and verify your sending domain in Resend → Domains (add the DNS records they give you)." />
+                        <Step n={3} text="In Settings → Email Services, select Resend as the provider." />
+                        <Step n={4} text="Paste the API key into the Resend API Key field." />
+                        <Step n={5} text="Set Sender Email to a verified address on your domain (e.g. noreply@ktmplots.com)." />
+                        <Step n={6} text="Save. Submit a test lead from the website to confirm delivery." />
                     </div>
-
-                    <h3 className="text-sm font-bold text-slate-800 mb-3 uppercase tracking-widest">Option B — Environment Variables</h3>
-                    <p className="text-sm text-slate-700 leading-relaxed mb-3">Add these to <code className="text-xs bg-slate-100 px-1.5 py-0.5 rounded">backend/.env</code>:</p>
                     <div className="bg-slate-900 rounded-2xl p-4 mb-5 font-mono text-xs text-slate-300 leading-relaxed">
-                        <p className="text-slate-500 mb-2"># SMTP Configuration</p>
+                        <p className="text-slate-500 mb-2"># Resend (alternative to dashboard config)</p>
+                        <p>EMAIL_PROVIDER=resend</p>
+                        <p>RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxx</p>
+                        <p>SMTP_FROM=noreply@ktmplots.com</p>
+                    </div>
+                    <Note type="tip">Resend's free domain <strong>onboarding@resend.dev</strong> works for testing without domain verification — but you must use your own verified domain for production.</Note>
+
+                    {/* Provider B: SMTP / Gmail */}
+                    <h3 className="text-sm font-bold text-slate-800 mb-3 mt-6 uppercase tracking-widest">Provider B — SMTP / Gmail</h3>
+                    <p className="text-sm text-slate-700 leading-relaxed mb-3">
+                        Use any SMTP server. Gmail works with an App Password on port 587. Note: some cloud hosts (e.g. Railway shared plans) block outbound SMTP ports — use Resend in that case.
+                    </p>
+                    <div className="flex flex-col gap-2 mb-4">
+                        <Step n={1} text="In Settings → Email Services, select SMTP / Gmail as the provider." />
+                        <Step n={2} text="Enter SMTP Host: smtp.gmail.com for Gmail." />
+                        <Step n={3} text="Set Port to 587 and leave Secure (TLS) OFF — Gmail uses STARTTLS on 587." />
+                        <Step n={4} text="Enter your Gmail address as the Username." />
+                        <Step n={5} text="Enter a Gmail App Password as the Password (see below — NOT your regular password)." />
+                        <Step n={6} text="Set Sender Email to your Gmail address." />
+                        <Step n={7} text="Save and test by submitting a lead from the website." />
+                    </div>
+                    <div className="bg-slate-900 rounded-2xl p-4 mb-5 font-mono text-xs text-slate-300 leading-relaxed">
+                        <p className="text-slate-500 mb-2"># Gmail SMTP (alternative to dashboard config)</p>
+                        <p>EMAIL_PROVIDER=smtp</p>
                         <p>SMTP_HOST=smtp.gmail.com</p>
                         <p>SMTP_PORT=587</p>
-                        <p>SMTP_USER=hello@ktmplots.com</p>
-                        <p>SMTP_PASS=your-app-password</p>
-                        <p>SMTP_FROM=hello@ktmplots.com</p>
+                        <p>SMTP_USER=hello@gmail.com</p>
+                        <p>SMTP_PASS=abcdefghijklmnop</p>
+                        <p>SMTP_FROM=hello@gmail.com</p>
                         <p>SMTP_SECURE=false</p>
                     </div>
-                    <Note type="tip">Dashboard settings take priority over environment variables. If both are set, the dashboard values are used.</Note>
 
-                    <h3 className="text-sm font-bold text-slate-800 mb-3 mt-2 uppercase tracking-widest">Gmail — App Password Setup</h3>
-                    <div className="flex flex-col gap-2">
+                    <h3 className="text-sm font-bold text-slate-800 mb-3 uppercase tracking-widest">Gmail — App Password Setup</h3>
+                    <div className="flex flex-col gap-2 mb-4">
                         <Step n={1} text="Go to myaccount.google.com → Security." />
                         <Step n={2} text="Enable 2-Step Verification if not already on." />
-                        <Step n={3} text="Search for 'App Passwords' and create one for 'Mail'." />
-                        <Step n={4} text="Copy the 16-character password and paste it as SMTP_PASS." />
+                        <Step n={3} text="Search for 'App Passwords' and click it." />
+                        <Step n={4} text="Select App: Mail → Generate. Copy the 16-character code (paste without spaces)." />
                     </div>
-                    <Note type="warn">Never use your regular Gmail password as the SMTP password — Google blocks it. Always use an App Password.</Note>
+                    <Note type="warn">Never use your regular Gmail password as SMTP_PASS — Google will reject it. You must use an App Password.</Note>
+                    <Note type="tip" >Dashboard settings always take priority over environment variables. If both are set, the dashboard values are used.</Note>
                 </Card>
 
                 {/* ── SEO ──────────────────────────────────────────────── */}

@@ -791,26 +791,82 @@ export default function SettingsPage() {
                                     <EnvelopeIcon className="h-6 w-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-bold text-slate-900 font-display">SMTP Configuration</h3>
-                                    <p className="text-sm font-medium text-slate-400">Manage transactional email delivery.</p>
+                                    <h3 className="text-xl font-bold text-slate-900 font-display">Email Configuration</h3>
+                                    <p className="text-sm font-medium text-slate-400">Choose your email delivery provider.</p>
                                 </div>
                             </div>
-                            {!isSectionEditing('email', ['smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from']) && (
+                            {!isSectionEditing('email', ['email_provider', 'resend_api_key', 'smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from']) && (
                                 <button
                                     onClick={() => toggleEdit('email')}
                                     className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all"
                                 >
-                                    Edit SMTP
+                                    Edit Email
                                 </button>
                             )}
                         </div>
 
+                        {/* Provider toggle */}
+                        <div className="mb-8 relative z-10">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2 mb-3">Email Provider</p>
+                            <div className="grid grid-cols-2 gap-3 max-w-md">
+                                {(['resend', 'smtp'] as const).map(p => (
+                                    <button
+                                        key={p}
+                                        disabled={!isSectionEditing('email', ['email_provider', 'resend_api_key', 'smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
+                                        onClick={() => setSettings({ ...settings, email_provider: p })}
+                                        className={`py-4 px-5 rounded-2xl border-2 text-left transition-all disabled:cursor-default ${(settings.email_provider || 'smtp') === p
+                                            ? 'border-emerald-500 bg-emerald-50'
+                                            : 'border-slate-100 bg-slate-50 hover:border-slate-200'}`}
+                                    >
+                                        <p className={`text-sm font-bold ${(settings.email_provider || 'smtp') === p ? 'text-emerald-700' : 'text-slate-500'}`}>
+                                            {p === 'resend' ? 'Resend' : 'SMTP / Gmail'}
+                                        </p>
+                                        <p className="text-[10px] text-slate-400 mt-0.5 leading-snug">
+                                            {p === 'resend' ? 'HTTP API — works on all hosts' : 'Traditional SMTP server'}
+                                        </p>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Resend fields */}
+                        {(settings.email_provider || 'smtp') === 'resend' && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 mb-8">
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Resend API Key</label>
+                                    <input
+                                        type="password"
+                                        disabled={!isSectionEditing('email', ['email_provider', 'resend_api_key', 'smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
+                                        value={settings.resend_api_key || ''}
+                                        onChange={(e) => setSettings({ ...settings, resend_api_key: e.target.value })}
+                                        className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-emerald-500/5 focus:bg-white focus:border-emerald-500/20 transition-all disabled:opacity-60"
+                                        placeholder="re_xxxxxxxxxxxxxxxxxxxx"
+                                    />
+                                    <p className="text-[10px] text-slate-400 ml-2">Get your API key from resend.com → API Keys</p>
+                                </div>
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Sender Email (From)</label>
+                                    <input
+                                        type="email"
+                                        disabled={!isSectionEditing('email', ['email_provider', 'resend_api_key', 'smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
+                                        value={settings.smtp_from || ''}
+                                        onChange={(e) => setSettings({ ...settings, smtp_from: e.target.value })}
+                                        className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-emerald-500/5 focus:bg-white focus:border-emerald-500/20 transition-all disabled:opacity-60"
+                                        placeholder="noreply@yourdomain.com"
+                                    />
+                                    <p className="text-[10px] text-slate-400 ml-2">Must be a verified domain in your Resend account</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* SMTP fields */}
+                        {(settings.email_provider || 'smtp') === 'smtp' && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
                             <div className="space-y-3">
                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">SMTP Host</label>
                                 <input
                                     type="text"
-                                    disabled={!isSectionEditing('email', ['smtp_host', 'smtp_user', 'smtp_pass'])}
+                                    disabled={!isSectionEditing('email', ['email_provider', 'resend_api_key', 'smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
                                     value={settings.smtp_host || ''}
                                     onChange={(e) => setSettings({ ...settings, smtp_host: e.target.value })}
                                     className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-emerald-500/5 focus:bg-white focus:border-emerald-500/20 transition-all disabled:opacity-60"
@@ -821,7 +877,7 @@ export default function SettingsPage() {
                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Sender Email (From)</label>
                                 <input
                                     type="email"
-                                    disabled={!isSectionEditing('email', ['smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
+                                    disabled={!isSectionEditing('email', ['email_provider', 'resend_api_key', 'smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
                                     value={settings.smtp_from || ''}
                                     onChange={(e) => setSettings({ ...settings, smtp_from: e.target.value })}
                                     className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-emerald-500/5 focus:bg-white focus:border-emerald-500/20 transition-all disabled:opacity-60"
@@ -832,7 +888,7 @@ export default function SettingsPage() {
                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">SMTP Port</label>
                                 <input
                                     type="text"
-                                    disabled={!isSectionEditing('email', ['smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
+                                    disabled={!isSectionEditing('email', ['email_provider', 'resend_api_key', 'smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
                                     value={settings.smtp_port || ''}
                                     onChange={(e) => setSettings({ ...settings, smtp_port: e.target.value })}
                                     className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-emerald-500/5 focus:bg-white focus:border-emerald-500/20 transition-all disabled:opacity-60"
@@ -843,7 +899,7 @@ export default function SettingsPage() {
                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Username</label>
                                 <input
                                     type="text"
-                                    disabled={!isSectionEditing('email', ['smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
+                                    disabled={!isSectionEditing('email', ['email_provider', 'resend_api_key', 'smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
                                     value={settings.smtp_user || ''}
                                     onChange={(e) => setSettings({ ...settings, smtp_user: e.target.value })}
                                     className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-emerald-500/5 focus:bg-white focus:border-emerald-500/20 transition-all disabled:opacity-60"
@@ -857,7 +913,7 @@ export default function SettingsPage() {
                                 <div className="relative">
                                     <input
                                         type={showSmtpPass ? 'text' : 'password'}
-                                        disabled={!isSectionEditing('email', ['smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
+                                        disabled={!isSectionEditing('email', ['email_provider', 'resend_api_key', 'smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
                                         value={settings.smtp_pass || ''}
                                         onChange={(e) => setSettings({ ...settings, smtp_pass: e.target.value.replace(/\s/g, '') })}
                                         className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl py-4 pl-6 pr-14 text-sm font-bold text-slate-900 focus:outline-none focus:ring-[12px] focus:ring-emerald-500/5 focus:bg-white focus:border-emerald-500/20 transition-all disabled:opacity-60"
@@ -880,7 +936,7 @@ export default function SettingsPage() {
                                 <label className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100 cursor-pointer hover:bg-white transition-colors">
                                     <input
                                         type="checkbox"
-                                        disabled={!isSectionEditing('email', ['smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
+                                        disabled={!isSectionEditing('email', ['email_provider', 'resend_api_key', 'smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from'])}
                                         checked={settings.smtp_secure === 'true'}
                                         onChange={(e) => setSettings({ ...settings, smtp_secure: String(e.target.checked) })}
                                         className="h-5 w-5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
@@ -889,8 +945,9 @@ export default function SettingsPage() {
                                 </label>
                             </div>
                         </div>
+                        )} {/* end SMTP conditional */}
 
-                        {isSectionEditing('email', ['smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from']) && (
+                        {isSectionEditing('email', ['email_provider', 'resend_api_key', 'smtp_host', 'smtp_user', 'smtp_pass', 'smtp_from']) && (
                             <div className="mt-8 flex justify-end gap-4 relative z-10">
                                 <button
                                     onClick={() => handleSave('email')}

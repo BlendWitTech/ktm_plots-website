@@ -1,5 +1,6 @@
 import { Injectable, Logger, Inject, forwardRef } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { SettingsService } from '../settings/settings.service';
 
 @Injectable()
@@ -145,20 +146,40 @@ export class MailService {
     /**
      * Send a raw HTML email (bypasses template wrapper).
      * Prefer sendTemplatedMail for branded outgoing emails.
+     * Automatically uses Resend or SMTP based on the email_provider setting.
      */
     async sendMail(to: string, subject: string, html: string) {
         try {
+            const settings = await this.settingsService.findAll();
+            const provider = (settings['email_provider'] as string) || process.env.EMAIL_PROVIDER || 'smtp';
+            const siteTitle = settings['site_title'] || 'KTM Plots';
+            const fromEmail = settings['smtp_from'] || settings['smtp_user'] || process.env.SMTP_FROM;
+
+            if (!fromEmail) {
+                throw new Error('Sender email (From Email) is missing. Please configure it in Settings → Email Services.');
+            }
+
+            if (provider === 'resend') {
+                const apiKey = (settings['resend_api_key'] as string) || process.env.RESEND_API_KEY;
+                if (!apiKey) throw new Error('Resend API key is not configured. Add it in Settings → Email Services.');
+
+                const resend = new Resend(apiKey);
+                const { error } = await resend.emails.send({
+                    from: `${siteTitle} <${fromEmail}>`,
+                    to,
+                    subject,
+                    html,
+                });
+
+                if (error) throw new Error(error.message);
+                this.logger.log(`Email sent via Resend to ${to}`);
+                return true;
+            }
+
+            // SMTP path
             const transporter = await this.createTransporter();
             if (!transporter) {
                 throw new Error('SMTP is not configured. Please check your system settings.');
-            }
-
-            const settings = await this.settingsService.findAll();
-            const fromEmail = settings['smtp_from'] || settings['smtp_user'];
-            const siteTitle = settings['site_title'] || 'KTM Plots';
-
-            if (!fromEmail) {
-                throw new Error('Sender email (SMTP User or From Email) is missing.');
             }
 
             const info = await transporter.sendMail({
@@ -168,7 +189,7 @@ export class MailService {
                 html,
             });
 
-            this.logger.log(`Email sent to ${to}: ${info.messageId}`);
+            this.logger.log(`Email sent via SMTP to ${to}: ${info.messageId}`);
             return true;
         } catch (error: any) {
             this.logger.error(`Failed to send email to ${to}: ${error.message}`);

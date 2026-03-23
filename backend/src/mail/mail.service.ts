@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject, forwardRef } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { SettingsService } from '../settings/settings.service';
 
@@ -7,7 +7,7 @@ export class MailService {
     private transporter: nodemailer.Transporter;
     private readonly logger = new Logger(MailService.name);
 
-    constructor(private settingsService: SettingsService) { }
+    constructor(@Inject(forwardRef(() => SettingsService)) private settingsService: SettingsService) { }
 
     /**
      * Wraps email content in a branded KTM Plots HTML template.

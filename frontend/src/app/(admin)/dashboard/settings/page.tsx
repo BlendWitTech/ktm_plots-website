@@ -94,47 +94,6 @@ function ClearThemeCacheCard() {
     );
 }
 
-function TestEmailCard() {
-    const { showToast } = useNotification();
-    const [email, setEmail] = React.useState('');
-    const [sending, setSending] = React.useState(false);
-
-    const handleSend = async () => {
-        if (!email) { showToast('Enter a recipient email address', 'error'); return; }
-        setSending(true);
-        try {
-            await apiRequest('/settings/test-email', { method: 'POST', body: { to: email } });
-            showToast(`Test email sent to ${email}`, 'success');
-        } catch (err: any) {
-            showToast(err.message || 'Failed to send test email. Check your SMTP settings.', 'error');
-        } finally {
-            setSending(false);
-        }
-    };
-
-    return (
-        <div className="mt-10 pt-8 border-t border-slate-100 relative z-10">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Send Test Email</p>
-            <div className="flex gap-3 items-center">
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="recipient@example.com"
-                    className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl py-3 px-5 text-sm font-medium text-slate-900 focus:outline-none focus:border-emerald-400 focus:bg-white transition-all"
-                />
-                <button
-                    onClick={handleSend}
-                    disabled={sending}
-                    className="px-6 py-3 bg-slate-900 text-white rounded-2xl font-bold text-[10px] uppercase tracking-widest hover:bg-emerald-600 transition-all disabled:opacity-50 whitespace-nowrap"
-                >
-                    {sending ? 'Sending…' : 'Send Test'}
-                </button>
-            </div>
-            <p className="mt-2 text-[10px] text-slate-400 font-medium">Sends a test email using the currently saved SMTP settings to verify delivery.</p>
-        </div>
-    );
-}
 
 export default function SettingsPage() {
     const [settings, setSettings] = useState<any>({});
@@ -948,8 +907,6 @@ export default function SettingsPage() {
                             </div>
                         )}
 
-                        {/* Test Email */}
-                        <TestEmailCard />
                     </div>
                 )}
 

@@ -28,8 +28,12 @@ export class SettingsController {
     @Post('clear-theme-cache')
     @UseGuards(JwtAuthGuard, PermissionsGuard)
     @RequirePermissions(Permission.SETTINGS_EDIT)
-    clearThemeCache() {
-        return this.settingsService.clearThemeCache();
+    async clearThemeCache() {
+        try {
+            return await this.settingsService.clearThemeCache();
+        } catch (error: any) {
+            throw new BadRequestException(error.message || 'Failed to clear theme cache');
+        }
     }
 
     @Post('test-email')

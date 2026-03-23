@@ -36,11 +36,14 @@ export class CommentsService {
 
     private async sendNewCommentNotification(comment: any) {
         const rows = await this.prisma.setting.findMany({
-            where: { key: { in: ['contact_email', 'smtp_from', 'smtp_user', 'site_title'] } }
+            where: { key: { in: ['contact_email', 'notification_email', 'smtp_from', 'smtp_user', 'site_title'] } }
         });
         const settings: Record<string, string> = Object.fromEntries(rows.map(r => [r.key, r.value]));
-        const adminEmail = settings['contact_email'] || settings['smtp_from'] || settings['smtp_user'];
-        if (!adminEmail) return;
+        const adminEmail = settings['notification_email'] || settings['contact_email'] || settings['smtp_from'] || settings['smtp_user'];
+        if (!adminEmail) {
+            this.logger.warn('Comment notification skipped: no admin email configured (set Contact Email in Settings → General)');
+            return;
+        }
 
         const siteTitle = settings['site_title'] || 'KTM Plots';
         const postTitle = comment.post?.title || 'a blog post';

@@ -26,8 +26,11 @@ export class LeadsService {
 
     private async sendLeadNotification(lead: any) {
         const settings = await this.settingsService.findAll();
-        const adminEmail = settings['contact_email'] || settings['smtp_from'] || settings['smtp_user'];
-        if (!adminEmail) return;
+        const adminEmail = settings['notification_email'] || settings['contact_email'] || settings['smtp_from'] || settings['smtp_user'];
+        if (!adminEmail) {
+            this.logger.warn('Lead notification skipped: no admin email configured (set Contact Email in Settings → General)');
+            return;
+        }
 
         const submittedAt = new Date(lead.createdAt).toLocaleString('en-NP', {
             timeZone: 'Asia/Kathmandu', day: '2-digit', month: 'short', year: 'numeric',

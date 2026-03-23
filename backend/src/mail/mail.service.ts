@@ -129,6 +129,9 @@ export class MailService {
             port: port || 587,
             secure: autoSecure,
             ...(autoSecure === false && { requireTLS: true }),
+            connectionTimeout: 10000,  // 10s — fail fast instead of hanging 2 minutes
+            greetingTimeout: 10000,
+            socketTimeout: 15000,
             auth: {
                 user,
                 pass,

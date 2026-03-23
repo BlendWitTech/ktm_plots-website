@@ -49,7 +49,7 @@ export class CommentsService {
             ? `New reply on "${postTitle}" — ${siteTitle}`
             : `New comment on "${postTitle}" — ${siteTitle}`;
 
-        const reviewUrl = `http://localhost:3000/dashboard/comments`;
+        const reviewUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/dashboard/comments`;
         const innerHtml = `
             <h2 style="margin:0 0 8px;font-size:22px;font-weight:900;color:#1E1E1E;">
                 ${isReply ? '↩ New Reply' : '💬 New Comment'}

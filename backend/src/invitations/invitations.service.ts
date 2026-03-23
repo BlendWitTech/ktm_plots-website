@@ -42,7 +42,8 @@ export class InvitationsService {
                 },
             });
 
-        const inviteLink = `http://localhost:3000/register?token=${token}`;
+        const frontendUrl = (process.env.FRONTEND_URL || process.env.APP_URL || 'http://localhost:3000').replace(/\/$/, '');
+        const inviteLink = `${frontendUrl}/register?token=${token}`;
         const html = `
             <h2 style="margin:0 0 8px;font-size:22px;font-weight:900;color:#1E1E1E;line-height:1.2;">You've Been Invited!</h2>
             <p style="margin:0 0 24px;font-size:14px;color:#6B7280;line-height:1.6;">You have been invited to join the team. Click the button below to accept your invitation and set up your account.</p>
@@ -121,7 +122,8 @@ export class InvitationsService {
             data: { token, expiresAt },
         });
 
-        const inviteLink = `http://localhost:3000/register?token=${token}`;
+        const frontendUrl = (process.env.FRONTEND_URL || process.env.APP_URL || 'http://localhost:3000').replace(/\/$/, '');
+        const inviteLink = `${frontendUrl}/register?token=${token}`;
         const html = `
             <h2 style="margin:0 0 8px;font-size:22px;font-weight:900;color:#1E1E1E;line-height:1.2;">Your Invitation Has Been Refreshed</h2>
             <p style="margin:0 0 24px;font-size:14px;color:#6B7280;line-height:1.6;">Your invitation link has been updated with a new expiry. Click the button below to complete your registration.</p>

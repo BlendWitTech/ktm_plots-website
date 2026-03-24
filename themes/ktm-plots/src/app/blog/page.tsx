@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getPosts, getSiteData, getPostCategories, getSection, isSectionEnabled, type PageRecord, getSeoMeta } from '@/lib/cms';
-import type { Metadata } from 'next';
 import BlogListingClient from '@/components/blog/BlogListingClient';
 
 export async function generateMetadata(): Promise<Metadata> {

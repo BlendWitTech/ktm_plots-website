@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getPlots, getSiteData, getPlotCategories, getSection, isSectionEnabled, type PageRecord, getSeoMeta } from '@/lib/cms';
-import type { Metadata } from 'next';
 import PlotListingClient from '@/components/plots/PlotListingClient';
 
 export async function generateMetadata(): Promise<Metadata> {

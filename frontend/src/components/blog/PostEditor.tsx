@@ -371,6 +371,7 @@ export default function PostEditor({ content, onChange }: { content: string, onC
                 // or maybe they are added by mistake elsewhere.
             }),
             Image.extend({
+                inline: true,
                 draggable: true,
                 addAttributes() {
                     return {

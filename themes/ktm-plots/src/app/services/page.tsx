@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { getSiteData, getSection, isSectionEnabled, type PageRecord, getSeoMeta } from '@/lib/cms';
-import type { Metadata } from 'next';
 import ServicesDetailGrid from '@/components/services/ServicesDetailGrid';
 
 export async function generateMetadata(): Promise<Metadata> {

@@ -102,6 +102,18 @@ h1, h2, h3, h4, h5, h6 {
   border-top: 2px solid #F3F4F6;
   margin: 2em 0;
 }
+/* ── Rich-text image layout (matches CMS editor alignment classes) */
+.prose img.image-align-center { display: block; margin-left: auto; margin-right: auto; }
+.prose img.image-align-half   { display: inline-block !important; vertical-align: top; margin: 0.25% 0.25%; }
+.prose img.image-align-third  { display: inline-block !important; vertical-align: top; margin: 0.25% 0.5%; }
+.prose img.image-align-left   { float: left  !important; display: block; margin: 0.25rem 1.5rem 0.75rem 0; }
+.prose img.image-align-right  { float: right !important; display: block; margin: 0.25rem 0 0.75rem 1.5rem; }
+/* Collapse whitespace between side-by-side inline-block images */
+.prose p:has(img.image-align-half),
+.prose p:has(img.image-align-third) { font-size: 0; line-height: 0; }
+/* Clearfix so floated images don't bleed out of their paragraph */
+.prose p::after { content: ''; display: table; clear: both; }
+
 
 /* ─── Layout ─────────────────────────────────────────────────────── */
 .container {

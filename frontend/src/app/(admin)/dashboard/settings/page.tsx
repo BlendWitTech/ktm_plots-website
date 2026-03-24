@@ -287,7 +287,7 @@ export default function SettingsPage() {
                                         />
                                     </div>
                                     <div className="space-y-3">
-                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">App Tagline <span className="normal-case text-slate-300">(SEO / meta)</span></label>
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Site Tagline <span className="normal-case text-slate-300">(default meta description — overridden per-page in SEO Management)</span></label>
                                         <input
                                             type="text"
                                             disabled={!isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text'])}

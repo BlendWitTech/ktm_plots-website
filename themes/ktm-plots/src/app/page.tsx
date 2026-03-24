@@ -4,7 +4,7 @@ import { getSiteData, getFeaturedPlots, getSection, isSectionEnabled, getSeoMeta
 export async function generateMetadata(): Promise<Metadata> {
   const [siteData, seo] = await Promise.all([getSiteData(), getSeoMeta('static', 'home')]);
   const title = seo?.title || siteData.settings.siteTitle || 'KTM Plots';
-  const description = seo?.description || siteData.settings.metaDescription || "Kathmandu Valley's Trusted Land Partner";
+  const description = seo?.description || siteData.settings.tagline || siteData.settings.metaDescription || "Kathmandu Valley's Trusted Land Partner";
   const ogImg = seo?.ogImages?.[0] || seo?.ogImage;
   return {
     title,

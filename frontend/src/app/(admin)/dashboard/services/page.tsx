@@ -319,7 +319,7 @@ function ServicesPageContent() {
 
                     <div className="space-y-3">
                         <label className="text-sm font-bold text-slate-700">Service Icon</label>
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                             {SERVICE_ICONS.map((item) => {
                                 const isSelected = formData.icon === item.name;
                                 return (

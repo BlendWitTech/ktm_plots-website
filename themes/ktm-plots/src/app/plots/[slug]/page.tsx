@@ -212,48 +212,33 @@ export default async function PlotDetailPage({ params }: Props) {
       {/* ── Main Content ──────────────────────────────────────── */}
       <section style={{ padding: '2.5rem 0 5rem', background: 'var(--color-accent)' }}>
         <div className="container">
+          <div className="plot-detail-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2rem', alignItems: 'start' }}>
 
-          {heroImgUrl ? (
-            /* ══════════════════════════════════════════════════════
-               CENTERED LAYOUT — hero image is shown, key specs are
-               already visible in the overlay above.
-            ══════════════════════════════════════════════════════ */
-            <div className="animate-slide-up" style={{ maxWidth: '860px', margin: '0 auto' }}>
+            {/* ── Left column ── */}
+            <div className="animate-slide-up">
 
-              {/* Gallery */}
-              {allImages.length > 0 && (
+              {/* Gallery or no-image placeholder */}
+              {allImages.length > 0 ? (
                 <div style={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.1)', marginBottom: '1.5rem', background: '#fff' }}>
                   <PlotGallery images={allImages} title={plot.title} />
                 </div>
-              )}
-
-              {/* Inline CTA strip */}
-              <div className="plot-cta-strip" style={{ background: '#FFFFFF', borderRadius: '14px', padding: '1.25rem 1.5rem', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: '1.5rem', display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                {status !== 'sold' ? (
-                  <>
-                    <Link
-                      href={`/contact?plot=${plot.slug}`}
-                      className="btn-primary"
-                      style={{ flex: '1 1 auto', textAlign: 'center', padding: '0.8rem 1.25rem', fontSize: '0.9rem', borderRadius: '10px', fontWeight: 800, minWidth: '180px' }}
-                    >
-                      Enquire About This Plot
-                    </Link>
-                    <Link
-                      href="/contact"
-                      className="btn-outline-dark"
-                      style={{ flex: '1 1 auto', textAlign: 'center', padding: '0.8rem 1.25rem', fontSize: '0.875rem', borderRadius: '10px', minWidth: '160px' }}
-                    >
-                      Schedule Site Visit
-                    </Link>
-                    <WishlistButton plotId={plot.id} variant="inline" />
-                  </>
-                ) : (
-                  <div style={{ flex: 1, textAlign: 'center' }}>
-                    <span style={{ fontWeight: 700, color: '#991B1B', marginRight: '1rem' }}>This plot has been sold.</span>
-                    <Link href="/plots" style={{ color: 'var(--color-primary)', fontSize: '0.875rem', fontWeight: 600, textDecoration: 'none' }}>Browse available plots →</Link>
+              ) : (
+                <div style={{ borderRadius: '16px', background: 'linear-gradient(135deg, var(--color-secondary), #2D0A0A)', marginBottom: '1.5rem', padding: '3rem 2rem', display: 'flex', alignItems: 'center', gap: '2rem', boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
+                  <div style={{ flexShrink: 0, opacity: 0.25 }}>
+                    <svg width="80" height="80" viewBox="0 0 100 100" fill="none" stroke="var(--color-primary)" strokeWidth="1.5">
+                      <rect x="10" y="10" width="80" height="80" rx="4"/>
+                      <line x1="10" y1="50" x2="90" y2="50"/>
+                      <line x1="50" y1="10" x2="50" y2="90"/>
+                    </svg>
                   </div>
-                )}
-              </div>
+                  <div>
+                    <div style={{ color: 'var(--color-primary)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>Property Listing</div>
+                    <div style={{ color: '#FFFFFF', fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.5rem' }}>{plot.title}</div>
+                    {plot.location && <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.85rem' }}>📍 {plot.location}</div>}
+                    <div style={{ marginTop: '1rem', fontSize: '0.78rem', color: 'rgba(255,255,255,0.4)' }}>Contact us to schedule a site visit and see this plot in person.</div>
+                  </div>
+                </div>
+              )}
 
               {/* About This Plot */}
               {(plot.description || plot.content) && (
@@ -284,7 +269,7 @@ export default async function PlotDetailPage({ params }: Props) {
                     </div>
                     <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-secondary)', margin: 0 }}>Plot Specifications</h2>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.75rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '0.75rem' }}>
                     {specs.map((spec) => (
                       <SpecItem key={spec.label} icon={spec.icon} label={spec.label} value={spec.value} />
                     ))}
@@ -301,7 +286,7 @@ export default async function PlotDetailPage({ params }: Props) {
                     </div>
                     <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-secondary)', margin: 0 }}>Additional Details</h2>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.75rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '0.75rem' }}>
                     {extraAttrs.map((attr) => (
                       <div key={attr.label} style={{ padding: '0.875rem', background: '#F9FAFB', borderRadius: '10px', border: '1px solid #F0F0F0' }}>
                         <div style={{ fontSize: '0.6rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>{attr.label}</div>
@@ -312,7 +297,7 @@ export default async function PlotDetailPage({ params }: Props) {
                 </div>
               )}
 
-              {/* Map */}
+              {/* Location Map */}
               {(plot as any).mapUrl && (
                 <div style={{ background: '#FFFFFF', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: '1.5rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1.25rem 1.5rem', borderBottom: '2px solid #F3F4F6' }}>
@@ -357,247 +342,138 @@ export default async function PlotDetailPage({ params }: Props) {
               </div>
             </div>
 
-          ) : (
-            /* ══════════════════════════════════════════════════════
-               2-COLUMN LAYOUT — no hero image; sidebar is the primary
-               info panel with price, specs & CTAs.
-            ══════════════════════════════════════════════════════ */
-            <div className="plot-detail-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2rem', alignItems: 'start' }}>
+            {/* ── Right column: Sticky sidebar ── */}
+            <div className="plot-detail-sidebar animate-slide-up delay-100" style={{ position: 'sticky', top: '5rem' }}>
 
-              {/* ── Left column ── */}
-              <div className="animate-slide-up">
-
-                {/* No-image placeholder with plot identity card */}
-                <div style={{ borderRadius: '16px', background: 'linear-gradient(135deg, var(--color-secondary), #2D0A0A)', marginBottom: '2rem', padding: '3rem 2rem', display: 'flex', alignItems: 'center', gap: '2rem', boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
-                  <div style={{ flexShrink: 0, opacity: 0.25 }}>
-                    <svg width="80" height="80" viewBox="0 0 100 100" fill="none" stroke="var(--color-primary)" strokeWidth="1.5">
-                      <rect x="10" y="10" width="80" height="80" rx="4"/>
-                      <line x1="10" y1="50" x2="90" y2="50"/>
-                      <line x1="50" y1="10" x2="50" y2="90"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div style={{ color: 'var(--color-primary)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>Property Listing</div>
-                    <div style={{ color: '#FFFFFF', fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.5rem' }}>{plot.title}</div>
-                    {plot.location && <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.85rem' }}>📍 {plot.location}</div>}
-                    <div style={{ marginTop: '1rem', fontSize: '0.78rem', color: 'rgba(255,255,255,0.4)' }}>Contact us to schedule a site visit and see this plot in person.</div>
+              {/* Price card */}
+              <div style={{ background: '#FFFFFF', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.1)', marginBottom: '1.25rem' }}>
+                <div style={{ background: 'linear-gradient(135deg, var(--color-primary), #8B0000)', padding: '1.5rem 1.75rem', position: 'relative', overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', right: '-20px', top: '-20px', width: '120px', height: '120px', background: 'rgba(255,255,255,0.05)', borderRadius: '50%' }} />
+                  <div style={{ position: 'absolute', right: '20px', bottom: '-30px', width: '80px', height: '80px', background: 'rgba(255,255,255,0.04)', borderRadius: '50%' }} />
+                  {plot.priceFrom ? (
+                    <>
+                      <div style={{ fontSize: '0.6rem', fontWeight: 700, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.3rem' }}>Starting Price</div>
+                      <div style={{ fontSize: '1.9rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1, position: 'relative' }}>
+                        NPR {Number(plot.priceFrom).toLocaleString('en-NP')}
+                      </div>
+                      {plot.priceTo && (
+                        <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.6)', marginTop: '0.3rem', fontWeight: 500 }}>
+                          Up to NPR {Number(plot.priceTo).toLocaleString('en-NP')}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#FFFFFF' }}>Price on Request</div>
+                  )}
+                  <div style={{ marginTop: '0.875rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(255,255,255,0.15)', borderRadius: '9999px', padding: '0.25rem 0.75rem', fontSize: '0.7rem', fontWeight: 600, color: '#fff' }}>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: statusConfig.dot }} />
+                    {statusConfig.label}
                   </div>
                 </div>
 
-                {/* About This Plot */}
-                {(plot.description || plot.content) && (
-                  <div style={{ background: '#FFFFFF', borderRadius: '16px', padding: '2rem', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: '1.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem', paddingBottom: '1rem', borderBottom: '2px solid #F3F4F6' }}>
-                      <div style={{ width: '36px', height: '36px', background: '#FEE2E2', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <svg width="17" height="17" fill="none" stroke="var(--color-primary)" strokeWidth="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <div style={{ padding: '1.5rem 1.75rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', marginBottom: '1.25rem' }}>
+                    {plot.areaFrom && (
+                      <div style={{ background: '#F9FAFB', borderRadius: '10px', padding: '0.75rem', border: '1px solid #F0F0F0' }}>
+                        <div style={{ fontSize: '0.58rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Area</div>
+                        <div style={{ fontWeight: 800, color: 'var(--color-secondary)', fontSize: '0.85rem', lineHeight: 1.2 }}>
+                          {plot.areaFrom}{plot.areaTo && plot.areaTo !== plot.areaFrom ? `–${plot.areaTo}` : ''}
+                        </div>
                       </div>
-                      <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-secondary)', margin: 0 }}>About This Plot</h2>
-                    </div>
-                    {plot.content ? (
-                      <div
-                        className="prose prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-800 prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-red-600 prose-li:text-slate-600"
-                        dangerouslySetInnerHTML={{ __html: renderContent(plot.content) }}
-                      />
-                    ) : (
-                      <p style={{ color: '#4B5563', lineHeight: 1.8, fontSize: '0.95rem', margin: 0 }}>{plot.description}</p>
+                    )}
+                    {plot.category && (
+                      <div style={{ background: '#F9FAFB', borderRadius: '10px', padding: '0.75rem', border: '1px solid #F0F0F0' }}>
+                        <div style={{ fontSize: '0.58rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Type</div>
+                        <div style={{ fontWeight: 800, color: 'var(--color-secondary)', fontSize: '0.85rem' }}>{plot.category.name}</div>
+                      </div>
+                    )}
+                    {plot.facing && (
+                      <div style={{ background: '#F9FAFB', borderRadius: '10px', padding: '0.75rem', border: '1px solid #F0F0F0' }}>
+                        <div style={{ fontSize: '0.58rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Facing</div>
+                        <div style={{ fontWeight: 800, color: 'var(--color-secondary)', fontSize: '0.85rem' }}>{plot.facing}</div>
+                      </div>
+                    )}
+                    {plot.roadAccess && (
+                      <div style={{ background: '#F9FAFB', borderRadius: '10px', padding: '0.75rem', border: '1px solid #F0F0F0', gridColumn: plot.facing ? 'auto' : '1 / -1' }}>
+                        <div style={{ fontSize: '0.58rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Road</div>
+                        <div style={{ fontWeight: 700, color: 'var(--color-secondary)', fontSize: '0.82rem' }}>{plot.roadAccess}</div>
+                      </div>
+                    )}
+                    {plot.location && (
+                      <div style={{ background: '#F9FAFB', borderRadius: '10px', padding: '0.75rem', border: '1px solid #F0F0F0', gridColumn: '1 / -1' }}>
+                        <div style={{ fontSize: '0.58rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Location</div>
+                        <div style={{ fontWeight: 700, color: 'var(--color-secondary)', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <svg width="11" height="11" fill="none" stroke="var(--color-primary)" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                          {plot.location}
+                        </div>
+                      </div>
                     )}
                   </div>
-                )}
 
-                {/* Plot Specifications */}
-                {specs.length > 0 && (
-                  <div style={{ background: '#FFFFFF', borderRadius: '16px', padding: '2rem', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: '1.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem', paddingBottom: '1rem', borderBottom: '2px solid #F3F4F6' }}>
-                      <div style={{ width: '36px', height: '36px', background: '#FEE2E2', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <svg width="17" height="17" fill="none" stroke="var(--color-primary)" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                      </div>
-                      <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-secondary)', margin: 0 }}>Plot Specifications</h2>
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.75rem' }}>
-                      {specs.map((spec) => (
-                        <SpecItem key={spec.label} icon={spec.icon} label={spec.label} value={spec.value} />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Additional Attributes */}
-                {extraAttrs.length > 0 && (
-                  <div style={{ background: '#FFFFFF', borderRadius: '16px', padding: '2rem', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: '1.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem', paddingBottom: '1rem', borderBottom: '2px solid #F3F4F6' }}>
-                      <div style={{ width: '36px', height: '36px', background: '#FEE2E2', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <svg width="17" height="17" fill="none" stroke="var(--color-primary)" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                      </div>
-                      <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-secondary)', margin: 0 }}>Additional Details</h2>
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.75rem' }}>
-                      {extraAttrs.map((attr) => (
-                        <div key={attr.label} style={{ padding: '0.875rem', background: '#F9FAFB', borderRadius: '10px', border: '1px solid #F0F0F0' }}>
-                          <div style={{ fontSize: '0.6rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>{attr.label}</div>
-                          <div style={{ fontWeight: 700, color: 'var(--color-secondary)', fontSize: '0.875rem' }}>{attr.value}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Why Buy With KTM Plots */}
-                <div style={{ background: 'linear-gradient(135deg, #0F172A, #1E293B)', borderRadius: '16px', padding: '1.75rem 2rem', marginBottom: '1.5rem', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-                    <div style={{ width: '36px', height: '36px', background: 'rgba(204,20,20,0.2)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <svg width="17" height="17" fill="none" stroke="var(--color-primary)" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                    </div>
-                    <h3 style={{ color: '#FFFFFF', fontWeight: 800, fontSize: '1rem', margin: 0 }}>Why Buy With KTM Plots?</h3>
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.6rem' }}>
-                    {trustItems.map((item) => (
-                      <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                        <div style={{ width: '28px', height: '28px', background: 'rgba(204,20,20,0.15)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <svg width="13" height="13" fill="none" stroke="var(--color-primary)" strokeWidth="2" viewBox="0 0 24 24"><path d={item.path}/></svg>
-                        </div>
-                        <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.75)', lineHeight: 1.4 }}>{item.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* ── Right column: Sticky sidebar ── */}
-              <div className="plot-detail-sidebar animate-slide-up delay-100" style={{ position: 'sticky', top: '5rem' }}>
-
-                {/* Price card */}
-                <div style={{ background: '#FFFFFF', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.1)', marginBottom: '1.25rem' }}>
-                  <div style={{ background: 'linear-gradient(135deg, var(--color-primary), #8B0000)', padding: '1.5rem 1.75rem', position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'absolute', right: '-20px', top: '-20px', width: '120px', height: '120px', background: 'rgba(255,255,255,0.05)', borderRadius: '50%' }} />
-                    <div style={{ position: 'absolute', right: '20px', bottom: '-30px', width: '80px', height: '80px', background: 'rgba(255,255,255,0.04)', borderRadius: '50%' }} />
-                    {plot.priceFrom ? (
-                      <>
-                        <div style={{ fontSize: '0.6rem', fontWeight: 700, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.3rem' }}>Starting Price</div>
-                        <div style={{ fontSize: '1.9rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1, position: 'relative' }}>
-                          NPR {Number(plot.priceFrom).toLocaleString('en-NP')}
-                        </div>
-                        {plot.priceTo && (
-                          <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.6)', marginTop: '0.3rem', fontWeight: 500 }}>
-                            Up to NPR {Number(plot.priceTo).toLocaleString('en-NP')}
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#FFFFFF' }}>Price on Request</div>
-                    )}
-                    <div style={{ marginTop: '0.875rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(255,255,255,0.15)', borderRadius: '9999px', padding: '0.25rem 0.75rem', fontSize: '0.7rem', fontWeight: 600, color: '#fff' }}>
-                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: statusConfig.dot }} />
-                      {statusConfig.label}
-                    </div>
-                  </div>
-
-                  <div style={{ padding: '1.5rem 1.75rem' }}>
-                    {/* Key stats grid */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', marginBottom: '1.25rem' }}>
-                      {plot.areaFrom && (
-                        <div style={{ background: '#F9FAFB', borderRadius: '10px', padding: '0.75rem', border: '1px solid #F0F0F0' }}>
-                          <div style={{ fontSize: '0.58rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Area</div>
-                          <div style={{ fontWeight: 800, color: 'var(--color-secondary)', fontSize: '0.85rem', lineHeight: 1.2 }}>
-                            {plot.areaFrom}{plot.areaTo && plot.areaTo !== plot.areaFrom ? `–${plot.areaTo}` : ''}
-                          </div>
-                        </div>
-                      )}
-                      {plot.category && (
-                        <div style={{ background: '#F9FAFB', borderRadius: '10px', padding: '0.75rem', border: '1px solid #F0F0F0' }}>
-                          <div style={{ fontSize: '0.58rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Type</div>
-                          <div style={{ fontWeight: 800, color: 'var(--color-secondary)', fontSize: '0.85rem' }}>{plot.category.name}</div>
-                        </div>
-                      )}
-                      {plot.facing && (
-                        <div style={{ background: '#F9FAFB', borderRadius: '10px', padding: '0.75rem', border: '1px solid #F0F0F0' }}>
-                          <div style={{ fontSize: '0.58rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Facing</div>
-                          <div style={{ fontWeight: 800, color: 'var(--color-secondary)', fontSize: '0.85rem' }}>{plot.facing}</div>
-                        </div>
-                      )}
-                      {plot.roadAccess && (
-                        <div style={{ background: '#F9FAFB', borderRadius: '10px', padding: '0.75rem', border: '1px solid #F0F0F0', gridColumn: plot.facing ? 'auto' : '1 / -1' }}>
-                          <div style={{ fontSize: '0.58rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Road</div>
-                          <div style={{ fontWeight: 700, color: 'var(--color-secondary)', fontSize: '0.82rem' }}>{plot.roadAccess}</div>
-                        </div>
-                      )}
-                      {plot.location && (
-                        <div style={{ background: '#F9FAFB', borderRadius: '10px', padding: '0.75rem', border: '1px solid #F0F0F0', gridColumn: '1 / -1' }}>
-                          <div style={{ fontSize: '0.58rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Location</div>
-                          <div style={{ fontWeight: 700, color: 'var(--color-secondary)', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                            <svg width="11" height="11" fill="none" stroke="var(--color-primary)" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            {plot.location}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* CTAs */}
-                    {status !== 'sold' ? (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                  {status !== 'sold' ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                      <Link
+                        href={`/contact?plot=${plot.slug}`}
+                        className="btn-primary"
+                        style={{ textAlign: 'center', padding: '0.9rem', fontSize: '0.95rem', borderRadius: '10px', fontWeight: 800 }}
+                      >
+                        Enquire About This Plot
+                      </Link>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '0.5rem' }}>
                         <Link
-                          href={`/contact?plot=${plot.slug}`}
-                          className="btn-primary"
-                          style={{ textAlign: 'center', padding: '0.9rem', fontSize: '0.95rem', borderRadius: '10px', fontWeight: 800 }}
+                          href="/contact"
+                          className="btn-outline-dark"
+                          style={{ textAlign: 'center', padding: '0.75rem', fontSize: '0.875rem', borderRadius: '10px' }}
                         >
-                          Enquire About This Plot
+                          Schedule Site Visit
                         </Link>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '0.5rem' }}>
-                          <Link
-                            href="/contact"
-                            className="btn-outline-dark"
-                            style={{ textAlign: 'center', padding: '0.75rem', fontSize: '0.875rem', borderRadius: '10px' }}
-                          >
-                            Schedule Site Visit
-                          </Link>
-                          <WishlistButton plotId={plot.id} variant="inline" />
-                        </div>
+                        <WishlistButton plotId={plot.id} variant="inline" />
                       </div>
-                    ) : (
-                      <div style={{ textAlign: 'center', padding: '1rem', background: '#FEE2E2', borderRadius: '10px' }}>
-                        <div style={{ fontWeight: 700, color: '#991B1B', marginBottom: '0.4rem' }}>This plot has been sold</div>
-                        <Link href="/plots" style={{ color: 'var(--color-primary)', fontSize: '0.875rem', fontWeight: 600, textDecoration: 'none' }}>Browse available plots →</Link>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Quick contact card */}
-                <div style={{ background: '#FFFFFF', borderRadius: '14px', padding: '1.1rem 1.4rem', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: '1.25rem', display: 'flex', gap: '0.875rem', alignItems: 'center' }}>
-                  <div style={{ width: '42px', height: '42px', background: '#FEE2E2', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <svg width="19" height="19" fill="none" stroke="var(--color-primary)" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.69 14a19.79 19.79 0 01-3.07-8.67A2 2 0 013.6 3.18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 10.91a16 16 0 005 5l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
-                    </svg>
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Have Questions?</div>
-                    <div style={{ fontWeight: 700, color: 'var(--color-secondary)', fontSize: '0.875rem' }}>Talk to our team now</div>
-                  </div>
-                  <Link href="/contact" style={{ background: 'var(--color-primary)', color: '#fff', fontSize: '0.72rem', fontWeight: 700, padding: '0.45rem 0.875rem', borderRadius: '7px', textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                    Contact Us
-                  </Link>
-                </div>
-
-                {/* KTM Guarantee */}
-                <div style={{ background: 'var(--color-secondary)', borderRadius: '14px', padding: '1.25rem 1.5rem' }}>
-                  <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.875rem' }}>
-                    KTM Plots Guarantee
-                  </div>
-                  <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
-                    {trustItems.map((item) => (
-                      <li key={item.label} style={{ display: 'flex', gap: '0.5rem', fontSize: '0.78rem', color: 'rgba(255,255,255,0.75)', alignItems: 'center' }}>
-                        <svg width="13" height="13" fill="none" stroke="var(--color-primary)" strokeWidth="2.5" viewBox="0 0 24 24" style={{ flexShrink: 0 }}>
-                          <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                        {item.label}
-                      </li>
-                    ))}
-                  </ul>
+                    </div>
+                  ) : (
+                    <div style={{ textAlign: 'center', padding: '1rem', background: '#FEE2E2', borderRadius: '10px' }}>
+                      <div style={{ fontWeight: 700, color: '#991B1B', marginBottom: '0.4rem' }}>This plot has been sold</div>
+                      <Link href="/plots" style={{ color: 'var(--color-primary)', fontSize: '0.875rem', fontWeight: 600, textDecoration: 'none' }}>Browse available plots →</Link>
+                    </div>
+                  )}
                 </div>
               </div>
 
-            </div>
-          )}
+              {/* Quick contact */}
+              <div style={{ background: '#FFFFFF', borderRadius: '14px', padding: '1.1rem 1.4rem', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: '1.25rem', display: 'flex', gap: '0.875rem', alignItems: 'center' }}>
+                <div style={{ width: '42px', height: '42px', background: '#FEE2E2', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <svg width="19" height="19" fill="none" stroke="var(--color-primary)" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.69 14a19.79 19.79 0 01-3.07-8.67A2 2 0 013.6 3.18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 10.91a16 16 0 005 5l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                  </svg>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Have Questions?</div>
+                  <div style={{ fontWeight: 700, color: 'var(--color-secondary)', fontSize: '0.875rem' }}>Talk to our team now</div>
+                </div>
+                <Link href="/contact" style={{ background: 'var(--color-primary)', color: '#fff', fontSize: '0.72rem', fontWeight: 700, padding: '0.45rem 0.875rem', borderRadius: '7px', textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  Contact Us
+                </Link>
+              </div>
 
+              {/* KTM Guarantee */}
+              <div style={{ background: 'var(--color-secondary)', borderRadius: '14px', padding: '1.25rem 1.5rem' }}>
+                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.875rem' }}>
+                  KTM Plots Guarantee
+                </div>
+                <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+                  {trustItems.map((item) => (
+                    <li key={item.label} style={{ display: 'flex', gap: '0.5rem', fontSize: '0.78rem', color: 'rgba(255,255,255,0.75)', alignItems: 'center' }}>
+                      <svg width="13" height="13" fill="none" stroke="var(--color-primary)" strokeWidth="2.5" viewBox="0 0 24 24" style={{ flexShrink: 0 }}>
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      {item.label}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 

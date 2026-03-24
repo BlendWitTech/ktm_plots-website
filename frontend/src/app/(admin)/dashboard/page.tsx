@@ -271,15 +271,15 @@ export default function DashboardPage() {
                     <div className="bg-white/70 backdrop-blur-xl rounded-[2.5rem] border border-slate-200/50 shadow-2xl shadow-slate-200/40 p-2">
                         {activity.map((item, idx) => (
                             <div key={item.id} className={classNames(
-                                "group p-6 flex items-center justify-between rounded-[2rem] transition-all duration-300 hover:bg-white hover:shadow-lg hover:shadow-slate-200/30",
+                                "group p-4 sm:p-6 flex items-center justify-between rounded-[2rem] transition-all duration-300 hover:bg-white hover:shadow-lg hover:shadow-slate-200/30",
                                 idx !== activity.length - 1 ? "mb-1" : ""
                             )}>
-                                <div className="flex items-center gap-6">
-                                    <div className="h-12 w-12 rounded-2xl bg-slate-100 flex items-center justify-center text-lg font-bold text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-inner ring-1 ring-black/5">
+                                <div className="flex items-center gap-3 sm:gap-6 min-w-0">
+                                    <div className="h-9 w-9 sm:h-12 sm:w-12 shrink-0 rounded-2xl bg-slate-100 flex items-center justify-center text-sm sm:text-lg font-bold text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-inner ring-1 ring-black/5">
                                         {item.user?.name ? item.user.name.charAt(0).toUpperCase() : 'U'}
                                     </div>
-                                    <div className="space-y-0.5">
-                                        <p className="text-sm font-bold text-slate-900 leading-tight">
+                                    <div className="space-y-0.5 min-w-0">
+                                        <p className="text-sm font-bold text-slate-900 leading-tight truncate max-w-[160px] sm:max-w-none">
                                             {item.user?.name || 'Unknown User'} <span className="text-slate-400 font-medium font-sans lowercase"> {humanizeAction(item.action, item.metadata)}</span>
                                         </p>
                                         <div className="flex items-center gap-3 mt-1.5">

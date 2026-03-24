@@ -241,7 +241,7 @@ function FieldEditor({ field, value, onChange, disabled }: {
     if (field.type === 'button') {
         const btn = value || { text: '', url: '' };
         return (
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <input type="text" disabled={disabled} value={btn.text || ''} onChange={(e) => onChange({ ...btn, text: e.target.value })} placeholder="Button label" className={base} />
                 <input type="text" disabled={disabled} value={btn.url || ''} onChange={(e) => onChange({ ...btn, url: e.target.value })} placeholder="/path or URL" className={base} />
             </div>
@@ -614,11 +614,11 @@ export default function SitePagesPage() {
                 </button>
             </div>
 
-            <div className="flex gap-6">
-                {/* Page sidebar — sticky so it stays visible while scrolling through sections */}
-                <div className="w-52 shrink-0">
-                    <div className="sticky top-0 space-y-1.5 pt-4">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 mb-3">Pages</p>
+            <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+                {/* Page sidebar — horizontal scroll on mobile, sticky sidebar on desktop */}
+                <div className="md:w-52 md:shrink-0">
+                    <div className="md:sticky md:top-0 flex md:flex-col flex-row flex-wrap gap-1.5 md:gap-0 md:space-y-1.5 pt-4">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 mb-3 w-full">Pages</p>
                     {pageSchema.map((pageDef) => {
                         const sections = pagesData[pageDef.slug] || {};
                         const enabledCount = Object.values(sections).filter((s) => s.enabled).length;

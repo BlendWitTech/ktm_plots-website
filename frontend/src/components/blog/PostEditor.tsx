@@ -379,12 +379,14 @@ export default function PostEditor({ content, onChange }: { content: string, onC
                         ...this.parent?.(),
                         width: {
                             default: '100%',
+                            parseHTML: element => element.style.width || element.getAttribute('width') || '100%',
                             renderHTML: attributes => ({
                                 style: `width: ${attributes.width};`,
                             }),
                         },
                         align: {
                             default: 'center',
+                            parseHTML: element => element.getAttribute('data-align') || 'center',
                             renderHTML: attributes => ({
                                 'data-align': attributes.align,
                                 class: `image-align-${attributes.align}`,

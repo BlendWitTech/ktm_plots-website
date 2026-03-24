@@ -72,7 +72,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
   const onKey = (e: React.KeyboardEvent) => { if (e.key === 'Enter') handleSearch(); };
 
   return (
-    <section style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#0D0D0D' }}>
+    <section style={{ position: 'relative', overflow: 'hidden', height: '100vh', minHeight: '600px', maxHeight: '1080px', display: 'flex', flexDirection: 'column', background: '#0D0D0D' }}>
 
       {/* ── Background ───────────────────────────────────────── */}
       <>
@@ -121,7 +121,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
       <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: 'linear-gradient(to bottom, var(--color-primary), #8B0000)', zIndex: 3 }} />
 
       {/* ── Main content ─────────────────────────────────────── */}
-      <div className="container hero-content-container" style={{ position: 'relative', zIndex: 4, flex: 1, display: 'grid', gridTemplateColumns: bgUrl ? '1fr' : '1fr 1fr', alignItems: 'center', gap: '3rem', padding: '7rem 1.5rem 5rem' }}>
+      <div className="container hero-content-container" style={{ position: 'relative', zIndex: 4, flex: 1, display: 'grid', gridTemplateColumns: bgUrl ? '1fr' : '1fr 1fr', alignItems: 'center', gap: '3rem', padding: '5rem 1.5rem 3rem', minHeight: 0 }}>
         <div className="hero-text-col" style={{ maxWidth: bgUrl ? '640px' : 'none' }}>
 
           {/* Trust badge */}
@@ -141,7 +141,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
           </h1>
 
           {/* Subtitle */}
-          <p className="animate-slide-up delay-200" style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.5)', marginBottom: '2.25rem', maxWidth: '520px', lineHeight: 1.85, fontWeight: 400 }}>
+          <p className="animate-slide-up delay-200" style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.5)', marginBottom: '1.5rem', maxWidth: '520px', lineHeight: 1.7, fontWeight: 400 }}>
             {subtitle}
           </p>
 
@@ -153,7 +153,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
             border: '1px solid rgba(255,255,255,0.12)',
             borderRadius: '16px',
             overflow: 'hidden',
-            marginBottom: '2.5rem',
+            marginBottom: '1.75rem',
             boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
           }}>
 
@@ -272,7 +272,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
           </div>
 
           {/* Secondary CTA buttons */}
-          <div className="animate-fade-in delay-400" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '4rem', flexWrap: 'wrap' }}>
+          <div className="animate-fade-in delay-400" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0', flexWrap: 'wrap' }}>
             <Link
               href={cta2Url}
               style={{

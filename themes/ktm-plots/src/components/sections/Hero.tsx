@@ -74,7 +74,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
   return (
     <section style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#0D0D0D' }}>
 
-      {/* ── Background (always dark gradient) ────────────────── */}
+      {/* ── Background ───────────────────────────────────────── */}
       <>
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #1A1A1A 0%, var(--color-secondary) 60%, #221010 100%)' }} />
         <div style={{ position: 'absolute', right: '-5%', top: '10%', width: '65%', height: '80%', background: 'radial-gradient(ellipse at center, rgba(204,20,20,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -92,12 +92,37 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
         <div style={{ position: 'absolute', left: 0, top: 0, width: '55%', height: '100%', background: 'radial-gradient(ellipse at left center, var(--color-secondary) 30%, transparent 70%)', pointerEvents: 'none' }} />
       </>
 
+      {/* ── Full-bleed image panel (image mode) ──────────────── */}
+      {bgUrl && (
+        <div className="hero-image-panel" style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '55%', zIndex: 2, clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)' }}>
+          <Image src={bgUrl} alt="Hero" fill style={{ objectFit: 'cover', objectPosition: 'center' }} priority />
+          {/* Left-edge blend into dark background */}
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(13,13,13,0.85) 0%, rgba(13,13,13,0.3) 30%, transparent 60%)' }} />
+          {/* Bottom vignette */}
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '45%', background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%)' }} />
+          {/* Bottom-right info overlay */}
+          <div style={{ position: 'absolute', bottom: '2.5rem', right: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+            <div style={{ background: 'var(--color-primary)', color: '#fff', fontSize: '0.65rem', fontWeight: 800, padding: '0.3rem 0.875rem', borderRadius: '100px', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              ✓ Verified Listings
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              {bottomBanner.slice(0, 2).map((b) => (
+                <div key={b.label} style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.85)', borderRadius: '8px', padding: '0.4rem 0.75rem', fontSize: '0.7rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <span>{b.value}</span>
+                  <span>{b.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '32px 32px', pointerEvents: 'none', zIndex: 1 }} />
       <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: 'linear-gradient(to bottom, var(--color-primary), #8B0000)', zIndex: 3 }} />
 
       {/* ── Main content ─────────────────────────────────────── */}
-      <div className="container hero-content-container" style={{ position: 'relative', zIndex: 4, flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', gap: '3rem', padding: '7rem 1.5rem 5rem' }}>
-        <div className="hero-text-col">
+      <div className="container hero-content-container" style={{ position: 'relative', zIndex: 4, flex: 1, display: 'grid', gridTemplateColumns: bgUrl ? '1fr' : '1fr 1fr', alignItems: 'center', gap: '3rem', padding: '7rem 1.5rem 5rem' }}>
+        <div className="hero-text-col" style={{ maxWidth: bgUrl ? '640px' : 'none' }}>
 
           {/* Trust badge */}
           <div className="animate-slide-right hero-trust-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(204,20,20,0.12)', border: '1px solid rgba(204,20,20,0.3)', borderRadius: '100px', padding: '0.35rem 0.9rem 0.35rem 0.5rem', marginBottom: '1.75rem', maxWidth: '100%' }}>
@@ -292,43 +317,9 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
 
         </div>
 
-        {/* ── Right column: hero image frame OR property card ── */}
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          {bgUrl ? (
-            /* ── Hero image displayed in a styled frame ── */
-            <div className="animate-fade-in delay-300 hero-noimage-brandmark" style={{ width: '100%', maxWidth: '480px', position: 'relative' }}>
-              {/* Decorative glow behind the image */}
-              <div style={{ position: 'absolute', inset: '-24px', background: 'radial-gradient(ellipse at center, rgba(204,20,20,0.22) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
-
-              {/* Image card */}
-              <div style={{ position: 'relative', zIndex: 1, borderRadius: '22px', overflow: 'hidden', boxShadow: '0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.08)', aspectRatio: '4/3' }}>
-                <Image src={bgUrl} alt="Hero" fill style={{ objectFit: 'cover', objectPosition: 'center' }} priority />
-                {/* Subtle inner gradient overlay */}
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(175deg, transparent 55%, rgba(0,0,0,0.65) 100%)' }} />
-                {/* Bottom info strip */}
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.5rem 1.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                  <div>
-                    <div style={{ color: '#fff', fontWeight: 800, fontSize: '1rem', lineHeight: 1.2, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>Premium Land Plots</div>
-                    <div style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.72rem', marginTop: '0.2rem', fontWeight: 500 }}>Kathmandu Valley</div>
-                  </div>
-                  <div style={{ background: 'var(--color-primary)', color: '#fff', fontSize: '0.65rem', fontWeight: 800, padding: '0.3rem 0.8rem', borderRadius: '100px', letterSpacing: '0.07em', textTransform: 'uppercase', flexShrink: 0 }}>
-                    ✓ Verified
-                  </div>
-                </div>
-              </div>
-
-              {/* Stats chips below the image */}
-              <div style={{ display: 'flex', gap: '0.6rem', marginTop: '0.875rem', flexWrap: 'wrap' }}>
-                {bottomBanner.slice(0, 4).map((b) => (
-                  <div key={b.label} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.13)', color: 'rgba(255,255,255,0.75)', borderRadius: '10px', padding: '0.5rem 0.875rem', fontSize: '0.72rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.4rem', flex: '1 1 auto' }}>
-                    <span style={{ fontSize: '0.95rem' }}>{b.value}</span>
-                    <span>{b.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            /* ── Floating property card (no hero image) ── */
+        {/* ── Right column: property card (no-image mode only) ── */}
+        {!bgUrl && (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div className="animate-fade-in delay-300 animate-float-slow hero-noimage-brandmark" style={{ width: '100%', maxWidth: '390px' }}>
 
               <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '1.25rem', marginBottom: '0.875rem', boxShadow: '0 20px 48px rgba(0,0,0,0.28)' }}>
@@ -395,8 +386,8 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
                 </div>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* ── Bottom stats strip (no-image mode) ──────────────── */}
@@ -424,6 +415,9 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
       <style>{`
         .hero-search-widget input::placeholder { color: rgba(255,255,255,0.35); }
         .hero-status-wrap select option { background: var(--color-secondary); color: #fff; }
+        @media (max-width: 768px) {
+          .hero-image-panel { display: none !important; }
+        }
 
         /* ── Mobile: hero title & badge ─────────────────────────── */
         @media (max-width: 480px) {

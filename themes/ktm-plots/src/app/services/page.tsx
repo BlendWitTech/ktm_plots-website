@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getSiteData, getSection, isSectionEnabled, type PageRecord, getSeoMeta } from '@/lib/cms';
 import ServicesDetailGrid from '@/components/services/ServicesDetailGrid';

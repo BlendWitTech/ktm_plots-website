@@ -376,33 +376,11 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
                 ))}
               </div>
 
-              <div className="animate-pulse-glow" style={{ marginTop: '0.875rem', background: 'var(--color-primary)', borderRadius: '12px', padding: '0.875rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.875rem', boxShadow: '0 8px 24px rgba(204,20,20,0.35)' }}>
-                <div style={{ width: '36px', height: '36px', background: 'rgba(255,255,255,0.15)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <svg width="18" height="18" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                </div>
-                <div>
-                  <div style={{ color: '#fff', fontWeight: 800, fontSize: '0.9rem' }}>50+ Active Listings</div>
-                  <div style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.7rem' }}>Across Kathmandu Valley</div>
-                </div>
-              </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* ── Bottom stats strip (no-image mode) ──────────────── */}
-      {!bgUrl && bottomBanner.length > 0 && (
-        <div style={{ position: 'relative', zIndex: 4, borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(12px)', padding: '1.25rem 0' }}>
-          <div className="container hero-banner-strip" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap', padding: '0 1.5rem' }}>
-            {bottomBanner.map((b) => (
-              <div key={b.label} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ fontSize: '1.1rem' }}>{b.value}</span>
-                <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.78rem', fontWeight: 600, letterSpacing: '0.04em' }}>{b.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Scroll indicator */}
       <div className="animate-bounce-mouse" style={{ position: 'absolute', bottom: '1.5rem', left: '50%', zIndex: 4 }}>

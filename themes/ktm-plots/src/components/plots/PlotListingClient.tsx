@@ -278,7 +278,8 @@ export default function PlotListingClient({
         @keyframes spin { to { transform: rotate(360deg); } }
         .plot-card { text-decoration: none; display: flex; flex-direction: column; background: #FFFFFF; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.07); transition: transform 0.22s ease, box-shadow 0.22s ease; }
         .plot-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(204,20,20,0.13); }
-        .plots-listing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.75rem; }
+        .plots-listing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; }
+        @media (max-width: 900px) { .plots-listing-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 580px) { .plots-listing-grid { grid-template-columns: 1fr; } }
       `}</style>
     </>

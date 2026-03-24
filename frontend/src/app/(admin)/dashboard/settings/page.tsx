@@ -85,7 +85,7 @@ function ClearThemeCacheCard() {
             <button
                 onClick={handleClear}
                 disabled={clearing}
-                className="w-full flex items-center justify-center gap-2 bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all disabled:opacity-60 disabled:bg-slate-50/80 disabled:cursor-default"
+                className="w-full flex items-center justify-center gap-2 bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
                 <ArrowPathIcon className={`h-4 w-4 ${clearing ? 'animate-spin' : ''}`} />
                 {clearing ? 'Clearing Cache…' : 'Clear Theme Cache'}

@@ -72,7 +72,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
   const onKey = (e: React.KeyboardEvent) => { if (e.key === 'Enter') handleSearch(); };
 
   return (
-    <section style={{ position: 'relative', overflow: 'hidden', height: '100vh', minHeight: '600px', maxHeight: '1080px', display: 'flex', flexDirection: 'column', background: '#0D0D0D' }}>
+    <section style={{ position: 'relative', overflow: 'hidden', height: 'calc(100vh - 72px)', minHeight: '560px', maxHeight: 'calc(1080px - 72px)', display: 'flex', flexDirection: 'column', background: '#0D0D0D' }}>
 
       {/* ── Background ───────────────────────────────────────── */}
       <>
@@ -405,7 +405,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
       )}
 
       {/* Scroll indicator */}
-      <div className="animate-bounce-mouse" style={{ position: 'absolute', bottom: '2.5rem', left: '50%', zIndex: 4 }}>
+      <div className="animate-bounce-mouse" style={{ position: 'absolute', bottom: '1.5rem', left: '50%', zIndex: 4 }}>
         <svg width="22" height="34" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" viewBox="0 0 22 36">
           <rect x="1" y="1" width="20" height="34" rx="10" />
           <line x1="11" y1="8" x2="11" y2="15" strokeWidth="2.5" strokeLinecap="round" stroke="rgba(255,255,255,0.5)" />

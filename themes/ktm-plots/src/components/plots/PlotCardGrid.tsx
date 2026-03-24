@@ -26,7 +26,7 @@ export default function PlotCardGrid({ plots, total }: Props) {
         Showing {plots.length} of {total} plots
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.75rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.75rem' }}>
         {plots.map((plot, idx) => {
           const imgUrl = getImageUrl(plot.featuredImageUrl);
           return (

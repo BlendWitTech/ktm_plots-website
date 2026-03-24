@@ -485,7 +485,7 @@ export default function PostEditor({ content, onChange }: { content: string, onC
     const handleSelectImage = (url: string) => {
         if (editor) {
             const isVideo = url.match(/\.(mp4|webm|ogg)$/i);
-            const isImageSelected = editor.state.selection?.node?.type?.name === 'image';
+            const isImageSelected = (editor.state.selection as any)?.node?.type?.name === 'image';
             if (isVideo) {
                 // @ts-ignore
                 editor.chain().focus().setVideo({ src: url }).run();

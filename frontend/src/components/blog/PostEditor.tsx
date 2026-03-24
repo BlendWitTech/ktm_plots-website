@@ -367,11 +367,12 @@ export default function PostEditor({ content, onChange }: { content: string, onC
                     keepAttributes: false,
                 },
                 codeBlock: false,
-                // link and underline are not usually in StarterKit, but if the user has a custom one, disabling here is safe
-                // or maybe they are added by mistake elsewhere.
+                link: false,
+                underline: false,
             }),
             Image.extend({
                 inline: true,
+                group: 'inline',
                 draggable: true,
                 addAttributes() {
                     return {

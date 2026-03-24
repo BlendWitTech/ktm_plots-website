@@ -61,7 +61,7 @@ function BlogPageContent() {
         categories: [],
         tags: [],
         publishedAt: '',
-        seo: { title: '', description: '' }
+        seo: { title: '', description: '', keywords: [] as string[], ogImage: '', ogImages: [] as string[] }
     };
     const [formData, setFormData] = useState<any>(defaultFormData);
     const [initialState, setInitialState] = useState<any>(defaultFormData);
@@ -157,7 +157,7 @@ function BlogPageContent() {
             categories: post.categories?.map((c: any) => c.id) || [],
             tags: post.tags?.map((t: any) => t.name) || [],
             publishedAt: post.publishedAt || '',
-            seo: { title: post.seo?.title || '', description: post.seo?.description || '' }
+            seo: { title: post.seo?.title || '', description: post.seo?.description || '', keywords: post.seo?.keywords || [], ogImage: post.seo?.ogImage || '', ogImages: post.seo?.ogImages || [] }
         };
         setFormData(data);
         setInitialState(data);
@@ -211,7 +211,7 @@ function BlogPageContent() {
             const payload = {
                 ...formData,
                 publishedAt: formData.publishedAt ? new Date(formData.publishedAt).toISOString() : undefined,
-                seo: (!formData.seo.title && !formData.seo.description) ? undefined : formData.seo
+                seo: (!formData.seo.title && !formData.seo.description && !formData.seo.ogImage && !formData.seo.keywords?.length) ? undefined : formData.seo
             };
 
             await apiRequest(url, {
@@ -515,7 +515,7 @@ function BlogPageContent() {
                             <div className="space-y-3">
                                 <div>
                                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Meta Title</label>
-                                     <input
+                                    <input
                                         type="text"
                                         value={formData.seo.title}
                                         disabled={isReadOnly}
@@ -527,7 +527,7 @@ function BlogPageContent() {
                                 </div>
                                 <div>
                                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Meta Description</label>
-                                     <textarea
+                                    <textarea
                                         value={formData.seo.description}
                                         disabled={isReadOnly}
                                         onChange={(e) => setFormData({ ...formData, seo: { ...formData.seo, description: e.target.value } })}
@@ -536,6 +536,42 @@ function BlogPageContent() {
                                         placeholder="Brief description for search results"
                                     />
                                     <p className="text-[10px] text-slate-400 mt-1 text-right">{formData.seo.description.length}/160</p>
+                                </div>
+                                <div>
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Keywords</label>
+                                    <div className="flex flex-wrap gap-1 mt-1 mb-1">
+                                        {(formData.seo.keywords || []).map((kw: string, i: number) => (
+                                            <span key={i} className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-100">
+                                                {kw}
+                                                <button type="button" disabled={isReadOnly} onClick={() => setFormData({ ...formData, seo: { ...formData.seo, keywords: formData.seo.keywords.filter((_: string, j: number) => j !== i) } })} className="hover:text-red-500 disabled:opacity-50">×</button>
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <input
+                                        type="text"
+                                        disabled={isReadOnly}
+                                        placeholder="Type keyword and press Enter…"
+                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-blue-600/10 disabled:opacity-50"
+                                        onKeyDown={(e) => {
+                                            if ((e.key === 'Enter' || e.key === ',') && (e.target as HTMLInputElement).value.trim()) {
+                                                e.preventDefault();
+                                                const kw = (e.target as HTMLInputElement).value.trim();
+                                                setFormData({ ...formData, seo: { ...formData.seo, keywords: [...(formData.seo.keywords || []), kw] } });
+                                                (e.target as HTMLInputElement).value = '';
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">OG Image URL</label>
+                                    <input
+                                        type="url"
+                                        value={formData.seo.ogImage || ''}
+                                        disabled={isReadOnly}
+                                        onChange={(e) => setFormData({ ...formData, seo: { ...formData.seo, ogImage: e.target.value } })}
+                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-blue-600/10 disabled:opacity-50"
+                                        placeholder="https://…/og-image.jpg (for social sharing)"
+                                    />
                                 </div>
                             </div>
                         </div>

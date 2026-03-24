@@ -17,7 +17,7 @@ import { apiRequest } from '@/lib/api';
 import Link from 'next/link';
 import { useNotification } from '@/context/NotificationContext';
 
-interface SeoMeta { title?: string; description?: string; ogImage?: string; }
+interface SeoMeta { title?: string; description?: string; keywords?: string[]; ogImage?: string; ogImages?: string[]; }
 interface ContentItem {
     id: string; title: string; slug: string; type: string; status: string;
     seo: SeoMeta | null;
@@ -58,8 +58,12 @@ function InlineSeoEditor({
     const [meta, setMeta] = useState<SeoMeta>({
         title: item.seo?.title || '',
         description: item.seo?.description || '',
+        keywords: item.seo?.keywords || [],
         ogImage: item.seo?.ogImage || '',
+        ogImages: item.seo?.ogImages || [],
     });
+    const [kwInput, setKwInput] = useState('');
+    const [ogImgInput, setOgImgInput] = useState('');
     const [saving, setSaving] = useState(false);
 
     const handleSave = async () => {
@@ -106,7 +110,32 @@ function InlineSeoEditor({
                         />
                     </div>
                     <div>
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">OG Image URL</label>
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Keywords</label>
+                        <div className="flex flex-wrap gap-1 mb-1">
+                            {(meta.keywords || []).map((kw, i) => (
+                                <span key={i} className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full border border-indigo-100">
+                                    {kw}
+                                    <button type="button" onClick={() => setMeta(m => ({ ...m, keywords: (m.keywords || []).filter((_, j) => j !== i) }))} className="hover:text-red-500">×</button>
+                                </span>
+                            ))}
+                        </div>
+                        <input
+                            type="text"
+                            value={kwInput}
+                            onChange={e => setKwInput(e.target.value)}
+                            onKeyDown={e => {
+                                if ((e.key === 'Enter' || e.key === ',') && kwInput.trim()) {
+                                    e.preventDefault();
+                                    setMeta(m => ({ ...m, keywords: [...(m.keywords || []), kwInput.trim()] }));
+                                    setKwInput('');
+                                }
+                            }}
+                            placeholder="Type keyword and press Enter…"
+                            className="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none transition-colors"
+                        />
+                    </div>
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">OG Image (Primary)</label>
                         <input
                             type="url"
                             value={meta.ogImage || ''}
@@ -114,6 +143,31 @@ function InlineSeoEditor({
                             placeholder="https://…/og-image.jpg"
                             className="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none transition-colors"
                         />
+                    </div>
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Additional OG Images</label>
+                        <div className="flex flex-col gap-1 mb-1">
+                            {(meta.ogImages || []).map((url, i) => (
+                                <div key={i} className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1">
+                                    <span className="flex-1 text-xs text-slate-600 truncate">{url}</span>
+                                    <button type="button" onClick={() => setMeta(m => ({ ...m, ogImages: (m.ogImages || []).filter((_, j) => j !== i) }))} className="text-slate-400 hover:text-red-500 text-xs font-bold">×</button>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="flex gap-2">
+                            <input
+                                type="url"
+                                value={ogImgInput}
+                                onChange={e => setOgImgInput(e.target.value)}
+                                placeholder="https://…/another-og-image.jpg"
+                                className="flex-1 border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none transition-colors"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => { if (ogImgInput.trim()) { setMeta(m => ({ ...m, ogImages: [...(m.ogImages || []), ogImgInput.trim()] })); setOgImgInput(''); } }}
+                                className="bg-indigo-50 text-indigo-600 px-3 py-2 rounded-xl text-xs font-bold hover:bg-indigo-100 border border-indigo-200"
+                            >Add</button>
+                        </div>
                     </div>
                 </div>
                 <div className="flex gap-2 mt-4">

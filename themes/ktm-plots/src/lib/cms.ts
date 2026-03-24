@@ -87,7 +87,7 @@ export interface Post {
   createdAt: string;
   author?: { name: string };
   categories?: { name: string; slug: string }[];
-  seo?: { title?: string; description?: string; ogImage?: string } | null;
+  seo?: { title?: string; description?: string; keywords?: string[]; ogImage?: string; ogImages?: string[] } | null;
 }
 
 export interface Project {
@@ -109,7 +109,7 @@ export interface Project {
   roadAccess: string | null;
   attributes: Record<string, string | number | boolean> | null;
   category?: { name: string; slug: string };
-  seo?: { title?: string; description?: string } | null;
+  seo?: { title?: string; description?: string; keywords?: string[]; ogImage?: string; ogImages?: string[] } | null;
   createdAt: string;
   plotNumber: string | null;
   landType: string | null;
@@ -307,6 +307,27 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     const p = await res.json();
     if (!p) return null;
     return { ...p, featuredImageUrl: p.featuredImageUrl ?? p.coverImage ?? null };
+  } catch {
+    return null;
+  }
+}
+
+export interface SeoMetaData {
+  title?: string;
+  description?: string;
+  keywords?: string[];
+  ogImage?: string;
+  ogImages?: string[];
+}
+
+export async function getSeoMeta(pageType: string, pageId?: string): Promise<SeoMetaData | null> {
+  try {
+    const path = pageId
+      ? `${API}/seo-meta/${encodeURIComponent(pageType)}/${encodeURIComponent(pageId)}`
+      : `${API}/seo-meta/${encodeURIComponent(pageType)}`;
+    const res = await fetch(path, { next: { revalidate: 10 } });
+    if (!res.ok) return null;
+    return res.json();
   } catch {
     return null;
   }

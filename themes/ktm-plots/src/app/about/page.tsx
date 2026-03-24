@@ -1,15 +1,12 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { getSiteData, getImageUrl, getSection, isSectionEnabled, type PageRecord } from '@/lib/cms';
+import { getSiteData, getImageUrl, getSection, isSectionEnabled, getSeoMeta, type PageRecord } from '@/lib/cms';
 import Services from '@/components/sections/Services';
 import AnimatedStatsStrip from '@/components/ui/AnimatedStatsStrip';
 import Link from 'next/link';
 import TeamSocialIcons from '@/components/ui/TeamSocialIcons';
 
-export const metadata: Metadata = {
-  title: 'About Us',
-  description: "Learn about KTM Plots — our story, mission, and the team behind Kathmandu Valley's trusted land partner.",
-};
+undefined
 
 // Fallback team if CMS team module is not enabled or empty
 const FALLBACK_TEAM = [

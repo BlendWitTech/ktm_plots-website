@@ -1,12 +1,21 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getPosts, getSiteData, getPostCategories, getSection, isSectionEnabled, type PageRecord } from '@/lib/cms';
+import { getPosts, getSiteData, getPostCategories, getSection, isSectionEnabled, type PageRecord, getSeoMeta } from '@/lib/cms';
+import type { Metadata } from 'next';
 import BlogListingClient from '@/components/blog/BlogListingClient';
 
-export const metadata: Metadata = {
-  title: 'Blog',
-  description: 'Expert insights on land investment, property buying, and real estate in Nepal.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getSeoMeta('static', 'blog');
+  const title = seo?.title || 'Blog | KTM Plots';
+  const description = seo?.description || 'Expert insights on land investment, property buying, and real estate in Nepal.';
+  const ogImg = seo?.ogImages?.[0] || seo?.ogImage;
+  return {
+    title, description,
+    ...(seo?.keywords?.length && { keywords: seo.keywords }),
+    openGraph: { title, description, type: 'website', ...(ogImg && { images: [{ url: ogImg, width: 1200, height: 630, alt: title }] }) },
+    twitter: { card: 'summary_large_image', title, description, ...(ogImg && { images: [ogImg] }) },
+  };
+}
 
 interface Props {
   searchParams: Promise<{ page?: string; category?: string }>;

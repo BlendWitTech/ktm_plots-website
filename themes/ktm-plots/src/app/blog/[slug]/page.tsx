@@ -16,14 +16,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const metaTitle = post.seo?.title || post.title;
   const metaDesc = post.seo?.description || post.excerpt || undefined;
   const imgUrl = getImageUrl(post.seo?.ogImage || post.featuredImageUrl);
+  const keywords = post.seo?.keywords;
+  const ogImages = post.seo?.ogImages?.length
+    ? post.seo.ogImages.map(u => ({ url: u, width: 1200, height: 630, alt: metaTitle }))
+    : imgUrl ? [{ url: imgUrl, width: 1200, height: 630, alt: metaTitle }] : undefined;
   return {
     title: metaTitle,
     description: metaDesc,
+    ...(keywords?.length && { keywords }),
     openGraph: {
       title: metaTitle,
       description: metaDesc,
       type: 'article',
-      ...(imgUrl && { images: [{ url: imgUrl, width: 1200, height: 630, alt: metaTitle }] }),
+      ...(ogImages && { images: ogImages }),
     },
     twitter: {
       card: 'summary_large_image',

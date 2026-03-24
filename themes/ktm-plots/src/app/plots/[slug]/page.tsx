@@ -17,17 +17,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const seo = plot.seo;
   const metaTitle = seo?.title || plot.title;
   const description = seo?.description || plot.description || `${plot.title} — verified land plot in Kathmandu Valley.`;
-  const imageUrl = getImageUrl(plot.featuredImageUrl);
+  const ogImgUrl = getImageUrl(seo?.ogImage || plot.featuredImageUrl);
+  const ogImages = seo?.ogImages?.length
+    ? seo.ogImages.map(u => ({ url: u, width: 1200, height: 630, alt: metaTitle }))
+    : ogImgUrl ? [{ url: ogImgUrl, width: 1200, height: 630, alt: metaTitle }] : undefined;
   return {
     title: metaTitle,
     description,
-    openGraph: {
-      title: metaTitle,
-      description,
-      type: 'article',
-      ...(imageUrl && { images: [{ url: imageUrl, width: 1200, height: 630, alt: plot.title }] }),
-    },
-    twitter: { card: 'summary_large_image', title: metaTitle, description, ...(imageUrl && { images: [imageUrl] }) },
+    ...(seo?.keywords?.length && { keywords: seo.keywords }),
+    openGraph: { title: metaTitle, description, type: 'article', ...(ogImages && { images: ogImages }) },
+    twitter: { card: 'summary_large_image', title: metaTitle, description, ...(ogImgUrl && { images: [ogImgUrl] }) },
   };
 }
 

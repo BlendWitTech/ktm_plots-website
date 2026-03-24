@@ -1,8 +1,20 @@
 import Link from 'next/link';
-import { getSiteData, getSection, isSectionEnabled, type PageRecord } from '@/lib/cms';
+import { getSiteData, getSection, isSectionEnabled, type PageRecord, getSeoMeta } from '@/lib/cms';
+import type { Metadata } from 'next';
 import ServicesDetailGrid from '@/components/services/ServicesDetailGrid';
 
-export const metadata = { title: 'Our Services | KTM Plots' };
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getSeoMeta('static', 'services');
+  const title = seo?.title || 'Our Services | KTM Plots';
+  const description = seo?.description || 'Professional land plot services in Kathmandu Valley.';
+  const ogImg = seo?.ogImages?.[0] || seo?.ogImage;
+  return {
+    title, description,
+    ...(seo?.keywords?.length && { keywords: seo.keywords }),
+    openGraph: { title, description, type: 'website', ...(ogImg && { images: [{ url: ogImg, width: 1200, height: 630, alt: title }] }) },
+    twitter: { card: 'summary_large_image', title, description, ...(ogImg && { images: [ogImg] }) },
+  };
+}
 
 const ALL_SERVICES = [
   {

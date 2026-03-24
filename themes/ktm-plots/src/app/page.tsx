@@ -1,4 +1,24 @@
-import { getSiteData, getFeaturedPlots, getSection, isSectionEnabled, type PageRecord } from '@/lib/cms';
+import type { Metadata } from 'next';
+import { getSiteData, getFeaturedPlots, getSection, isSectionEnabled, getSeoMeta, type PageRecord } from '@/lib/cms';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [siteData, seo] = await Promise.all([getSiteData(), getSeoMeta('static', 'home')]);
+  const title = seo?.title || siteData.settings.siteTitle || 'KTM Plots';
+  const description = seo?.description || siteData.settings.metaDescription || "Kathmandu Valley's Trusted Land Partner";
+  const ogImg = seo?.ogImages?.[0] || seo?.ogImage;
+  return {
+    title,
+    description,
+    ...(seo?.keywords?.length && { keywords: seo.keywords }),
+    openGraph: {
+      title: seo?.title || title,
+      description,
+      type: 'website',
+      ...(ogImg && { images: [{ url: ogImg, width: 1200, height: 630, alt: title }] }),
+    },
+    twitter: { card: 'summary_large_image', title, description, ...(ogImg && { images: [ogImg] }) },
+  };
+}
 import Hero from '@/components/sections/Hero';
 import About from '@/components/sections/About';
 import Services from '@/components/sections/Services';

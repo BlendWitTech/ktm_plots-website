@@ -53,7 +53,7 @@ function PlotsPageContent() {
         areaFrom: '', areaTo: '',
         facing: '', roadAccess: '',
         featured: false,
-        seo: { title: '', description: '' },
+        seo: { title: '', description: '', keywords: [] as string[], ogImage: '', ogImages: [] as string[] },
     };
 
     const [formData, setFormData] = useState<any>(defaultFormData);
@@ -141,7 +141,7 @@ function PlotsPageContent() {
             facing: plot.facing || '',
             roadAccess: plot.roadAccess || '',
             featured: plot.featured || false,
-            seo: { title: plot.seo?.title || '', description: plot.seo?.description || '' },
+            seo: { title: plot.seo?.title || '', description: plot.seo?.description || '', keywords: plot.seo?.keywords || [], ogImage: plot.seo?.ogImage || '', ogImages: plot.seo?.ogImages || [] },
         };
         setFormData(data);
         setInitialState(data);
@@ -510,6 +510,42 @@ function PlotsPageContent() {
                                         onChange={e => setFormData((prev: any) => ({ ...prev, seo: { ...prev.seo, description: e.target.value } }))}
                                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600/10 resize-none disabled:opacity-50"
                                         placeholder="Brief description for search engines..."
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Keywords</label>
+                                    <div className="flex flex-wrap gap-1 mb-1">
+                                        {(formData.seo?.keywords || []).map((kw: string, i: number) => (
+                                            <span key={i} className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-100">
+                                                {kw}
+                                                <button type="button" disabled={isReadOnly} onClick={() => setFormData((prev: any) => ({ ...prev, seo: { ...prev.seo, keywords: prev.seo.keywords.filter((_: string, j: number) => j !== i) } }))} className="hover:text-red-500 disabled:opacity-50">×</button>
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <input
+                                        type="text"
+                                        disabled={isReadOnly}
+                                        placeholder="Type keyword and press Enter…"
+                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600/10 disabled:opacity-50"
+                                        onKeyDown={(e) => {
+                                            if ((e.key === 'Enter' || e.key === ',') && (e.target as HTMLInputElement).value.trim()) {
+                                                e.preventDefault();
+                                                const kw = (e.target as HTMLInputElement).value.trim();
+                                                setFormData((prev: any) => ({ ...prev, seo: { ...prev.seo, keywords: [...(prev.seo?.keywords || []), kw] } }));
+                                                (e.target as HTMLInputElement).value = '';
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">OG Image URL</label>
+                                    <input
+                                        type="url"
+                                        value={formData.seo?.ogImage || ''}
+                                        disabled={isReadOnly}
+                                        onChange={e => setFormData((prev: any) => ({ ...prev, seo: { ...prev.seo, ogImage: e.target.value } }))}
+                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600/10 disabled:opacity-50"
+                                        placeholder="https://…/og-image.jpg (for social sharing)"
                                     />
                                 </div>
                             </div>

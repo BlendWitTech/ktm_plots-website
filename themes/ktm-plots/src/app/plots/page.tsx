@@ -1,22 +1,21 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getPlots, getSiteData, getPlotCategories, getSection, isSectionEnabled, type PageRecord } from '@/lib/cms';
+import { getPlots, getSiteData, getPlotCategories, getSection, isSectionEnabled, type PageRecord, getSeoMeta } from '@/lib/cms';
+import type { Metadata } from 'next';
 import PlotListingClient from '@/components/plots/PlotListingClient';
 
-export const metadata: Metadata = {
-  title: 'Available Plots',
-  description: 'Browse all available land plots across Kathmandu Valley. Verified titles, transparent pricing, and professional support.',
-  openGraph: {
-    title: 'Available Plots | KTM Plots',
-    description: 'Browse all available land plots across Kathmandu Valley. Verified titles, transparent pricing, and professional support.',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Available Plots | KTM Plots',
-    description: 'Browse all available land plots across Kathmandu Valley. Verified titles, transparent pricing, and professional support.',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getSeoMeta('static', 'plots');
+  const title = seo?.title || 'Available Plots | KTM Plots';
+  const description = seo?.description || 'Browse all available land plots across Kathmandu Valley. Verified titles, transparent pricing.';
+  const ogImg = seo?.ogImages?.[0] || seo?.ogImage;
+  return {
+    title, description,
+    ...(seo?.keywords?.length && { keywords: seo.keywords }),
+    openGraph: { title, description, type: 'website', ...(ogImg && { images: [{ url: ogImg, width: 1200, height: 630, alt: title }] }) },
+    twitter: { card: 'summary_large_image', title, description, ...(ogImg && { images: [ogImg] }) },
+  };
+}
 
 interface Props {
   searchParams: Promise<{ category?: string; page?: string; status?: string; search?: string }>;

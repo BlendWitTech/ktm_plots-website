@@ -1,13 +1,23 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { getSiteData, getSection, isSectionEnabled, type PageRecord } from '@/lib/cms';
+import { getSiteData, getSection, isSectionEnabled, type PageRecord, getSeoMeta } from '@/lib/cms';
+import type { Metadata } from 'next';
 import ContactForm from './ContactForm';
 import ContactActions from './ContactActions';
 
-export const metadata: Metadata = {
-  title: 'Contact Us',
-  description: 'Get in touch with KTM Plots for a free consultation, site visit, or property inquiry.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getSeoMeta('static', 'contact');
+  const title = seo?.title || 'Contact Us | KTM Plots';
+  const description = seo?.description || 'Get in touch with KTM Plots for a free consultation, site visit, or property inquiry.';
+  const ogImg = seo?.ogImages?.[0] || seo?.ogImage;
+  return {
+    title, description,
+    ...(seo?.keywords?.length && { keywords: seo.keywords }),
+    openGraph: { title, description, type: 'website', ...(ogImg && { images: [{ url: ogImg, width: 1200, height: 630, alt: title }] }) },
+    twitter: { card: 'summary_large_image', title, description, ...(ogImg && { images: [ogImg] }) },
+  };
+}
+
 
 export default async function ContactPage() {
   const siteData = await getSiteData();

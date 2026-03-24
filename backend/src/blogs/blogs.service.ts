@@ -52,8 +52,7 @@ export class BlogsService {
             await this.seoMetaService.upsert({
                 pageType: 'post',
                 pageId: post.id,
-                title: seo.title,
-                description: seo.description
+                ...seo,
             });
         }
 
@@ -168,8 +167,7 @@ export class BlogsService {
             await this.seoMetaService.upsert({
                 pageType: 'post',
                 pageId: post.id,
-                title: seo.title,
-                description: seo.description
+                ...seo,
             });
         }
 

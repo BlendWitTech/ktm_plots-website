@@ -178,7 +178,7 @@ const FALLBACK_SITE_DATA: SiteData = {
 
 export async function getSiteData(): Promise<SiteData> {
   try {
-    const res = await fetch(`${API}/public/site-data`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API}/public/site-data`, { next: { revalidate: 10 } });
     if (!res.ok) throw new Error(`${res.status}`);
     const data = await res.json();
     return {
@@ -197,7 +197,7 @@ export async function getSiteData(): Promise<SiteData> {
 
 export async function getFeaturedPlots(): Promise<Project[]> {
   try {
-    const res = await fetch(`${API}/plots/public/featured`, { next: { revalidate: 120 } });
+    const res = await fetch(`${API}/plots/public/featured`, { next: { revalidate: 10 } });
     if (!res.ok) return [];
     return res.json();
   } catch {
@@ -219,7 +219,7 @@ export async function getPlots(params?: {
   if (params?.status) q.set('status', params.status);
   if (params?.search) q.set('search', params.search);
   try {
-    const res = await fetch(`${API}/plots/public/list?${q}`, { next: { revalidate: 120 } });
+    const res = await fetch(`${API}/plots/public/list?${q}`, { next: { revalidate: 10 } });
     if (!res.ok) return { data: [], total: 0, page: 1, limit: 10 };
     return res.json();
   } catch {
@@ -229,7 +229,7 @@ export async function getPlots(params?: {
 
 export async function getPageBySlug(slug: string): Promise<Page | null> {
   try {
-    const res = await fetch(`${API}/public/pages/${slug}`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API}/public/pages/${slug}`, { next: { revalidate: 10 } });
     if (!res.ok) return null;
     return res.json();
   } catch {
@@ -247,7 +247,7 @@ export interface PlotCategory {
 
 export async function getPlotCategories(): Promise<PlotCategory[]> {
   try {
-    const res = await fetch(`${API}/plot-categories`, { next: { revalidate: 120 } });
+    const res = await fetch(`${API}/plot-categories`, { next: { revalidate: 10 } });
     if (!res.ok) return [];
     return res.json();
   } catch {
@@ -257,7 +257,7 @@ export async function getPlotCategories(): Promise<PlotCategory[]> {
 
 export async function getPlotBySlug(slug: string): Promise<Project | null> {
   try {
-    const res = await fetch(`${API}/plots/public/${slug}`, { next: { revalidate: 120 } });
+    const res = await fetch(`${API}/plots/public/${slug}`, { next: { revalidate: 10 } });
     if (!res.ok) return null;
     const p = await res.json();
     if (!p) return null;
@@ -269,7 +269,7 @@ export async function getPlotBySlug(slug: string): Promise<Project | null> {
 
 export async function getPostCategories(): Promise<{ id: string; name: string; slug: string }[]> {
   try {
-    const res = await fetch(`${API}/categories`, { next: { revalidate: 120 } });
+    const res = await fetch(`${API}/categories`, { next: { revalidate: 10 } });
     if (!res.ok) return [];
     return res.json();
   } catch {
@@ -287,7 +287,7 @@ export async function getPosts(params?: {
   if (params?.limit) q.set('limit', String(params.limit));
   if (params?.category) q.set('category', params.category);
   try {
-    const res = await fetch(`${API}/posts/public?${q}`, { next: { revalidate: 120 } });
+    const res = await fetch(`${API}/posts/public?${q}`, { next: { revalidate: 10 } });
     if (!res.ok) return { data: [], total: 0 };
     const json = await res.json();
     // Backend returns { posts, pagination: { total } } — normalise to { data, total }
@@ -302,7 +302,7 @@ export async function getPosts(params?: {
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   try {
-    const res = await fetch(`${API}/posts/public/${slug}`, { next: { revalidate: 120 } });
+    const res = await fetch(`${API}/posts/public/${slug}`, { next: { revalidate: 10 } });
     if (!res.ok) return null;
     const p = await res.json();
     if (!p) return null;

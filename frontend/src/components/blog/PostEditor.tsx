@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useEditor, EditorContent, TiptapBubbleMenu as BubbleMenu } from '@tiptap/react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useEditor, EditorContent, TiptapBubbleMenu as BubbleMenu, NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react';
+import type { NodeViewProps } from '@tiptap/react';
 
 // @ts-ignore
 const AnyBubbleMenu = BubbleMenu as any;
@@ -222,6 +223,83 @@ const MenuBar = ({ editor, onOpenMedia }: { editor: any, onOpenMedia: () => void
     );
 };
 
+// ── Resizable image NodeView ──────────────────────────────────────────────────
+const ResizableImageView = ({ node, updateAttributes, selected }: NodeViewProps) => {
+    const { src, alt, title, width, align } = node.attrs;
+    const resolvedWidth: string = width || '100%';
+
+    const handleResizeStart = (e: React.MouseEvent, side: 'left' | 'right') => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const startX = e.clientX;
+        const proseMirror = (e.currentTarget as HTMLElement).closest('.ProseMirror') as HTMLElement | null;
+        const parentWidth = proseMirror?.clientWidth || 800;
+        const startPct = parseFloat(resolvedWidth) || 100;
+        const startPx = (startPct / 100) * parentWidth;
+
+        const onMove = (ev: MouseEvent) => {
+            const dx = ev.clientX - startX;
+            const newPx = side === 'right' ? startPx + dx : startPx - dx;
+            const newPct = Math.round((newPx / parentWidth) * 100);
+            updateAttributes({ width: `${Math.max(10, Math.min(100, newPct))}%` });
+        };
+        const onUp = () => {
+            window.removeEventListener('mousemove', onMove);
+            window.removeEventListener('mouseup', onUp);
+        };
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onUp);
+    };
+
+    const wrapperStyle: React.CSSProperties = {
+        position: 'relative',
+        display: (align === 'left' || align === 'right' || align === 'half' || align === 'third') ? 'inline-block' : 'block',
+        width: resolvedWidth,
+        boxSizing: 'border-box',
+        ...(!align || align === 'center' ? { marginLeft: 'auto', marginRight: 'auto', marginTop: '1.5rem', marginBottom: '1.5rem' } : {}),
+        ...(align === 'left'  ? { float: 'left',  marginRight: '1.75rem', marginTop: '0.25rem', marginBottom: '0.75rem' } : {}),
+        ...(align === 'right' ? { float: 'right', marginLeft: '1.75rem',  marginTop: '0.25rem', marginBottom: '0.75rem' } : {}),
+        ...(align === 'half'  ? { verticalAlign: 'top', margin: '0.25% 0.5%' } : {}),
+        ...(align === 'third' ? { verticalAlign: 'top', margin: '0.25% 1%'   } : {}),
+    };
+
+    return (
+        <NodeViewWrapper style={wrapperStyle} data-drag-handle>
+            <img
+                src={src}
+                alt={alt || ''}
+                title={title || ''}
+                className="bg-transparent transition-all duration-300"
+                style={{ width: '100%', display: 'block', userSelect: 'none', pointerEvents: 'none' }}
+                draggable={false}
+            />
+            {selected && (
+                <>
+                    {/* Selection border */}
+                    <div style={{ position: 'absolute', inset: 0, border: '2.5px solid #3B82F6', borderRadius: 3, pointerEvents: 'none' }} />
+                    {/* Left handle */}
+                    <div
+                        title="Drag to resize"
+                        style={{ position: 'absolute', left: -5, top: '50%', transform: 'translateY(-50%)', width: 10, height: 32, background: '#3B82F6', borderRadius: 5, cursor: 'ew-resize', zIndex: 20 }}
+                        onMouseDown={(e) => handleResizeStart(e, 'left')}
+                    />
+                    {/* Right handle */}
+                    <div
+                        title="Drag to resize"
+                        style={{ position: 'absolute', right: -5, top: '50%', transform: 'translateY(-50%)', width: 10, height: 32, background: '#3B82F6', borderRadius: 5, cursor: 'ew-resize', zIndex: 20 }}
+                        onMouseDown={(e) => handleResizeStart(e, 'right')}
+                    />
+                    {/* Width indicator */}
+                    <div style={{ position: 'absolute', bottom: 6, left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.65)', color: '#fff', fontSize: '10px', fontWeight: 700, padding: '2px 7px', borderRadius: 4, pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+                        {resolvedWidth}
+                    </div>
+                </>
+            )}
+        </NodeViewWrapper>
+    );
+};
+
 export default function PostEditor({ content, onChange }: { content: string, onChange: (html: string) => void }) {
     const [isMediaOpen, setIsMediaOpen] = useState(false);
     const [, forceUpdate] = useState(0);
@@ -260,6 +338,9 @@ export default function PostEditor({ content, onChange }: { content: string, onC
                             }),
                         },
                     };
+                },
+                addNodeView() {
+                    return ReactNodeViewRenderer(ResizableImageView);
                 },
             }).configure({
                 HTMLAttributes: {

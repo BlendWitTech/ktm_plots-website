@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { getPosts, getSiteData, getPostCategories, getSection, isSectionEnabled, type PageRecord, getSeoMeta } from '@/lib/cms';
 import BlogListingClient from '@/components/blog/BlogListingClient';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getSeoMeta('static', 'blog');
   const title = seo?.title || 'Blog | KTM Plots';

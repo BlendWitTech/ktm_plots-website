@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { getPlots, getSiteData, getPlotCategories, getSection, isSectionEnabled, type PageRecord, getSeoMeta } from '@/lib/cms';
 import PlotListingClient from '@/components/plots/PlotListingClient';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getSeoMeta('static', 'plots');
   const title = seo?.title || 'Available Plots | KTM Plots';

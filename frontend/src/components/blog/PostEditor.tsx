@@ -252,20 +252,14 @@ const ResizableImageView = ({ node, updateAttributes, selected }: NodeViewProps)
         window.addEventListener('mouseup', onUp);
     };
 
-    const wrapperStyle: React.CSSProperties = {
-        position: 'relative',
-        display: (align === 'left' || align === 'right' || align === 'half' || align === 'third') ? 'inline-block' : 'block',
-        width: resolvedWidth,
-        boxSizing: 'border-box',
-        ...(!align || align === 'center' ? { marginLeft: 'auto', marginRight: 'auto', marginTop: '1.5rem', marginBottom: '1.5rem' } : {}),
-        ...(align === 'left'  ? { float: 'left',  marginRight: '1.75rem', marginTop: '0.25rem', marginBottom: '0.75rem' } : {}),
-        ...(align === 'right' ? { float: 'right', marginLeft: '1.75rem',  marginTop: '0.25rem', marginBottom: '0.75rem' } : {}),
-        ...(align === 'half'  ? { verticalAlign: 'top', margin: '0.25% 0.5%' } : {}),
-        ...(align === 'third' ? { verticalAlign: 'top', margin: '0.25% 1%'   } : {}),
-    };
-
     return (
-        <NodeViewWrapper style={wrapperStyle} data-drag-handle>
+        // CSS classes handle layout type; inline style only carries the dynamic width
+        <NodeViewWrapper
+            as="span"
+            className={`resizable-img-node rimg-${align || 'center'}`}
+            style={{ width: resolvedWidth }}
+            data-drag-handle
+        >
             <img
                 src={src}
                 alt={alt || ''}
@@ -451,7 +445,7 @@ export default function PostEditor({ content, onChange }: { content: string, onC
                 <AnyBubbleMenu
                     editor={editor}
                     tippyOptions={{ duration: 100, zIndex: 999, maxWidth: 'none', placement: 'top' }}
-                    shouldShow={({ editor }: any) => editor.isActive('image')}
+                    shouldShow={({ state }: any) => !!(state.selection?.node?.type?.name === 'image')}
                 >
                     {(() => {
                         const align = editor.getAttributes('image').align || 'center';
@@ -550,7 +544,7 @@ export default function PostEditor({ content, onChange }: { content: string, onC
                                         </button>
                                     ))}
                                 </div>
-                                {/* Width picker — only shown for float layouts */}
+                                {/* Width picker — shown for float layouts */}
                                 {isFloat && (
                                     <div className="flex items-center gap-1 pt-1 border-t border-slate-100">
                                         <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider px-1">Width</span>
@@ -565,6 +559,24 @@ export default function PostEditor({ content, onChange }: { content: string, onC
                                         ))}
                                     </div>
                                 )}
+                                {/* Hint for side-by-side layouts */}
+                                {(align === 'half' || align === 'third') && (
+                                    <div className="flex items-start gap-1.5 pt-1.5 px-1 border-t border-slate-100">
+                                        <span className="text-slate-400 mt-px" style={{ fontSize: 10 }}>ℹ</span>
+                                        <span className="text-[9px] text-slate-400 leading-tight">
+                                            Insert {align === 'half' ? '2' : '3'} images back-to-back in the <strong>same paragraph</strong> (no Enter between them) to get side-by-side layout.
+                                        </span>
+                                    </div>
+                                )}
+                                {/* Hint for float layouts */}
+                                {isFloat && (
+                                    <div className="flex items-start gap-1.5 px-1 pb-0.5">
+                                        <span className="text-slate-400 mt-px" style={{ fontSize: 10 }}>ℹ</span>
+                                        <span className="text-[9px] text-slate-400 leading-tight">
+                                            Type text in the <strong>same paragraph</strong> as the image — it will wrap around the {align === 'left' ? 'right' : 'left'} side.
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         );
                     })()}
@@ -574,10 +586,15 @@ export default function PostEditor({ content, onChange }: { content: string, onC
             <MenuBar editor={editor} onOpenMedia={() => setIsMediaOpen(true)} />
             <div className="custom-scrollbar overflow-y-auto max-h-[800px] prose-img-custom">
                 <style jsx global>{`
-                    /* ── Image layout presets ─────────────────────────────── */
+                    /* ── NodeView image wrapper base ──────────────────────── */
+                    .prose-img-custom .resizable-img-node {
+                        position: relative;
+                        box-sizing: border-box;
+                        max-width: 100%;
+                    }
 
-                    /* Full width — one per row */
-                    .prose-img-custom .image-align-center {
+                    /* Center — block, margin auto */
+                    .prose-img-custom .rimg-center {
                         display: block;
                         margin-left: auto;
                         margin-right: auto;
@@ -585,62 +602,59 @@ export default function PostEditor({ content, onChange }: { content: string, onC
                         margin-bottom: 1.5rem;
                     }
 
-                    /* 2 images per row */
-                    .prose-img-custom .image-align-half {
-                        display: inline-block;
+                    /* 2 per row */
+                    .prose-img-custom .rimg-half {
+                        display: inline-block !important;
                         vertical-align: top;
-                        width: 49% !important;
                         margin: 0.25% 0.5%;
-                        box-sizing: border-box;
                     }
 
-                    /* 3 images per row */
-                    .prose-img-custom .image-align-third {
-                        display: inline-block;
+                    /* 3 per row */
+                    .prose-img-custom .rimg-third {
+                        display: inline-block !important;
                         vertical-align: top;
-                        width: 31% !important;
                         margin: 0.25% 1%;
-                        box-sizing: border-box;
                     }
 
                     /* Float left — text wraps right */
-                    .prose-img-custom .image-align-left {
-                        float: left;
+                    .prose-img-custom .rimg-left {
+                        float: left !important;
+                        display: block;
                         margin-right: 1.75rem;
                         margin-top: 0.25rem;
                         margin-bottom: 0.75rem;
                     }
 
                     /* Float right — text wraps left */
-                    .prose-img-custom .image-align-right {
-                        float: right;
+                    .prose-img-custom .rimg-right {
+                        float: right !important;
+                        display: block;
                         margin-left: 1.75rem;
                         margin-top: 0.25rem;
                         margin-bottom: 0.75rem;
                     }
 
-                    /* Legacy full-width class */
-                    .prose-img-custom .image-align-full {
-                        display: block;
-                        width: 100% !important;
-                        max-width: none;
-                        margin-top: 2rem;
-                        margin-bottom: 2rem;
-                    }
-
-                    /* Inline-block parent needs font-size reset to remove whitespace gaps */
-                    .prose-img-custom .ProseMirror p:has(.image-align-half),
-                    .prose-img-custom .ProseMirror p:has(.image-align-third) {
+                    /* Remove whitespace gaps between inline-block images */
+                    .prose-img-custom .ProseMirror p:has(.rimg-half),
+                    .prose-img-custom .ProseMirror p:has(.rimg-third) {
                         font-size: 0;
                         line-height: 0;
                     }
 
-                    /* Clearfix after floats */
-                    .prose-img-custom .ProseMirror::after {
+                    /* Per-paragraph clearfix so floated images don't bleed out */
+                    .prose-img-custom .ProseMirror p::after {
                         content: "";
                         display: table;
                         clear: both;
                     }
+
+                    /* ── Legacy output classes (keep for already-saved content) ── */
+                    .prose-img-custom .image-align-center { display: block; margin: 1.5rem auto; }
+                    .prose-img-custom .image-align-half   { display: inline-block; vertical-align: top; margin: 0.25% 0.5%; box-sizing: border-box; }
+                    .prose-img-custom .image-align-third  { display: inline-block; vertical-align: top; margin: 0.25% 1%;   box-sizing: border-box; }
+                    .prose-img-custom .image-align-left   { float: left;  margin-right: 1.75rem; margin-bottom: 0.75rem; }
+                    .prose-img-custom .image-align-right  { float: right; margin-left:  1.75rem; margin-bottom: 0.75rem; }
+                    .prose-img-custom .image-align-full   { display: block; width: 100% !important; max-width: none; margin: 2rem 0; }
                 `}</style>
                 <EditorContent editor={editor} />
             </div>

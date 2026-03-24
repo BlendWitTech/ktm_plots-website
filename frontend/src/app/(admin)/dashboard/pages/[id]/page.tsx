@@ -31,9 +31,13 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
         title: '',
         slug: '',
         content: '',
+        seoTitle: '',
         description: '',
+        keywords: [] as string[],
+        ogImage: '',
         status: 'DRAFT',
     });
+    const [kwInput, setKwInput] = useState('');
 
     // Section editor state
     const [pageSlug, setPageSlug] = useState('');
@@ -61,7 +65,10 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
                 title: data.title,
                 slug: data.slug,
                 content: data.content || '',
+                seoTitle: data.seo?.title || '',
                 description: data.seo?.description || '',
+                keywords: data.seo?.keywords || [],
+                ogImage: data.seo?.ogImage || '',
                 status: data.status,
             });
 
@@ -111,8 +118,10 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
                     ...formData,
                     data: { sections },
                     seo: {
-                        title: formData.title,
+                        title: formData.seoTitle || formData.title,
                         description: formData.description,
+                        keywords: formData.keywords,
+                        ogImage: formData.ogImage,
                     },
                 },
                 skipNotification: true,
@@ -247,16 +256,64 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
                 <div className="space-y-6">
                     {/* SEO Settings */}
                     <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
-                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Metadata</h3>
-                        <div>
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Meta Description</label>
+                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">SEO Metadata</h3>
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">SEO Title <span className="normal-case font-normal text-slate-300">({(formData.seoTitle||'').length}/60)</span></label>
+                            <input
+                                type="text"
+                                value={formData.seoTitle}
+                                disabled={isReadOnly}
+                                onChange={e => setFormData({ ...formData, seoTitle: e.target.value })}
+                                placeholder={formData.title || 'Page title for search engines...'}
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-600/10 disabled:opacity-75 disabled:bg-slate-100/50"
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Meta Description <span className="normal-case font-normal text-slate-300">({(formData.description||'').length}/160)</span></label>
                             <textarea
                                 value={formData.description}
                                 disabled={isReadOnly}
                                 onChange={e => setFormData({ ...formData, description: e.target.value })}
-                                rows={4}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-600/10 resize-none mt-2 disabled:opacity-75 disabled:text-slate-500 disabled:bg-slate-100/50"
+                                rows={3}
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-600/10 resize-none disabled:opacity-75 disabled:bg-slate-100/50"
                                 placeholder="Brief description for search engines..."
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Keywords</label>
+                            <div className="flex flex-wrap gap-1 mb-1">
+                                {formData.keywords.map((kw, i) => (
+                                    <span key={i} className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full border border-indigo-100">
+                                        {kw}
+                                        <button type="button" disabled={isReadOnly} onClick={() => setFormData(f => ({ ...f, keywords: f.keywords.filter((_, j) => j !== i) }))} className="hover:text-red-500">×</button>
+                                    </span>
+                                ))}
+                            </div>
+                            <input
+                                type="text"
+                                value={kwInput}
+                                disabled={isReadOnly}
+                                onChange={e => setKwInput(e.target.value)}
+                                onKeyDown={e => {
+                                    if ((e.key === 'Enter' || e.key === ',') && kwInput.trim()) {
+                                        e.preventDefault();
+                                        setFormData(f => ({ ...f, keywords: [...f.keywords, kwInput.trim()] }));
+                                        setKwInput('');
+                                    }
+                                }}
+                                placeholder="Type keyword and press Enter…"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-600/10 disabled:opacity-75 disabled:bg-slate-100/50"
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">OG Image URL</label>
+                            <input
+                                type="url"
+                                value={formData.ogImage}
+                                disabled={isReadOnly}
+                                onChange={e => setFormData({ ...formData, ogImage: e.target.value })}
+                                placeholder="https://…/og-image.jpg"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-600/10 disabled:opacity-75 disabled:bg-slate-100/50"
                             />
                         </div>
                     </div>

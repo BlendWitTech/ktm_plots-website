@@ -74,34 +74,30 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
   return (
     <section style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#0D0D0D' }}>
 
-      {/* ── Background ───────────────────────────────────────── */}
-      {bgUrl ? (
-        <>
-          <Image src={bgUrl} alt="Hero background" fill style={{ objectFit: 'cover', objectPosition: 'center' }} priority />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.75) 45%, rgba(10,10,10,0.35) 100%)' }} />
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '220px', background: 'linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 100%)' }} />
-        </>
-      ) : (
-        <>
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #1A1A1A 0%, var(--color-secondary) 60%, #221010 100%)' }} />
-          <div style={{ position: 'absolute', right: '-5%', top: '10%', width: '65%', height: '80%', background: 'radial-gradient(ellipse at center, rgba(204,20,20,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
-          <div className="hero-noimage-panel" style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '48%', background: 'linear-gradient(160deg, #C01414 0%, #7a0a0a 100%)', clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0% 100%)', opacity: 0.72 }} />
-          <div className="hero-noimage-panel" style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '48%', clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0% 100%)', pointerEvents: 'none' }}>
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.12 }}>
-              <defs><pattern id="mapgrid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.6"/></pattern></defs>
-              <rect width="100%" height="100%" fill="url(#mapgrid)" />
-            </svg>
-          </div>
-          <div style={{ position: 'absolute', left: 0, top: 0, width: '55%', height: '100%', background: 'radial-gradient(ellipse at left center, var(--color-secondary) 30%, transparent 70%)', pointerEvents: 'none' }} />
-        </>
-      )}
+      {/* ── Background (always dark gradient) ────────────────── */}
+      <>
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #1A1A1A 0%, var(--color-secondary) 60%, #221010 100%)' }} />
+        <div style={{ position: 'absolute', right: '-5%', top: '10%', width: '65%', height: '80%', background: 'radial-gradient(ellipse at center, rgba(204,20,20,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        {!bgUrl && (
+          <>
+            <div className="hero-noimage-panel" style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '48%', background: 'linear-gradient(160deg, #C01414 0%, #7a0a0a 100%)', clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0% 100%)', opacity: 0.72 }} />
+            <div className="hero-noimage-panel" style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '48%', clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0% 100%)', pointerEvents: 'none' }}>
+              <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.12 }}>
+                <defs><pattern id="mapgrid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.6"/></pattern></defs>
+                <rect width="100%" height="100%" fill="url(#mapgrid)" />
+              </svg>
+            </div>
+          </>
+        )}
+        <div style={{ position: 'absolute', left: 0, top: 0, width: '55%', height: '100%', background: 'radial-gradient(ellipse at left center, var(--color-secondary) 30%, transparent 70%)', pointerEvents: 'none' }} />
+      </>
 
       <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '32px 32px', pointerEvents: 'none', zIndex: 1 }} />
       <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: 'linear-gradient(to bottom, var(--color-primary), #8B0000)', zIndex: 3 }} />
 
       {/* ── Main content ─────────────────────────────────────── */}
-      <div className="container hero-content-container" style={{ position: 'relative', zIndex: 4, flex: 1, display: 'grid', gridTemplateColumns: bgUrl ? '1fr' : '1fr 1fr', alignItems: 'center', gap: '3rem', padding: '7rem 1.5rem 5rem' }}>
-        <div className="hero-text-col" style={{ maxWidth: bgUrl ? '700px' : 'none' }}>
+      <div className="container hero-content-container" style={{ position: 'relative', zIndex: 4, flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', gap: '3rem', padding: '7rem 1.5rem 5rem' }}>
+        <div className="hero-text-col">
 
           {/* Trust badge */}
           <div className="animate-slide-right hero-trust-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(204,20,20,0.12)', border: '1px solid rgba(204,20,20,0.3)', borderRadius: '100px', padding: '0.35rem 0.9rem 0.35rem 0.5rem', marginBottom: '1.75rem', maxWidth: '100%' }}>
@@ -296,9 +292,43 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
 
         </div>
 
-        {/* ── Right column: floating property card (no-image mode) ── */}
-        {!bgUrl && (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        {/* ── Right column: hero image frame OR property card ── */}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          {bgUrl ? (
+            /* ── Hero image displayed in a styled frame ── */
+            <div className="animate-fade-in delay-300 hero-noimage-brandmark" style={{ width: '100%', maxWidth: '480px', position: 'relative' }}>
+              {/* Decorative glow behind the image */}
+              <div style={{ position: 'absolute', inset: '-24px', background: 'radial-gradient(ellipse at center, rgba(204,20,20,0.22) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+
+              {/* Image card */}
+              <div style={{ position: 'relative', zIndex: 1, borderRadius: '22px', overflow: 'hidden', boxShadow: '0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.08)', aspectRatio: '4/3' }}>
+                <Image src={bgUrl} alt="Hero" fill style={{ objectFit: 'cover', objectPosition: 'center' }} priority />
+                {/* Subtle inner gradient overlay */}
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(175deg, transparent 55%, rgba(0,0,0,0.65) 100%)' }} />
+                {/* Bottom info strip */}
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.5rem 1.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                  <div>
+                    <div style={{ color: '#fff', fontWeight: 800, fontSize: '1rem', lineHeight: 1.2, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>Premium Land Plots</div>
+                    <div style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.72rem', marginTop: '0.2rem', fontWeight: 500 }}>Kathmandu Valley</div>
+                  </div>
+                  <div style={{ background: 'var(--color-primary)', color: '#fff', fontSize: '0.65rem', fontWeight: 800, padding: '0.3rem 0.8rem', borderRadius: '100px', letterSpacing: '0.07em', textTransform: 'uppercase', flexShrink: 0 }}>
+                    ✓ Verified
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats chips below the image */}
+              <div style={{ display: 'flex', gap: '0.6rem', marginTop: '0.875rem', flexWrap: 'wrap' }}>
+                {bottomBanner.slice(0, 4).map((b) => (
+                  <div key={b.label} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.13)', color: 'rgba(255,255,255,0.75)', borderRadius: '10px', padding: '0.5rem 0.875rem', fontSize: '0.72rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.4rem', flex: '1 1 auto' }}>
+                    <span style={{ fontSize: '0.95rem' }}>{b.value}</span>
+                    <span>{b.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            /* ── Floating property card (no hero image) ── */
             <div className="animate-fade-in delay-300 animate-float-slow hero-noimage-brandmark" style={{ width: '100%', maxWidth: '390px' }}>
 
               <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '1.25rem', marginBottom: '0.875rem', boxShadow: '0 20px 48px rgba(0,0,0,0.28)' }}>
@@ -365,12 +395,12 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* ── Bottom stats strip (image mode) ─────────────────── */}
-      {bgUrl && bottomBanner.length > 0 && (
+      {/* ── Bottom stats strip (no-image mode) ──────────────── */}
+      {!bgUrl && bottomBanner.length > 0 && (
         <div style={{ position: 'relative', zIndex: 4, borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(12px)', padding: '1.25rem 0' }}>
           <div className="container hero-banner-strip" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap', padding: '0 1.5rem' }}>
             {bottomBanner.map((b) => (
@@ -384,7 +414,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
       )}
 
       {/* Scroll indicator */}
-      <div className="animate-bounce-mouse" style={{ position: 'absolute', bottom: bgUrl ? '5rem' : '2.5rem', left: '50%', zIndex: 4 }}>
+      <div className="animate-bounce-mouse" style={{ position: 'absolute', bottom: '2.5rem', left: '50%', zIndex: 4 }}>
         <svg width="22" height="34" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" viewBox="0 0 22 36">
           <rect x="1" y="1" width="20" height="34" rx="10" />
           <line x1="11" y1="8" x2="11" y2="15" strokeWidth="2.5" strokeLinecap="round" stroke="rgba(255,255,255,0.5)" />

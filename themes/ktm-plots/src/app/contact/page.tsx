@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { getSiteData, getSection, isSectionEnabled, type PageRecord, getSeoMeta } from '@/lib/cms';
-import type { Metadata } from 'next';
 import ContactForm from './ContactForm';
 import ContactActions from './ContactActions';
 

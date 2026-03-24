@@ -6,6 +6,8 @@ import { getPlotBySlug, getImageUrl, renderContent } from '@/lib/cms';
 import PlotGallery from '@/components/PlotGallery';
 import WishlistButton from '@/components/ui/WishlistButton';
 
+export const dynamic = 'force-dynamic';
+
 interface Props {
   params: Promise<{ slug: string }>;
 }

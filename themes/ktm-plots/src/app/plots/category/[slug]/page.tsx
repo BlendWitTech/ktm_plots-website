@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { getPlots, getPlotCategories, getSiteData } from '@/lib/cms';
 import PlotListingClient from '@/components/plots/PlotListingClient';
 
+export const dynamic = 'force-dynamic';
+
 const LIMIT = 9;
 
 interface Props {

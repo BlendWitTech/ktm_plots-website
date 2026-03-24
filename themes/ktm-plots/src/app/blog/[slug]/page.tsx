@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { getPostBySlug, getPosts, getImageUrl, formatDate, renderContent } from '@/lib/cms';
 import BlogComments from '@/components/blog/BlogComments';
 
+export const dynamic = 'force-dynamic';
+
 interface Props {
   params: Promise<{ slug: string }>;
 }

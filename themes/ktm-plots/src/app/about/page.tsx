@@ -6,6 +6,8 @@ import AnimatedStatsStrip from '@/components/ui/AnimatedStatsStrip';
 import Link from 'next/link';
 import TeamSocialIcons from '@/components/ui/TeamSocialIcons';
 
+export const dynamic = 'force-dynamic';
+
 undefined
 
 // Fallback team if CMS team module is not enabled or empty

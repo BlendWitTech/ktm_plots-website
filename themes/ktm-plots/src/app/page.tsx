@@ -27,6 +27,8 @@ import Testimonials from '@/components/sections/Testimonials';
 import CtaStrip from '@/components/sections/CtaStrip';
 import BlogPreview from '@/components/sections/BlogPreview';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const [siteData, featuredPlots] = await Promise.all([
     getSiteData(),

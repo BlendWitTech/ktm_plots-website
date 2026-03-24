@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import { getPageBySlug } from '@/lib/cms';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }

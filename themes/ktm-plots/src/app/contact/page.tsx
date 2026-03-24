@@ -4,6 +4,8 @@ import { getSiteData, getSection, isSectionEnabled, type PageRecord, getSeoMeta 
 import ContactForm from './ContactForm';
 import ContactActions from './ContactActions';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getSeoMeta('static', 'contact');
   const title = seo?.title || 'Contact Us | KTM Plots';

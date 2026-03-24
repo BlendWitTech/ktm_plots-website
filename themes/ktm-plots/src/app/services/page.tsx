@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { getSiteData, getSection, isSectionEnabled, type PageRecord, getSeoMeta } from '@/lib/cms';
 import ServicesDetailGrid from '@/components/services/ServicesDetailGrid';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getSeoMeta('static', 'services');
   const title = seo?.title || 'Our Services | KTM Plots';

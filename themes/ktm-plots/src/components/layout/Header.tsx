@@ -106,10 +106,13 @@ export default function Header({ siteData, menu }: Props) {
         <nav style={{ display: 'flex', gap: '1.75rem', alignItems: 'center' }} className="desktop-nav">
           {items.map((item) => {
             const active = isActive(item.url);
+            const isExternal = item.target === '_blank';
             return (
               <Link
                 key={item.id}
                 href={item.url}
+                target={item.target || undefined}
+                rel={isExternal ? 'noopener noreferrer' : undefined}
                 style={{
                   color: active ? 'var(--color-primary)' : 'var(--color-secondary)',
                   textDecoration: 'none',
@@ -175,10 +178,13 @@ export default function Header({ siteData, menu }: Props) {
         <div style={{ padding: '0.75rem 1.5rem 1.5rem' }}>
           {items.map((item) => {
             const active = isActive(item.url);
+            const isExternal = item.target === '_blank';
             return (
               <Link
                 key={item.id}
                 href={item.url}
+                target={item.target || undefined}
+                rel={isExternal ? 'noopener noreferrer' : undefined}
                 onClick={() => setOpen(false)}
                 style={{
                   display: 'flex',

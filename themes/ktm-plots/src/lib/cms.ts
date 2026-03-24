@@ -52,6 +52,7 @@ export interface MenuItem {
   label: string;
   url: string;
   order: number;
+  target?: string;
   children?: MenuItem[];
 }
 

@@ -368,12 +368,14 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
-                {['✓ Verified Title', '✓ Free Site Visit', '✓ Reg. Support'].map((f) => (
-                  <div key={f} style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.8)', borderRadius: '100px', padding: '0.35rem 0.85rem', fontSize: '0.68rem', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                    {f}
-                  </div>
-                ))}
+              <div className="animate-pulse-glow" style={{ marginTop: '0.875rem', background: 'var(--color-primary)', borderRadius: '12px', padding: '0.875rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.875rem', boxShadow: '0 8px 24px rgba(204,20,20,0.35)' }}>
+                <div style={{ width: '36px', height: '36px', background: 'rgba(255,255,255,0.15)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <svg width="18" height="18" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
+                <div>
+                  <div style={{ color: '#fff', fontWeight: 800, fontSize: '0.9rem' }}>50+ Active Listings</div>
+                  <div style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.7rem' }}>Across Kathmandu Valley</div>
+                </div>
               </div>
 
             </div>

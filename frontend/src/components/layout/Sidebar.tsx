@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
     HomeIcon,
     DocumentTextIcon,
@@ -247,7 +247,6 @@ interface SidebarProps {
 
 export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
     const pathname = usePathname();
-    const searchParams = useSearchParams();
     const router = useRouter();
     const { permissions, isLoading: permissionsLoading } = usePermissions();
     const { enabledModules, isLoading: modulesLoading } = useModules();
@@ -358,7 +357,8 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
     }, [onToggle]);
 
     const handleNavigation = (href: string) => {
-        const currentUrl = pathname + (searchParams.toString() ? '?' + searchParams.toString() : '');
+        const currentSearch = typeof window !== 'undefined' ? window.location.search : '';
+        const currentUrl = pathname + currentSearch;
         if (href === currentUrl || href === '#') return;
         if (isDirty) {
             setPendingNavigation(href);

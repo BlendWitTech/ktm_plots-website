@@ -199,7 +199,7 @@ export async function getFeaturedPlots(): Promise<Project[]> {
   try {
     const res = await fetch(`${API}/plots/public/featured`, { next: { revalidate: 10 } });
     if (!res.ok) return [];
-    return res.json();
+    return await res.json();
   } catch {
     return [];
   }
@@ -221,7 +221,7 @@ export async function getPlots(params?: {
   try {
     const res = await fetch(`${API}/plots/public/list?${q}`, { next: { revalidate: 10 } });
     if (!res.ok) return { data: [], total: 0, page: 1, limit: 10 };
-    return res.json();
+    return await res.json();
   } catch {
     return { data: [], total: 0, page: 1, limit: 10 };
   }
@@ -231,7 +231,7 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
   try {
     const res = await fetch(`${API}/public/pages/${slug}`, { next: { revalidate: 10 } });
     if (!res.ok) return null;
-    return res.json();
+    return await res.json();
   } catch {
     return null;
   }
@@ -249,7 +249,7 @@ export async function getPlotCategories(): Promise<PlotCategory[]> {
   try {
     const res = await fetch(`${API}/plot-categories`, { next: { revalidate: 10 } });
     if (!res.ok) return [];
-    return res.json();
+    return await res.json();
   } catch {
     return [];
   }
@@ -271,7 +271,7 @@ export async function getPostCategories(): Promise<{ id: string; name: string; s
   try {
     const res = await fetch(`${API}/categories`, { next: { revalidate: 10 } });
     if (!res.ok) return [];
-    return res.json();
+    return await res.json();
   } catch {
     return [];
   }
@@ -327,7 +327,7 @@ export async function getSeoMeta(pageType: string, pageId?: string): Promise<Seo
       : `${API}/seo-meta/${encodeURIComponent(pageType)}`;
     const res = await fetch(path, { next: { revalidate: 10 } });
     if (!res.ok) return null;
-    return res.json();
+    return await res.json();
   } catch {
     return null;
   }

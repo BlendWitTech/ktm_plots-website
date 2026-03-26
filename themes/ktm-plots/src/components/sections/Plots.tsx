@@ -98,60 +98,79 @@ export default function Plots({ plots, secData = {} }: Props) {
             <ScrollReveal animation="up" delay={80}>
               <div style={{ background: '#FFFFFF', borderRadius: '12px', overflow: 'hidden', marginBottom: '2rem', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
 
-                {/* Type row */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.625rem 1rem', borderBottom: '1px solid #F3F4F6' }}>
-                  <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Type:</span>
-                  {/* Desktop pills */}
-                  <div className="pf-type-pills" style={{ display: 'flex', gap: '0.4rem', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                    {typeOpts.map((o) => (
-                      <button key={o.slug} onClick={() => setActiveCategory(o.slug)}
-                        style={{ ...pillBase, background: activeCategory === o.slug ? 'var(--color-secondary)' : '#F3F4F6', color: activeCategory === o.slug ? '#fff' : '#4B5563', borderColor: activeCategory === o.slug ? 'var(--color-secondary)' : 'transparent' }}>
-                        {o.name}
-                      </button>
-                    ))}
+                {/* Desktop: stacked rows */}
+                <div className="pf-desktop-rows">
+                  {/* Type row */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.625rem 1rem', borderBottom: '1px solid #F3F4F6' }}>
+                    <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Type:</span>
+                    <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' } as React.CSSProperties}>
+                      {typeOpts.map((o) => (
+                        <button key={o.slug} onClick={() => setActiveCategory(o.slug)}
+                          style={{ ...pillBase, background: activeCategory === o.slug ? 'var(--color-secondary)' : '#F3F4F6', color: activeCategory === o.slug ? '#fff' : '#4B5563', borderColor: activeCategory === o.slug ? 'var(--color-secondary)' : 'transparent', flexShrink: 0 }}>
+                          {o.name}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  {/* Mobile cycle */}
-                  <div className="pf-type-cycle" style={{ display: 'none', alignItems: 'center', gap: '0.25rem', flex: 1 }}>
-                    <button onClick={cycleBtn(-1, typeOpts, activeCategory, setActiveCategory)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'26px', height:'26px', borderRadius:'6px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
-                      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                    </button>
-                    <span style={{ flex:1, textAlign:'center', padding:'0.3rem 0.5rem', borderRadius:'6px', background: activeCategory ? 'var(--color-secondary)' : '#F3F4F6', color: activeCategory ? '#fff' : '#4B5563', fontSize:'0.78rem', fontWeight:700, whiteSpace:'nowrap' }}>
-                      {typeOpts.find(o => o.slug === activeCategory)?.name ?? 'All Types'}
-                    </span>
-                    <button onClick={cycleBtn(1, typeOpts, activeCategory, setActiveCategory)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'26px', height:'26px', borderRadius:'6px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
-                      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                    </button>
+                  {/* Status row */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.625rem 1rem' }}>
+                    <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Status:</span>
+                    <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none', flex: 1 } as React.CSSProperties}>
+                      {STATUS_FILTERS.map((s) => (
+                        <button key={s.slug} onClick={() => setActiveStatus(s.slug)}
+                          style={{ ...pillBase, background: activeStatus === s.slug ? 'var(--color-secondary)' : '#F3F4F6', color: activeStatus === s.slug ? '#fff' : '#4B5563', borderColor: activeStatus === s.slug ? 'var(--color-secondary)' : 'transparent', flexShrink: 0 }}>
+                          {s.label}
+                        </button>
+                      ))}
+                    </div>
+                    {(activeCategory || activeStatus) && (
+                      <button onClick={() => { setActiveCategory(''); setActiveStatus(''); }}
+                        style={{ ...pillBase, flexShrink:0, color:'var(--color-primary)', background:'#FEF2F2', borderColor:'#FCA5A5', fontSize:'0.72rem' }}>
+                        ✕ Clear
+                      </button>
+                    )}
                   </div>
                 </div>
 
-                {/* Status row */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.625rem 1rem' }}>
-                  <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Status:</span>
-                  {/* Desktop pills */}
-                  <div className="pf-status-pills" style={{ display: 'flex', gap: '0.4rem', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none', flex: 1 }}>
-                    {STATUS_FILTERS.map((s) => (
-                      <button key={s.slug} onClick={() => setActiveStatus(s.slug)}
-                        style={{ ...pillBase, background: activeStatus === s.slug ? 'var(--color-secondary)' : '#F3F4F6', color: activeStatus === s.slug ? '#fff' : '#4B5563', borderColor: activeStatus === s.slug ? 'var(--color-secondary)' : 'transparent' }}>
-                        {s.label}
+                {/* Mobile: 50/50 side-by-side cycle toggles */}
+                <div className="pf-mobile-row" style={{ display: 'none', alignItems: 'stretch' }}>
+                  {/* Type half */}
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '0.5rem 0.625rem', gap: '0.2rem' }}>
+                    <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Type</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                      <button onClick={cycleBtn(-1, typeOpts, activeCategory, setActiveCategory)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'24px', height:'24px', borderRadius:'5px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
+                        <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
                       </button>
-                    ))}
+                      <span style={{ flex:1, textAlign:'center', padding:'0.25rem 0.25rem', borderRadius:'5px', background: activeCategory ? 'var(--color-secondary)' : '#F3F4F6', color: activeCategory ? '#fff' : '#4B5563', fontSize:'0.75rem', fontWeight:700, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+                        {typeOpts.find(o => o.slug === activeCategory)?.name ?? 'All Types'}
+                      </span>
+                      <button onClick={cycleBtn(1, typeOpts, activeCategory, setActiveCategory)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'24px', height:'24px', borderRadius:'5px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
+                        <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                      </button>
+                    </div>
                   </div>
-                  {/* Mobile cycle */}
-                  <div className="pf-status-cycle" style={{ display: 'none', alignItems: 'center', gap: '0.25rem', flex: 1 }}>
-                    <button onClick={cycleBtn(-1, STATUS_FILTERS, activeStatus, setActiveStatus)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'26px', height:'26px', borderRadius:'6px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
-                      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                    </button>
-                    <span style={{ flex:1, textAlign:'center', padding:'0.3rem 0.5rem', borderRadius:'6px', background: activeStatus ? 'var(--color-secondary)' : '#F3F4F6', color: activeStatus ? '#fff' : '#4B5563', fontSize:'0.78rem', fontWeight:700, whiteSpace:'nowrap' }}>
-                      {STATUS_FILTERS.find(s => s.slug === activeStatus)?.label ?? 'All Status'}
-                    </span>
-                    <button onClick={cycleBtn(1, STATUS_FILTERS, activeStatus, setActiveStatus)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'26px', height:'26px', borderRadius:'6px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
-                      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                    </button>
+                  {/* Divider */}
+                  <div style={{ width: '1px', background: '#F3F4F6', alignSelf: 'stretch' }} />
+                  {/* Status half */}
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '0.5rem 0.625rem', gap: '0.2rem' }}>
+                    <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Status</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                      <button onClick={cycleBtn(-1, STATUS_FILTERS, activeStatus, setActiveStatus)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'24px', height:'24px', borderRadius:'5px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
+                        <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                      </button>
+                      <span style={{ flex:1, textAlign:'center', padding:'0.25rem 0.25rem', borderRadius:'5px', background: activeStatus ? 'var(--color-secondary)' : '#F3F4F6', color: activeStatus ? '#fff' : '#4B5563', fontSize:'0.75rem', fontWeight:700, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+                        {STATUS_FILTERS.find(s => s.slug === activeStatus)?.label ?? 'All Status'}
+                      </span>
+                      <button onClick={cycleBtn(1, STATUS_FILTERS, activeStatus, setActiveStatus)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'24px', height:'24px', borderRadius:'5px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
+                        <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                      </button>
+                    </div>
                   </div>
+                  {/* Clear button — only when active */}
                   {(activeCategory || activeStatus) && (
                     <button onClick={() => { setActiveCategory(''); setActiveStatus(''); }}
-                      style={{ ...pillBase, flexShrink:0, color:'var(--color-primary)', background:'#FEF2F2', borderColor:'#FCA5A5', fontSize:'0.72rem' }}>
-                      ✕ Clear
+                      style={{ alignSelf:'center', padding:'0 0.75rem', color:'var(--color-primary)', background:'none', border:'none', cursor:'pointer', fontSize:'0.75rem', fontWeight:700, flexShrink:0 }}>
+                      ✕
                     </button>
                   )}
                 </div>
@@ -242,15 +261,11 @@ export default function Plots({ plots, secData = {} }: Props) {
         )}
       </div>
       <style>{`
-        .pf-type-pills::-webkit-scrollbar,
-        .pf-status-pills::-webkit-scrollbar { display: none; }
-        .pf-type-cycle, .pf-status-cycle { display: none; }
+        .pf-mobile-row { display: none; }
         @media (max-width: 640px) {
           .plots-divider { display: none !important; }
-          .pf-type-pills  { display: none !important; }
-          .pf-status-pills { display: none !important; }
-          .pf-type-cycle  { display: flex !important; }
-          .pf-status-cycle { display: flex !important; }
+          .pf-desktop-rows { display: none !important; }
+          .pf-mobile-row  { display: flex !important; }
           .plots-grid {
             display: flex !important;
             overflow-x: auto;

@@ -173,7 +173,7 @@ export default function Header({ siteData, menu }: Props) {
           transition: 'max-height 0.3s cubic-bezier(0.22,1,0.36,1)',
         }}
         className="mobile-menu"
-        aria-hidden={!open}
+        inert={!open ? true : undefined}
       >
         <div style={{ padding: '0.75rem 1.5rem 1.5rem' }}>
           {items.map((item) => {

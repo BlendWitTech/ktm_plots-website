@@ -72,7 +72,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
   const onKey = (e: React.KeyboardEvent) => { if (e.key === 'Enter') handleSearch(); };
 
   return (
-    <section style={{ position: 'relative', overflow: 'hidden', height: 'calc(100svh - 72px)', minHeight: '560px', maxHeight: 'calc(1080px - 72px)', display: 'flex', flexDirection: 'column', background: '#0D0D0D' }}>
+    <section style={{ position: 'relative', overflow: 'hidden', minHeight: 'calc(100svh - 72px)', maxHeight: 'calc(1080px - 72px)', display: 'flex', flexDirection: 'column', background: '#0D0D0D' }}>
 
       {/* ── Background ───────────────────────────────────────── */}
       <>

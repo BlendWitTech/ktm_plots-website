@@ -1,610 +1,362 @@
-# Mero CMS — Developer Guide
+# KTM Plots Theme — Developer Guide
 
-This guide covers the architecture, coding patterns, and workflows for contributors working on Mero CMS. Read this before writing any code.
+This guide covers the architecture, coding patterns, and workflows for anyone working on this theme. Read this before writing any code.
 
 ---
 
 ## Table of Contents
 
 1. [Architecture Overview](#architecture-overview)
-2. [Backend — NestJS](#backend--nestjs)
-3. [Frontend — Next.js Admin](#frontend--nextjs-admin)
-4. [Theme Development](#theme-development)
-5. [Database & Prisma](#database--prisma)
-6. [Authentication & Permissions](#authentication--permissions)
-7. [Module System](#module-system)
-8. [Public API (for Themes)](#public-api-for-themes)
-9. [Adding a New Feature Module](#adding-a-new-feature-module)
-10. [Environment Variables](#environment-variables)
+2. [Data Fetching — cms.ts](#data-fetching--cmsts)
+3. [Page Structure](#page-structure)
+4. [Section Components](#section-components)
+5. [Layout Components](#layout-components)
+6. [UI Components](#ui-components)
+7. [Plots Module](#plots-module)
+8. [Blog Module](#blog-module)
+9. [CMS API Reference](#cms-api-reference)
+10. [Styling Conventions](#styling-conventions)
 11. [Git Workflow](#git-workflow)
 12. [Commit Convention](#commit-convention)
-13. [CI/CD Pipeline](#cicd-pipeline)
 
 ---
 
 ## Architecture Overview
 
 ```
-┌─────────────────┐      JWT       ┌──────────────────────┐
-│  Admin UI       │ ─────────────► │  NestJS Backend      │
-│  Next.js 15     │                │  Port 3001           │
-│  Port 3000      │                │                      │
-└─────────────────┘                │  ┌────────────────┐  │
-                                   │  │ Prisma ORM     │  │
-┌─────────────────┐  Public API    │  │ PostgreSQL      │  │
-│  Theme App      │ ─────────────► │  └────────────────┘  │
-│  Next.js 15     │  (no auth)     │                      │
-│  Port 3002+     │                │  ┌────────────────┐  │
-└─────────────────┘                │  │ /themes dir    │  │
-                                   │  │ (auto-scanned) │  │
-                                   │  └────────────────┘  │
-                                   └──────────────────────┘
+┌──────────────────────┐   NEXT_PUBLIC_CMS_API_URL   ┌──────────────────────┐
+│  KTM Plots Theme     │ ──────────────────────────► │  Mero CMS Backend    │
+│  Next.js 16          │   Public API — no auth       │  NestJS / Railway    │
+│  React 19            │                              │                      │
+│  TypeScript          │   GET /public/site-data      │  PostgreSQL          │
+│  App Router          │   GET /plots/public/*        │                      │
+└──────────────────────┘   GET /posts/public/*        └──────────────────────┘
 ```
 
-- **Admin UI** communicates with the backend using JWT authentication
-- **Themes** communicate with the backend via public unauthenticated endpoints
-- **Backend** reads theme files from the `themes/` directory (or `/themes/` in Docker)
-- **Database** state drives everything — setup completion, enabled modules, active theme, settings
+- **This repo** contains only the client-facing public website (theme)
+- **No auth required** — the theme only uses the backend's unauthenticated public API
+- **ISR** — pages are statically generated at build time and revalidated every 10 seconds via `next: { revalidate: 10 }`
+- **Fallback data** — if the backend is unreachable, the theme renders using embedded defaults in `src/lib/cms.ts`
 
 ---
 
-## Backend — NestJS
+## Data Fetching — cms.ts
 
-### Directory Structure
+All data fetching lives in one file: `src/lib/cms.ts`. Never use `fetch` directly in page or component files — always import from `cms.ts`.
 
-```
-backend/src/
-├── main.ts                 # Entry point — bootstraps NestJS, CORS, global pipes
-├── app.module.ts           # Root module — imports all feature modules
-├── prisma/
-│   └── prisma.service.ts   # PrismaClient singleton
-├── auth/
-│   ├── jwt.strategy.ts     # Passport JWT strategy
-│   ├── jwt-auth.guard.ts   # Guard — attach to protected routes
-│   ├── permissions.guard.ts # Guard — checks user permissions
-│   ├── permissions.decorator.ts  # @RequirePermissions(...)
-│   └── permissions.enum.ts # All permission constants
-├── setup/
-│   ├── setup.controller.ts # POST /setup/*, POST /setup/complete
-│   └── setup.service.ts    # Wizard logic, schema build, module activation
-└── [feature]/
-    ├── [feature].module.ts
-    ├── [feature].controller.ts
-    ├── [feature].service.ts
-    └── dto/
-        ├── create-[feature].dto.ts
-        └── update-[feature].dto.ts
-```
-
-### Controller Pattern
-
-Every protected controller follows this pattern:
+### Key functions
 
 ```typescript
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { PermissionsGuard } from '../auth/permissions.guard';
-import { RequirePermissions } from '../auth/permissions.decorator';
-import { Permission } from '../auth/permissions.enum';
-
-@Controller('blogs')
-export class BlogsController {
-    constructor(private readonly blogsService: BlogsService) {}
-
-    // Protected route — requires auth + permission
-    @UseGuards(JwtAuthGuard, PermissionsGuard)
-    @RequirePermissions(Permission.CONTENT_CREATE)
-    @Post()
-    create(@Body() dto: CreateBlogDto) {
-        return this.blogsService.create(dto);
-    }
-
-    // Public route — no guards
-    @Get('public/list')
-    getPublished(@Query('page') page?: string) {
-        return this.blogsService.findPublished(page ? parseInt(page) : 1);
-    }
-}
+import {
+  getSiteData,       // All site-wide data in one call
+  getPlots,          // Paginated plot listings with filters
+  getPlotBySlug,     // Single plot detail
+  getFeaturedPlots,  // Featured plots for home page
+  getPlotCategories, // All plot categories
+  getPosts,          // Paginated blog posts
+  getPostBySlug,     // Single blog post
+  getPageBySlug,     // CMS-managed static pages
+  getSeoMeta,        // Per-page SEO metadata
+  getImageUrl,       // Resolves relative media paths to full URLs
+  formatDate,        // Formats ISO dates to Nepali locale
+  renderContent,     // Renders CMS content (HTML or markdown) to safe HTML
+  submitLead,        // Submits contact form via local API proxy
+} from '@/lib/cms';
 ```
 
-**Rules:**
-- Always use `@UseGuards(JwtAuthGuard, PermissionsGuard)` together — never just one
-- Always declare `@RequirePermissions(...)` when using `PermissionsGuard`
-- Public routes go at the bottom of the controller — NestJS matches routes top-to-bottom, so `public/list` must come before `:id` or it will be swallowed by the param route
-- Modules gated behind a CMS module use `@RequireModule('module-name')` at class level
+### getSiteData()
 
-### Service Pattern
+The most commonly used function. Returns settings, menus, services, testimonials, and recent posts in a single call.
 
 ```typescript
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { NotificationsService } from '../notifications/notifications.service';
-
-@Injectable()
-export class BlogsService {
-    constructor(
-        private prisma: PrismaService,
-        private notifications: NotificationsService,
-    ) {}
-
-    async create(dto: CreateBlogDto) {
-        const blog = await this.prisma.blog.create({ data: dto });
-
-        await this.notifications.create({
-            type: 'SUCCESS',
-            title: 'Blog Created',
-            message: `"${blog.title}" was published.`,
-            targetRole: 'Admin',
-        });
-
-        return blog;
-    }
-
-    async findById(id: string) {
-        const blog = await this.prisma.blog.findUnique({ where: { id } });
-        if (!blog) throw new NotFoundException('Blog not found');
-        return blog;
-    }
-}
-```
-
-**Rules:**
-- Inject `PrismaService` for all DB access — never instantiate `PrismaClient` directly
-- Throw NestJS `NotFoundException`, `BadRequestException`, etc. — never raw `Error`
-- Notify admins of important actions using `NotificationsService`
-- Keep business logic in services, not controllers
-
-### Module Registration
-
-Every feature module must be registered in `app.module.ts`. When adding a new module:
-
-```typescript
-// app.module.ts
-import { BlogsModule } from './blogs/blogs.module';
-
-@Module({
-    imports: [
-        // ... existing modules
-        BlogsModule,
-    ],
-})
-export class AppModule {}
-```
-
----
-
-## Frontend — Next.js Admin
-
-### Directory Structure
-
-```
-frontend/src/
-├── app/
-│   ├── layout.tsx              # Root layout
-│   ├── setup/                  # /setup — wizard pages
-│   └── (admin)/
-│       ├── layout.tsx          # Dashboard shell (sidebar, header)
-│       └── dashboard/
-│           ├── page.tsx        # /dashboard — home
-│           ├── blogs/
-│           │   ├── page.tsx    # List view
-│           │   └── [id]/
-│           │       └── page.tsx  # Edit view
-│           └── ...
-├── components/
-│   ├── dashboard/              # Dashboard-specific components
-│   └── ui/                     # Shared primitive components
-├── lib/
-│   ├── api.ts                  # apiRequest() utility
-│   └── utils.ts                # Formatting helpers
-└── context/
-    ├── AuthContext.tsx          # Current user, login/logout
-    └── NotificationContext.tsx  # Toast notifications
-```
-
-### API Calls
-
-Always use the `apiRequest` utility — never use `fetch` directly:
-
-```typescript
-import { apiRequest } from '@/lib/api';
-
-// GET
-const blogs = await apiRequest('/blogs');
-
-// POST
-const newBlog = await apiRequest('/blogs', {
-    method: 'POST',
-    body: { title: 'Hello', content: '...' },
-});
-
-// PATCH
-await apiRequest(`/blogs/${id}`, {
-    method: 'PATCH',
-    body: { title: 'Updated' },
-});
-
-// DELETE
-await apiRequest(`/blogs/${id}`, { method: 'DELETE' });
-```
-
-`apiRequest` automatically:
-- Prepends `NEXT_PUBLIC_API_URL`
-- Attaches the JWT token from `localStorage`
-- Parses JSON responses
-- Throws on non-2xx responses with the server error message
-
-### UI Patterns
-
-```typescript
-import { useNotification } from '@/context/NotificationContext';
-
-export default function CreateBlogForm() {
-    const { showToast } = useNotification();
-
-    const handleSubmit = async (data: FormData) => {
-        try {
-            await apiRequest('/blogs', { method: 'POST', body: data });
-            showToast('Blog created successfully', 'success');
-        } catch (err: any) {
-            showToast(err.message || 'Something went wrong', 'error');
-        }
-    };
-    // ...
-}
-```
-
-**Rules:**
-- Use `showToast` for all user feedback — never `alert()` or `console.log` for user-facing messages
-- Use `@heroicons/react/24/outline` for all icons — keep the icon set consistent
-- Use Tailwind CSS classes only — no custom CSS files except `globals.css` for base styles
-- Gate UI elements by permission, but always rely on backend guards as the real security layer
-
----
-
-## Theme Development
-
-A theme is a standalone Next.js application in `themes/<slug>/`.
-
-### Minimum Required Files
-
-```
-themes/my-theme/
-├── theme.json          # Required — theme metadata and seed data
-├── package.json
-├── next.config.js
-├── src/
-│   └── app/
-│       └── page.tsx    # Home page
-└── .env.local.example  # Documents CMS_API_URL requirement
-```
-
-### theme.json Structure
-
-```json
-{
-    "name": "My Theme",
-    "slug": "my-theme",
-    "version": "1.0.0",
-    "description": "A beautiful theme for Mero CMS",
-    "author": "Blendwit Tech",
-    "requiredModules": ["pages", "menus", "blogs", "services"],
-    "preview": "preview.svg",
-    "defaultSettings": {
-        "hero_title": "Welcome",
-        "primary_color": "#4f46e5"
-    },
-    "seedData": {
-        "pages": [
-            { "title": "Home", "slug": "home", "content": "..." }
-        ],
-        "menus": [
-            {
-                "name": "Main Navigation",
-                "slug": "main-nav",
-                "items": [
-                    { "label": "Home", "url": "/", "order": 1 }
-                ]
-            }
-        ],
-        "services": [],
-        "blogs": [],
-        "testimonials": [],
-        "team": []
-    }
-}
-```
-
-### Fetching Data in a Theme
-
-```typescript
-// In your theme's Next.js page or component
-const API_URL = process.env.CMS_API_URL || 'http://localhost:3001';
-
-async function getSiteData() {
-    const res = await fetch(`${API_URL}/public/site-data`, {
-        next: { revalidate: 60 }, // ISR — revalidate every 60 seconds
-    });
-    return res.json();
-}
+// In a server component or page
+import { getSiteData } from '@/lib/cms';
 
 export default async function HomePage() {
-    const data = await getSiteData();
-    const { site, menus, blogs, services, testimonials } = data;
-    // ...
+  const { settings, menus, services, testimonials, recentPosts } = await getSiteData();
+  // Pass to child components as props
 }
 ```
 
-### Packaging a Theme for Upload
+### getPlots() — with filters
 
-```bash
-node scripts/zip-theme.js my-theme
-# Creates: themes/my-theme.zip
-# Then upload via: Admin → Appearance → Themes → Upload Theme
+```typescript
+const result = await getPlots({
+  page: 1,
+  limit: 12,
+  category: 'residential',  // plot category slug
+  status: 'available',       // available | sold | reserved
+  search: 'kathmandu',
+});
+// result: { data: Project[], total: number, page: number, limit: number }
+```
+
+### getImageUrl()
+
+Always use this for CMS media paths. It prepends the backend URL to relative paths:
+
+```typescript
+import { getImageUrl } from '@/lib/cms';
+
+// CMS returns: "/uploads/abc123.jpg"
+// getImageUrl returns: "https://backend.railway.app/uploads/abc123.jpg"
+const url = getImageUrl(plot.featuredImageUrl);
+```
+
+### renderContent()
+
+Converts CMS rich text content (HTML or basic markdown) to safe HTML for `dangerouslySetInnerHTML`:
+
+```typescript
+import { renderContent } from '@/lib/cms';
+
+<div dangerouslySetInnerHTML={{ __html: renderContent(post.content) }} />
 ```
 
 ---
 
-## Database & Prisma
+## Page Structure
 
-### Schema Assembly
-
-The `backend/prisma/schema.prisma` is assembled from module fragments in `backend/prisma/modules/`. When a user enables/disables modules through the setup wizard or Settings → Modules, `build-schema.js` reassembles the schema and `prisma db push` applies it.
-
-**Do not edit `schema.prisma` directly.** Edit the module fragment in `prisma/modules/`.
-
-### Running Migrations (Local Dev)
-
-```bash
-cd backend
-
-# Apply all pending migrations
-npx prisma migrate dev
-
-# Create a new migration after editing a module schema fragment
-npx prisma migrate dev --name add_blog_featured_flag
-
-# Push schema without migrations (staging/CI)
-npx prisma db push
-
-# Open Prisma Studio (GUI)
-npx prisma studio
+```
+src/app/
+├── page.tsx                    # Home — renders all section components
+├── about/page.tsx              # About — getSiteData() + static content
+├── plots/
+│   ├── page.tsx                # All plots — server shell + PlotListingClient
+│   ├── [slug]/page.tsx         # Plot detail — getPlotBySlug()
+│   └── category/[slug]/page.tsx # Category filtered plots
+├── blog/
+│   ├── page.tsx                # Blog listing — server shell + BlogListingClient
+│   └── [slug]/page.tsx         # Blog post detail — getPostBySlug()
+├── services/page.tsx           # Services — getSiteData()
+├── contact/page.tsx            # Contact — form + lead submission
+└── [slug]/page.tsx             # Dynamic CMS pages — getPageBySlug()
 ```
 
-### Accessing Prisma in Services
+### Server vs Client components
+
+- **Pages are server components** — they fetch data and pass it as props
+- **Interactive UI is client components** — filters, carousels, modals are `'use client'`
+- Never call `getSiteData()` or other CMS functions in client components — fetch in the server page and pass data down as props
 
 ```typescript
-@Injectable()
-export class BlogsService {
-    constructor(private prisma: PrismaService) {}
-
-    async findAll() {
-        return this.prisma.blog.findMany({
-            orderBy: { createdAt: 'desc' },
-            include: { category: true, tags: true },
-        });
-    }
+// CORRECT — server component fetches, client component receives props
+// plots/page.tsx (server)
+export default async function PlotsPage() {
+  const { data: initialPlots, total } = await getPlots({ limit: 12 });
+  const categories = await getPlotCategories();
+  return <PlotListingClient initialPlots={initialPlots} categories={categories} total={total} />;
 }
-```
 
----
-
-## Authentication & Permissions
-
-### How It Works
-
-1. User logs in → backend returns a JWT
-2. Frontend stores JWT in `localStorage`
-3. Every protected request includes `Authorization: Bearer <token>`
-4. `JwtAuthGuard` verifies the token and attaches `req.user`
-5. `PermissionsGuard` checks `req.user.permissions` against `@RequirePermissions(...)`
-
-### Permission Enum
-
-All permissions are in `backend/src/auth/permissions.enum.ts`. Always use the enum — never hardcode permission strings:
-
-```typescript
-import { Permission } from '../auth/permissions.enum';
-
-@RequirePermissions(Permission.CONTENT_CREATE)
-@RequirePermissions(Permission.SETTINGS_MANAGE)
-@RequirePermissions(Permission.USERS_MANAGE)
-```
-
-### Roles
-
-- **Super Admin** — all permissions, cannot be deleted
-- **Admin** — configurable permissions assigned by Super Admin
-- Custom roles can be created in Dashboard → Settings → Roles
-
----
-
-## Module System
-
-The CMS uses a flag-based module system. Modules are stored as enabled/disabled in the database (`settings` table, key `ENABLED_MODULES`).
-
-### Gating an Endpoint Behind a Module
-
-```typescript
-import { RequireModule } from '../setup/require-module.decorator';
-
-@RequireModule('blogs')   // Returns 404 if 'blogs' module is not enabled
-@Controller('blogs')
-export class BlogsController { ... }
-```
-
-### Checking Module Status in a Service
-
-```typescript
-import { SettingsService } from '../settings/settings.service';
-
-const enabledModules = await this.settingsService.getEnabledModules();
-if (!enabledModules.includes('analytics')) {
-    throw new ForbiddenException('Analytics module is not enabled');
+// PlotListingClient.tsx ('use client')
+'use client';
+export function PlotListingClient({ initialPlots, categories, total }) {
+  // handles filter state and pagination client-side
 }
 ```
 
 ---
 
-## Public API (for Themes)
+## Section Components
 
-The public API requires no authentication. It is the sole data source for theme apps.
+Home page sections live in `src/components/sections/`. Each section receives props from the home `page.tsx`.
 
-| Endpoint                  | Description                              |
-|---------------------------|------------------------------------------|
-| `GET /public/site-data`   | All site data in one response            |
-| `GET /public/blogs`       | Published blog posts (paginated)         |
-| `GET /public/blogs/:slug` | Single blog post by slug                 |
-| `GET /public/pages/:slug` | Single page by slug                      |
-| `GET /public/services`    | All published services                   |
-| `GET /public/team`        | All team members                         |
-| `GET /public/testimonials`| All testimonials                         |
-| `GET /public/menus/:slug` | Navigation menu with items               |
-| `GET /public/settings`    | Public site settings (name, logo, etc.)  |
+| Component | Data source | Key props |
+|---|---|---|
+| `Hero.tsx` | `settings`, `plots` (featured) | Type/status filter, search, scroll to plots |
+| `About.tsx` | `settings` | Title, content, stats strip |
+| `Plots.tsx` | `plots` (featured), `categories` | Filter tabs, horizontal scroll on mobile |
+| `Services.tsx` | `services` | List of services with icons |
+| `Testimonials.tsx` | `testimonials` | Carousel of client testimonials |
+| `BlogPreview.tsx` | `recentPosts` | Grid of recent blog posts |
+| `CtaStrip.tsx` | `settings` | CTA text and button from `settings.ctaText` / `settings.ctaUrl` |
+
+### Adding a new section
+
+1. Create `src/components/sections/NewSection.tsx`
+2. Accept data as props — never fetch inside the component
+3. Add it to `src/app/page.tsx` and pass the relevant data from `getSiteData()`
+
+```typescript
+// src/app/page.tsx
+import { NewSection } from '@/components/sections/NewSection';
+
+export default async function HomePage() {
+  const { settings, services } = await getSiteData();
+  return (
+    <>
+      {/* existing sections */}
+      <NewSection settings={settings} services={services} />
+    </>
+  );
+}
+```
 
 ---
 
-## Adding a New Feature Module
+## Layout Components
 
-Follow these steps to add a complete new module (example: `portfolio`):
+### Header.tsx
 
-### 1. Create the Prisma schema fragment
+Renders the site navigation. Reads menu items from the `main-nav` menu slug. Handles mobile hamburger menu state (client component).
 
-```
-backend/prisma/modules/projects.prisma
-```
+### Footer.tsx
 
-```prisma
-model Project {
-    id          String   @id @default(cuid())
-    title       String
-    slug        String   @unique
-    description String?
-    published   Boolean  @default(false)
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-}
-```
-
-### 2. Generate the NestJS module
-
-```bash
-cd backend
-nest g module projects
-nest g controller projects
-nest g service projects
-```
-
-### 3. Create DTOs
-
-```typescript
-// dto/create-project.dto.ts
-export class CreateProjectDto {
-    title: string;
-    slug: string;
-    description?: string;
-    published?: boolean;
-}
-```
-
-### 4. Implement the service
-
-Follow the [Service Pattern](#service-pattern) above.
-
-### 5. Implement the controller
-
-Follow the [Controller Pattern](#controller-pattern) above. Add `@RequireModule('projects')` if this is an optional module.
-
-### 6. Register in `app.module.ts`
-
-```typescript
-import { ProjectsModule } from './projects/projects.module';
-// add ProjectsModule to @Module({ imports: [...] })
-```
-
-### 7. Add to permissions enum
-
-```typescript
-// auth/permissions.enum.ts
-export enum Permission {
-    // ... existing
-    PROJECTS_VIEW = 'projects:view',
-    PROJECTS_CREATE = 'projects:create',
-    PROJECTS_EDIT = 'projects:edit',
-    PROJECTS_DELETE = 'projects:delete',
-}
-```
-
-### 8. Add public endpoint (optional)
-
-In `backend/src/public/public.controller.ts` and `public.service.ts`, add the public-facing read endpoint.
-
-### 9. Add frontend pages
-
-Create `frontend/src/app/(admin)/dashboard/projects/page.tsx` (list) and `[id]/page.tsx` (edit).
+Renders footer links, social icons, contact info from `settings`. Static — no interactive state.
 
 ---
 
-## Environment Variables
+## UI Components
 
-### Backend
+| Component | Purpose |
+|---|---|
+| `ScrollReveal.tsx` | Wraps any element with an IntersectionObserver fade-in animation |
+| `AnimatedStatsStrip.tsx` | Number counter animation for stats (years, plots sold, etc.) |
+| `WishlistButton.tsx` | Client-side wishlist toggle using localStorage |
+| `FloatingActions.tsx` | Fixed floating call/WhatsApp buttons |
+| `TeamSocialIcons.tsx` | Social media icon row for team member profiles |
+| `PlotGallery.tsx` | Lightbox image gallery for plot detail pages |
 
-| Variable              | Required | Description                                      |
-|-----------------------|----------|--------------------------------------------------|
-| `DATABASE_URL`        | Yes      | PostgreSQL connection string                     |
-| `JWT_SECRET`          | Yes      | Secret for signing JWTs (min 32 chars)           |
-| `PORT`                | No       | Server port (default: 3001)                      |
-| `NODE_ENV`            | No       | `development` or `production`                    |
-| `CORS_ORIGINS`        | No       | Comma-separated allowed origins                  |
-| `CORS_VERCEL_PROJECT` | No       | Vercel project name (allows all preview URLs)    |
-| `THEMES_DIR`          | No       | Custom themes directory path                     |
-| `UPLOAD_DIR`          | No       | Upload storage directory (default: `./uploads`)  |
-| `MAX_FILE_SIZE`       | No       | Max upload size in bytes (default: 10485760)     |
+### ScrollReveal usage
 
-See `backend/.env.development.example` for a complete local config template.
+```typescript
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
-### Frontend
+<ScrollReveal>
+  <div className="my-card">...</div>
+</ScrollReveal>
+```
 
-| Variable              | Required | Description                         |
-|-----------------------|----------|-------------------------------------|
-| `NEXT_PUBLIC_API_URL` | Yes      | Backend API base URL                |
+> **Important:** Do not wrap elements inside `overflow-x: auto` horizontal scroll containers with ScrollReveal — off-screen items never enter the viewport so they stay invisible. Use `opacity: 1 !important` CSS override for those containers.
+
+---
+
+## Plots Module
+
+The plots module is the core feature of this theme. Key files:
+
+| File | Purpose |
+|---|---|
+| `src/lib/cms.ts` — `getPlots()` | Paginated, filterable plot listings |
+| `src/lib/cms.ts` — `getPlotBySlug()` | Single plot with all detail fields |
+| `src/lib/cms.ts` — `getPlotCategories()` | All plot category slugs and names |
+| `src/lib/cms.ts` — `getFeaturedPlots()` | Featured plots for home page |
+| `src/components/plots/PlotCardGrid.tsx` | Reusable card grid (server/client) |
+| `src/components/plots/PlotListingClient.tsx` | Client-side filters + pagination |
+| `src/components/sections/Plots.tsx` | Home page featured plots section |
+| `src/components/PlotGallery.tsx` | Detail page image gallery |
+
+### Plot data shape (`Project` type)
+
+```typescript
+interface Project {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  featuredImageUrl: string | null;
+  images: string[];
+  featured: boolean;
+  status: string | null;         // "available" | "sold" | "reserved"
+  location: string | null;
+  priceFrom: string | null;
+  priceTo: string | null;
+  areaFrom: string | null;
+  areaTo: string | null;
+  facing: string | null;
+  roadAccess: string | null;
+  plotNumber: string | null;
+  landType: string | null;       // plot category / type
+  latitude: number | null;
+  longitude: number | null;
+  mapUrl: string | null;
+  totalPlots: number | null;
+  availablePlots: number | null;
+  category?: { name: string; slug: string };
+}
+```
+
+---
+
+## Blog Module
+
+| File | Purpose |
+|---|---|
+| `src/lib/cms.ts` — `getPosts()` | Paginated blog posts |
+| `src/lib/cms.ts` — `getPostBySlug()` | Single post with full content |
+| `src/lib/cms.ts` — `getPostCategories()` | All blog category slugs |
+| `src/components/blog/BlogCardGrid.tsx` | Reusable blog card grid |
+| `src/components/blog/BlogListingClient.tsx` | Client-side filters + pagination |
+| `src/components/blog/BlogComments.tsx` | Comments section (client component) |
+| `src/components/sections/BlogPreview.tsx` | Home page blog preview section |
+
+---
+
+## CMS API Reference
+
+All endpoints are on the Mero CMS backend at `NEXT_PUBLIC_CMS_API_URL`. These require no authentication.
+
+| Endpoint | Description |
+|---|---|
+| `GET /public/site-data` | Settings, menus, services, testimonials, recent posts |
+| `GET /public/pages/:slug` | Single CMS page by slug |
+| `GET /plots/public/list` | Paginated plots (`?page&limit&category&status&search`) |
+| `GET /plots/public/featured` | Featured plots array |
+| `GET /plots/public/:slug` | Single plot detail |
+| `GET /plot-categories` | All plot categories |
+| `GET /posts/public` | Paginated published blog posts |
+| `GET /posts/public/:slug` | Single blog post |
+| `GET /categories` | All blog categories |
+| `GET /seo-meta/:pageType` | SEO metadata for a page type |
+| `GET /seo-meta/:pageType/:id` | SEO metadata for a specific item |
+| `POST /leads` | Submit a contact form lead |
+
+---
+
+## Styling Conventions
+
+- **CSS variables** for brand colours are set in `src/app/globals.css`:
+  ```css
+  :root {
+    --color-primary: #CC1414;   /* KTM Plots red */
+    --color-secondary: #1a1a1a;
+  }
+  ```
+- **Inline styles** are used throughout section components — keep them consistent with existing patterns
+- **No Tailwind** — this theme uses inline styles and standard CSS only
+- **Mobile-first** — use `@media (max-width: 640px)` breakpoints, with `480px` for extra-small screens
+- **No custom CSS files per component** — all component styles live in the component's `<style>` tag or as inline style objects
 
 ---
 
 ## Git Workflow
 
-### Branch Model
-
 ```
-main          ← production (protected — PR required, manual deploy approval)
-  └── develop ← staging (protected — PR required, auto-deploys to Railway/Vercel)
-        └── feature/your-feature  ← day-to-day work
-        └── fix/bug-description
-        └── chore/task-name
+main          ← production (auto-deploys to Vercel)
+  └── feature/your-change    ← day-to-day work
+  └── fix/bug-description
+  └── chore/task-name
 ```
-
-### Day-to-Day Flow
 
 ```bash
-# Always branch from develop
-git checkout develop
-git pull origin develop
-git checkout -b feature/add-projects-module
+# Always branch from main
+git checkout main
+git pull origin main
+git checkout -b feature/update-plots-card
 
 # Work, commit often
-git add backend/src/projects/
-git commit -m "feat(projects): add CRUD endpoints"
+git add src/components/plots/PlotCardGrid.tsx
+git commit -m "feat(plots): add area badge to plot card"
 
-# Push and open PR to develop
-git push origin feature/add-projects-module
-# Open PR on GitHub: feature/add-projects-module → develop
+# Push and open PR to main
+git push origin feature/update-plots-card
+# Open PR on GitHub → confirm Vercel preview builds → merge
 ```
 
 **Rules:**
-- Never push directly to `develop` or `main`
-- Every PR must pass CI (backend build + frontend build) before merging
-- PRs to `develop` require at least one approval
-- PRs to `main` require owner approval — merging triggers the production approval gate
+- Never push directly to `main`
+- Every PR must have a passing Vercel preview deployment before merging
+- One PR per logical change — keep PRs small and focused
 
 ---
 
@@ -616,41 +368,20 @@ Use [Conventional Commits](https://www.conventionalcommits.org/):
 <type>(<scope>): <short description>
 ```
 
-| Type       | When to use                                          |
-|------------|------------------------------------------------------|
-| `feat`     | New feature or endpoint                              |
-| `fix`      | Bug fix                                              |
-| `chore`    | Build scripts, dependencies, config (no src changes) |
-| `refactor` | Code restructure with no behavior change             |
-| `docs`     | Documentation only                                   |
-| `style`    | Formatting, no logic change                          |
-| `test`     | Adding or fixing tests                               |
+| Type | When to use |
+|---|---|
+| `feat` | New page, section, or component |
+| `fix` | Bug fix |
+| `chore` | Config, dependencies, build scripts |
+| `refactor` | Code restructure, no behaviour change |
+| `docs` | Documentation only |
+| `style` | Formatting, CSS tweaks — no logic change |
 
 **Examples:**
 ```
-feat(blogs): add featured flag to blog posts
-fix(auth): prevent token reuse after logout
-chore(docker): add themes/ to Dockerfile COPY step
-docs(readme): update quick start instructions
+feat(hero): add 50/50 type-status filter on mobile
+fix(plots): hide scrollbar in pill filter row
+chore(vercel): update root directory setting
+docs(readme): add deployment instructions
+style(about): tighten stats strip padding on mobile
 ```
-
----
-
-## CI/CD Pipeline
-
-| Workflow                          | Trigger             | Steps                                          |
-|-----------------------------------|---------------------|------------------------------------------------|
-| `ci.yml`                          | All pushes + PRs    | Backend build → verify dist/main.js → Frontend build |
-| `deploy-staging.yml`              | Push to `develop`   | Same as CI → notify; Railway+Vercel auto-deploy|
-| `deploy-production.yml`           | Push to `main`      | CI → await manual approval → notify deploy     |
-
-Railway and Vercel deploy automatically via their GitHub integrations once the connected branch is updated. The GitHub Actions workflows serve as the build validation gate.
-
-### Required GitHub Secrets
-
-| Secret               | Used by                     |
-|----------------------|-----------------------------|
-| `STAGING_API_URL`    | `deploy-staging.yml`        |
-| `PRODUCTION_API_URL` | `deploy-production.yml`     |
-
-For full deployment instructions, see [SETUP.md](SETUP.md).

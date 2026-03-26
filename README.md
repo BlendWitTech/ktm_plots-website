@@ -1,24 +1,15 @@
-# Mero CMS
+# KTM Plots — Theme
 
-**Mero CMS** is a modular, self-hosted content management system built by [Blendwit Tech](https://blendwit.com).
-Enable only the modules your project needs — blogs, services, team, testimonials, SEO, analytics, and more — then deploy a theme that automatically seeds its own demo content.
-
-> **License:** Commercial proprietary software. Access requires a paid license or approved contributor status.
-> Contact [hello@blendwit.com](mailto:hello@blendwit.com) or visit [blendwit.com/mero-cms/pricing](https://blendwit.com/mero-cms/pricing).
+The official public website for **KTM Plots**, Kathmandu Valley's trusted real estate partner.
+Built as a standalone Next.js theme on top of [Mero CMS](https://blendwit.com/mero-cms) by [Blendwit Tech](https://blendwit.com).
 
 ---
 
-## What It Does
+## What This Repo Is
 
-- **Modular backend** — enable/disable content modules without touching code
-- **Setup wizard** — first-run wizard creates the database, admin account, and seeds demo content
-- **Theme system** — upload ZIP themes; each theme declares its required modules and seeds its own data
-- **Role-based access control** — Super Admin, Admin, and custom roles with per-permission granularity
-- **Public API** — themes fetch all data from a single `/public/site-data` endpoint
-- **SEO toolkit** — per-page meta tags, sitemap, robots.txt, and URL redirects
-- **Analytics** — Google Analytics 4 dashboard embedded in the admin UI
-- **Media manager** — upload and manage images and files used across all content
-- **Demo playground** — visitors sign in with Google/GitHub/LinkedIn and explore the CMS before purchasing
+This is a **theme-only** repository. It contains the client-facing public website — pages, components, and styles. It does **not** contain the CMS engine (backend API, admin dashboard, or database). Those live in the [blendwit-cms](https://github.com/BlendWitTech/blendwit-cms) repo.
+
+The theme fetches all content from the Mero CMS backend via a single environment variable.
 
 ---
 
@@ -26,180 +17,150 @@ Enable only the modules your project needs — blogs, services, team, testimonia
 
 | Layer | Technology |
 |---|---|
-| Backend API | NestJS, Prisma ORM, PostgreSQL |
-| Admin UI | Next.js 15, React 19, Tailwind CSS |
-| Themes | Next.js 15 (standalone apps) |
-| Demo App | Next.js 15, NextAuth.js |
-| Authentication | JWT, bcrypt, 2FA (TOTP) |
-| Infrastructure | Docker, Railway (backend), Vercel (frontend + demo) |
-| CI/CD | GitHub Actions |
+| Framework | Next.js 16, React 19 |
+| Language | TypeScript |
+| Styling | CSS Modules + inline styles |
+| Data | Mero CMS Public API (`/public/site-data`, `/plots/public/*`) |
+| Deployment | Vercel |
 
 ---
 
 ## Project Structure
 
 ```
-blendwit-cms/
-├── backend/                        # NestJS REST API — port 3001
-│   ├── prisma/
-│   │   ├── modules/                # Per-module Prisma schema fragments
-│   │   └── schema.prisma           # Assembled schema (generated)
-│   ├── Dockerfile                  # Multi-stage Docker build for Railway
-│   └── src/
-│       ├── auth/                   # JWT auth, guards, 2FA
-│       ├── users/                  # User management
-│       ├── roles/                  # Roles and permissions
-│       ├── setup/                  # Setup wizard logic
-│       ├── themes/                 # Theme discovery, activation, ZIP upload
-│       ├── public/                 # Public read-only API for themes
-│       ├── blogs/                  # Blog posts
-│       ├── categories/             # Blog categories
-│       ├── tags/                   # Blog tags
-│       ├── comments/               # Reader comments
-│       ├── pages/                  # Static pages
-│       ├── menus/                  # Navigation menus
-│       ├── services/               # Service offerings
-│       ├── testimonials/           # Client testimonials
-│       ├── team/                   # Team member profiles
-│       ├── leads/                  # Contact form leads
-│       ├── media/                  # File/image uploads
-│       ├── seo-meta/               # Per-page SEO metadata
-│       ├── redirects/              # URL redirect rules
-│       ├── sitemap/                # Sitemap generation
-│       ├── robots/                 # robots.txt management
-│       ├── analytics/              # GA4 integration
-│       ├── notifications/          # In-app admin notifications
-│       ├── audit-log/              # Activity audit trail
-│       ├── invitations/            # Contributor invite system
-│       ├── mail/                   # Email (SMTP) service
-│       └── settings/               # Site-wide settings store
-├── frontend/                       # Next.js admin dashboard — port 3000
-│   └── src/
-│       ├── app/
-│       │   ├── setup/              # Setup wizard pages
-│       │   └── (admin)/dashboard/  # All dashboard pages
-│       ├── components/             # Shared UI components
-│       ├── lib/                    # API client, utilities
-│       └── context/                # Auth, modules, notifications context
-├── demo/                           # Demo playground app — port 3002
-│   └── src/
-│       ├── app/
-│       │   ├── api/auth/           # NextAuth.js OAuth handlers
-│       │   ├── playground/         # Live CMS demo tour
-│       │   └── pricing/            # Pricing page with lead capture
-│       └── components/
-├── themes/                         # Built-in themes (auto-discovered)
-│   └── cms-starter/                # CMS marketing website theme
-├── scripts/
-│   ├── build-schema.js             # Assembles Prisma schema from modules
-│   ├── zip-theme.js                # Packages a theme into a ZIP for upload
-│   └── dev-theme.js                # Starts a theme in dev mode
-├── .github/
-│   └── workflows/
-│       ├── ci.yml                  # Build validation on every push/PR
-│       ├── deploy-staging.yml      # Staging status on develop push
-│       └── deploy-production.yml   # Production approval gate on main push
-├── railway.json                    # Railway DOCKERFILE builder config
-├── LICENSE                         # Commercial proprietary license
-├── README.md                       # This file
-├── SETUP.md                        # Full deployment guide
-├── DEVELOPER_GUIDE.md              # Architecture and coding patterns
-├── CONTRIBUTING.md                 # Contributor rules
-└── PRICING.md                      # Pricing tiers and license terms
+ktm-plots/
+├── src/
+│   ├── app/                        # Next.js App Router pages
+│   │   ├── page.tsx                # Home page
+│   │   ├── about/                  # About page
+│   │   ├── plots/                  # Plot listings + detail pages
+│   │   │   ├── page.tsx            # All plots (with filters)
+│   │   │   ├── [slug]/             # Individual plot detail
+│   │   │   └── category/[slug]/    # Plots filtered by category
+│   │   ├── blog/                   # Blog listing + post pages
+│   │   ├── services/               # Services page
+│   │   ├── contact/                # Contact page + lead form
+│   │   ├── [slug]/                 # Dynamic CMS pages
+│   │   ├── api/
+│   │   │   ├── submit-lead/        # Lead form proxy (avoids CORS)
+│   │   │   ├── comments/           # Blog comments proxy
+│   │   │   └── revalidate/         # ISR revalidation webhook
+│   │   ├── globals.css             # Base styles and CSS variables
+│   │   ├── layout.tsx              # Root layout (fonts, metadata)
+│   │   ├── robots.ts               # robots.txt generation
+│   │   └── sitemap.ts              # Sitemap generation
+│   ├── components/
+│   │   ├── layout/
+│   │   │   ├── Header.tsx          # Site header + navigation
+│   │   │   └── Footer.tsx          # Site footer
+│   │   ├── sections/               # Home page section components
+│   │   │   ├── Hero.tsx            # Hero with search/filter widget
+│   │   │   ├── About.tsx           # About section + stats strip
+│   │   │   ├── Plots.tsx           # Featured plots section
+│   │   │   ├── Services.tsx        # Services section
+│   │   │   ├── Testimonials.tsx    # Testimonials carousel
+│   │   │   ├── BlogPreview.tsx     # Recent blog posts
+│   │   │   └── CtaStrip.tsx        # Call-to-action strip
+│   │   ├── plots/
+│   │   │   ├── PlotCardGrid.tsx    # Reusable plot card grid
+│   │   │   └── PlotListingClient.tsx # Client-side filter + pagination
+│   │   ├── blog/
+│   │   │   ├── BlogCardGrid.tsx    # Reusable blog card grid
+│   │   │   ├── BlogListingClient.tsx # Client-side filter + pagination
+│   │   │   └── BlogComments.tsx    # Comments section
+│   │   ├── services/
+│   │   │   └── ServicesDetailGrid.tsx
+│   │   ├── ui/
+│   │   │   ├── ScrollReveal.tsx    # Intersection observer animation
+│   │   │   ├── AnimatedStatsStrip.tsx
+│   │   │   ├── WishlistButton.tsx
+│   │   │   ├── FloatingActions.tsx
+│   │   │   └── TeamSocialIcons.tsx
+│   │   └── PlotGallery.tsx         # Image gallery for plot detail
+│   └── lib/
+│       └── cms.ts                  # All CMS API fetchers + types
+├── media/                          # Uploaded media (gitignored in dev)
+├── public/                         # Static assets
+├── theme.json                      # Theme metadata (slug, required modules)
+├── next.config.js                  # Next.js configuration
+├── tsconfig.json                   # TypeScript configuration
+├── vercel.json                     # Vercel deployment configuration
+└── .env.example                    # Required environment variables
 ```
-
----
-
-## Available Modules
-
-Selected during setup wizard — toggle later in **Dashboard → Settings → Modules**.
-
-| Module | Description |
-|---|---|
-| Blogs | Blog posts with rich content |
-| Categories | Taxonomy for blog posts |
-| Tags | Tag-based blog post taxonomy |
-| Comments | Reader comments on blog posts |
-| Pages | Static page management |
-| Menus | Dynamic nested navigation menus |
-| Services | Service or product listings |
-| Testimonials | Client testimonials and reviews |
-| Team | Team member profiles |
-| Leads | Contact form submission capture |
-| Media | File and image upload management |
-| SEO Meta | Per-page title, description, OG tags |
-| Redirects | URL redirect rules |
-| Sitemap | Auto-generated XML sitemap |
-| Robots | Editable robots.txt |
-| Analytics | Google Analytics 4 dashboard |
-| Themes | Theme upload, activation, and management |
-
-> Specialty modules (e.g. real estate plots) are shipped inside individual themes, not in the base CMS.
-
----
-
-## Theme System
-
-Themes are standalone Next.js apps that call the CMS public API. Fully self-contained — each theme declares what it needs and seeds its own content.
-
-**How a theme works:**
-1. `theme.json` declares slug, required modules, and seed data
-2. Backend auto-discovers themes in the `themes/` directory at startup
-3. Admin clicks **Setup** → backend seeds menus, posts, testimonials, services, etc.
-4. Admin clicks **Activate** → backend marks it as the active theme
-5. Theme fetches all data from `GET /public/site-data`
-
-**Packaging a custom theme for upload:**
-```bash
-node scripts/zip-theme.js cms-starter
-# Output: themes/cms-starter.zip
-# Then: Dashboard → Appearance → Themes → Upload Theme
-```
-
----
-
-## Environments
-
-| Environment | Branch | Backend | Frontend |
-|---|---|---|---|
-| Local Development | any | localhost:3001 | localhost:3000 |
-| Staging | `develop` | Railway (staging service) | Vercel preview URL |
-| Production | `main` | Railway (production service) | Vercel production domain |
 
 ---
 
 ## Quick Start (Local)
 
+### Prerequisites
+
+- Node.js 20+
+- A running Mero CMS backend (see [blendwit-cms](https://github.com/BlendWitTech/blendwit-cms))
+
+### Steps
+
 ```bash
-# 1. Clone (requires license or contributor access)
-git clone https://github.com/BlendWitTech/blendwit-cms.git
-cd blendwit-cms
+# 1. Clone
+git clone https://github.com/BlendWitTech/ktm-plots.git
+cd ktm-plots
 
-# 2. Backend
-cd backend
-cp .env.development.example .env
-# Edit .env: fill in DATABASE_URL and JWT_SECRET
+# 2. Install dependencies
 npm install
-npx prisma migrate dev
-npm run start:dev
 
-# 3. Frontend (new terminal)
-cd frontend
-cp .env.development.example .env.local
-npm install
+# 3. Set environment variable
+cp .env.example .env.local
+# Edit .env.local and set:
+# NEXT_PUBLIC_CMS_API_URL=http://localhost:3001
+
+# 4. Run dev server
 npm run dev
-
-# 4. Open http://localhost:3000/setup and complete the wizard
+# Opens at http://localhost:3000
 ```
 
-Full deployment guide → [SETUP.md](SETUP.md)
-Architecture and patterns → [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md)
-Pricing → [PRICING.md](PRICING.md)
+The theme works even without a live backend — it falls back to embedded default content defined in `src/lib/cms.ts`.
+
+---
+
+## Environment Variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `NEXT_PUBLIC_CMS_API_URL` | Yes | URL of the Mero CMS backend (e.g. `https://ktm-plots-backend.railway.app`) |
+
+---
+
+## Deployment (Vercel)
+
+1. Connect this repo to a Vercel project
+2. **Root Directory**: leave empty (theme is at repo root)
+3. Set environment variable:
+   ```
+   NEXT_PUBLIC_CMS_API_URL = https://your-backend.railway.app
+   ```
+4. Deploy
+
+The `vercel.json` at the repo root handles the build configuration automatically.
+
+---
+
+## Content Management
+
+All content — plots, blog posts, services, testimonials, menus, site settings — is managed through the **Mero CMS admin dashboard**. The theme fetches data at request time (ISR, 10s revalidate) from the backend's public API.
+
+For instant content updates, the CMS triggers the `/api/revalidate` endpoint on publish events, which clears the Next.js cache for affected pages.
+
+---
+
+## CMS Engine
+
+This theme is built on **Mero CMS** by Blendwit Tech.
+
+- Engine repo: [BlendWitTech/blendwit-cms](https://github.com/BlendWitTech/blendwit-cms)
+- Documentation: [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md)
+- Setup guide: [SETUP.md](SETUP.md)
 
 ---
 
 ## License
 
-Commercial proprietary software — Copyright (c) 2024–2026 Blendwit Tech. All rights reserved.
-Unauthorized use, cloning, or distribution is prohibited without a valid license.
-See [LICENSE](LICENSE) for full terms.
+This theme is proprietary software owned by **Blendwit Tech** and licensed to KTM Plots for their production deployment. Unauthorized redistribution is prohibited.

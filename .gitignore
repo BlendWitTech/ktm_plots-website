@@ -7,9 +7,6 @@ build/
 .next/
 out/
 
-# Theme zip exports
-themes/*.zip
-
 # Environment files (never commit secrets)
 .env
 .env.local
@@ -33,19 +30,18 @@ coverage/
 # Claude Code memory
 .claude/
 
-# Media uploads (user-generated content)
-backend/uploads/
+# TypeScript build info
+*.tsbuildinfo
 
-# Temp / packaging directories
-temp_theme/
-temp_website_repo/
-tmp/
-
-# Prisma generated client (regenerated on build)
-backend/node_modules/.prisma/
-
-# Theme build artifacts
-themes/*/node_modules/
-themes/*/.next/
-themes/*/out/
-themes/*/media/
+# Engine files (kept locally for reference, not part of this theme repo)
+backend/
+frontend/
+scripts/
+themes/
+docker-compose.yml
+nixpacks.toml
+railway.json
+railway.toml
+LICENSE
+PRICING.md
+package-lock.json

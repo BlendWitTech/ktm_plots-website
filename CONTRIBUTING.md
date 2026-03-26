@@ -1,51 +1,50 @@
-# Contributing to Mero CMS
+# Contributing to KTM Plots Theme
 
-Mero CMS is a proprietary product owned by **Blendwit Tech**. Contributions are by invitation only.
+This repo is maintained by **Blendwit Tech**. Contributions are by invitation only from the KTM Plots project team.
 
 ---
 
-## How to Become a Contributor
+## Getting Started
 
-1. Apply at [blendwit.com/mero-cms/contribute](https://blendwit.com/mero-cms/contribute)
-2. Once approved, you will receive a GitHub collaborator invite
-3. Sign the Contributor Agreement sent to your email
-4. Set up the project locally by following [SETUP.md](SETUP.md) — Part 1
+1. Make sure you have access to this GitHub repo (contact [hello@blendwit.com](mailto:hello@blendwit.com) if not)
+2. Follow [SETUP.md](SETUP.md) — Part 1 to get the theme running locally
+3. Read [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) before writing any code
 
 ---
 
 ## Contribution Rules
 
-- All contributions must be made via **Pull Requests** — never push directly to `develop` or `main`
-- Every PR must pass all CI checks before it can be reviewed
+- All changes must be made via **Pull Requests** — never push directly to `main`
+- Every PR must have a passing Vercel preview deployment before it can be reviewed
 - Every PR must be reviewed and approved by a Blendwit Tech maintainer before merging
-- PRs go to `develop` — never directly to `main`
-- All contributed code becomes the intellectual property of Blendwit Tech under the terms of the Contributor Agreement
-- Do not share, redistribute, or discuss internal implementation details outside of approved channels
+- Do not commit `.env` files, secrets, or credentials
+- Do not commit files in `media/` — uploaded media must not be in git
 
 ---
 
 ## Git Workflow
 
 ```
-main         ← production (owners only, via PR from develop)
-  └── develop  ← staging (contributor PRs merge here)
-        └── feature/your-feature  ← your work branch
+main          ← production (Blendwit Tech merges here after review)
+  └── feature/your-feature    ← your work
+  └── fix/bug-description
 ```
 
 ```bash
-# Always start from the latest develop
-git checkout develop
-git pull origin develop
+# Always start from the latest main
+git checkout main
+git pull origin main
 
 # Create a feature branch
 git checkout -b feature/short-description
 
-# Work and commit using conventional commits (see below)
-git add <specific files>
-git commit -m "feat(module): what you built"
+# Work and commit using conventional commits
+git add src/components/sections/Hero.tsx
+git commit -m "feat(hero): update filter layout"
 
-# Push and open a PR to develop
-git push origin feature/your-feature
+# Push and open a PR to main
+git push origin feature/short-description
+# Open PR on GitHub: feature/short-description → main
 ```
 
 ---
@@ -60,32 +59,20 @@ Use [Conventional Commits](https://www.conventionalcommits.org/):
 
 | Type | When to use |
 |---|---|
-| `feat` | New feature or behaviour |
+| `feat` | New page, section, or feature |
 | `fix` | Bug fix |
-| `chore` | Build tooling, CI, config, dependencies |
+| `chore` | Config, dependencies, build |
 | `docs` | Documentation changes only |
-| `refactor` | Code change that neither fixes a bug nor adds a feature |
-| `style` | Formatting, whitespace — no logic change |
-| `test` | Adding or updating tests |
+| `refactor` | Restructure without behaviour change |
+| `style` | CSS / formatting — no logic change |
 
 **Examples:**
 ```
-feat(blogs): add scheduled publishing
-fix(themes): resolve CORS on theme zip upload
-chore(ci): pin node version to 20
-docs(setup): add troubleshooting section for Railway
+feat(plots): add map view to plot detail page
+fix(hero): correct mobile filter overflow
+chore(deps): update next to 16.2.0
+docs(setup): add revalidation setup steps
 ```
-
----
-
-## Code Standards
-
-- TypeScript strict mode — no `any` unless unavoidable and documented
-- NestJS modules follow the existing pattern: `module / controller / service / dto`
-- Frontend components use Tailwind CSS utility classes — no custom CSS files
-- All API endpoints require `@JwtAuthGuard` and `@RequirePermissions(...)` unless explicitly public
-- Never commit `.env` files, secrets, or credentials
-- Never commit files in `backend/uploads/` — user media must not be in git
 
 ---
 
@@ -93,11 +80,11 @@ docs(setup): add troubleshooting section for Railway
 
 Before opening a PR, confirm:
 
-- [ ] `npm run build` passes in `backend/`
-- [ ] `npm run build` passes in `frontend/`
-- [ ] No new TypeScript errors introduced
-- [ ] No hardcoded URLs, credentials, or theme-specific text in base CMS files
-- [ ] New modules/pages are guarded with proper permission checks
+- [ ] `npm run build` passes locally without errors
+- [ ] No TypeScript errors (`npm run lint` passes)
+- [ ] Vercel preview URL loads correctly with content from the CMS
+- [ ] No hardcoded content that should come from the CMS
+- [ ] Mobile layout tested at 375px and 768px
 - [ ] PR title follows the commit convention format
 - [ ] PR description explains what changed and why
 
@@ -105,10 +92,4 @@ Before opening a PR, confirm:
 
 ## Reporting Issues
 
-Approved contributors may open issues directly in this repository.
-
-For all others: [hello@blendwit.com](mailto:hello@blendwit.com)
-
----
-
-*Unauthorized use of this software is a violation of copyright law. See [LICENSE](LICENSE).*
+Open a GitHub issue in this repo, or email [hello@blendwit.com](mailto:hello@blendwit.com).

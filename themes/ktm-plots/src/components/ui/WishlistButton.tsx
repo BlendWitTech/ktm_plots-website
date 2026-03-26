@@ -14,8 +14,8 @@ function getWishlist(): string[] {
 
 interface Props {
   plotId: string;
-  /** 'card' = absolute-positioned icon overlay (default). 'inline' = full button with label */
-  variant?: 'card' | 'inline';
+  /** 'card' = absolute-positioned icon overlay (default). 'inline' = full button with label. 'compact' = icon only, same border style as inline */
+  variant?: 'card' | 'inline' | 'compact';
 }
 
 export default function WishlistButton({ plotId, variant = 'card' }: Props) {
@@ -35,6 +35,28 @@ export default function WishlistButton({ plotId, variant = 'card' }: Props) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     setSaved(next.includes(plotId));
   };
+
+  if (variant === 'compact') {
+    return (
+      <button
+        onClick={toggle}
+        aria-label={saved ? 'Remove from wishlist' : 'Save to wishlist'}
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          width: '32px', height: '32px', flexShrink: 0,
+          background: saved ? '#FEF2F2' : 'var(--color-accent)',
+          border: `1.5px solid ${saved ? '#FCA5A5' : '#E5E7EB'}`,
+          borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s',
+        }}
+        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#FEF2F2'; (e.currentTarget as HTMLElement).style.borderColor = '#FCA5A5'; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = saved ? '#FEF2F2' : 'var(--color-accent)'; (e.currentTarget as HTMLElement).style.borderColor = saved ? '#FCA5A5' : '#E5E7EB'; }}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill={saved ? 'var(--color-primary)' : 'none'} stroke={saved ? 'var(--color-primary)' : 'currentColor'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </button>
+    );
+  }
 
   if (variant === 'inline') {
     return (

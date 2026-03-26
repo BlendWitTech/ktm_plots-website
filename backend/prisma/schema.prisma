@@ -342,6 +342,7 @@ model SeoMeta {
   ogTitle            String?
   ogDescription      String?
   ogImage            String?
+  ogImages           String[]
   twitterCard        String?  @default("summary_large_image")
   twitterTitle       String?
   twitterDescription String?

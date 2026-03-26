@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { Project } from '@/lib/cms';
 import { getImageUrl } from '@/lib/cms';
 import ScrollReveal from '@/components/ui/ScrollReveal';
@@ -36,6 +36,18 @@ export default function Plots({ plots, secData = {} }: Props) {
 
   const [activeCategory, setActiveCategory] = useState('');
   const [activeStatus, setActiveStatus]   = useState('');
+  const pfCatRef    = useRef<HTMLDivElement>(null);
+  const pfStatusRef = useRef<HTMLDivElement>(null);
+  const pfScroll = (ref: React.RefObject<HTMLDivElement | null>, dir: -1 | 1) => ref.current?.scrollBy({ left: dir * 110, behavior: 'smooth' });
+  const [pfCatSc,    setPfCatSc]    = useState({ l: false, r: false });
+  const [pfStatusSc, setPfStatusSc] = useState({ l: false, r: false });
+  const pfChk = (el: HTMLDivElement | null) => ({ l: (el?.scrollLeft ?? 0) > 1, r: (el?.scrollLeft ?? 0) + (el?.clientWidth ?? 0) < (el?.scrollWidth ?? 0) - 1 });
+  useEffect(() => {
+    const cat = pfCatRef.current; const sts = pfStatusRef.current;
+    const upd = () => { setPfCatSc(pfChk(pfCatRef.current)); setPfStatusSc(pfChk(pfStatusRef.current)); };
+    upd(); cat?.addEventListener('scroll', upd); sts?.addEventListener('scroll', upd); window.addEventListener('resize', upd);
+    return () => { cat?.removeEventListener('scroll', upd); sts?.removeEventListener('scroll', upd); window.removeEventListener('resize', upd); };
+  }, []);
 
   // Derive unique categories from the loaded plots
   const seenSlugs = new Set<string>();
@@ -84,6 +96,12 @@ export default function Plots({ plots, secData = {} }: Props) {
         {/* Filter bar */}
         {(() => {
           const typeOpts = [{ slug: '', name: 'All Types' }, ...categories];
+          const pill = (active: boolean) => ({
+            padding: '0.3rem 0.75rem', borderRadius: '7px', border: 'none', cursor: 'pointer',
+            fontSize: '0.78rem', fontWeight: 700, whiteSpace: 'nowrap' as const, flexShrink: 0, transition: 'all 0.15s',
+            background: active ? 'var(--color-secondary)' : 'transparent',
+            color: active ? '#fff' : '#6B7280',
+          });
           const cycleBtn = (dir: -1 | 1, opts: {slug:string}[], active: string, set: (s:string)=>void) => {
             const idx = opts.findIndex(o => o.slug === active);
             return () => set(opts[(idx + dir + opts.length) % opts.length].slug);
@@ -92,51 +110,62 @@ export default function Plots({ plots, secData = {} }: Props) {
             <ScrollReveal animation="up" delay={80}>
               <div style={{ background: '#FFFFFF', borderRadius: '12px', overflow: 'hidden', marginBottom: '2rem', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
 
-                {/* Desktop: scrollable pill tab rows (like Hero) */}
-                <div className="pf-desktop-rows">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderBottom: '1px solid #F3F4F6' }}>
-                    <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Type:</span>
-                    <div style={{ display: 'flex', gap: '0.25rem', overflowX: 'auto', scrollbarWidth: 'none', flexWrap: 'nowrap' } as React.CSSProperties}>
-                      {typeOpts.map((o) => (
-                        <button key={o.slug} onClick={() => setActiveCategory(o.slug)} style={{
-                          padding: '0.35rem 0.875rem', borderRadius: '7px', border: 'none', cursor: 'pointer',
-                          fontSize: '0.8rem', fontWeight: 700, whiteSpace: 'nowrap', flexShrink: 0, transition: 'all 0.15s',
-                          background: activeCategory === o.slug ? 'var(--color-secondary)' : 'transparent',
-                          color: activeCategory === o.slug ? '#fff' : '#6B7280',
-                        }}>{o.name}</button>
-                      ))}
-                    </div>
-                    {(activeCategory || activeStatus) && (
-                      <button onClick={() => { setActiveCategory(''); setActiveStatus(''); }}
-                        style={{ marginLeft: 'auto', flexShrink: 0, padding: '0.3rem 0.75rem', borderRadius: '7px', border: '1px solid #FCA5A5', background: '#FEF2F2', color: 'var(--color-primary)', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}>
-                        ✕ Clear
+                {/* Desktop: 50/50 pill tabs with scroll arrows */}
+                <div className="pf-filter-pills" style={{ display: 'flex', alignItems: 'stretch' }}>
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '0.75rem 1rem', gap: '1rem', minWidth: 0 }}>
+                    <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.1em', flexShrink: 0 }}>Type</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', flex: 1, overflow: 'hidden' }}>
+                      <button onClick={() => pfScroll(pfCatRef, -1)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'20px', height:'20px', borderRadius:'4px', border:'1px solid #E5E7EB', background:'transparent', color:'#9CA3AF', cursor:'pointer', flexShrink:0, opacity: pfCatSc.l ? 1 : 0, pointerEvents: pfCatSc.l ? 'auto' : 'none', transition:'opacity 0.15s' }}>
+                        <svg width="9" height="9" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
                       </button>
-                    )}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}>
-                    <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Status:</span>
-                    <div style={{ display: 'flex', gap: '0.25rem', overflowX: 'auto', scrollbarWidth: 'none', flexWrap: 'nowrap' } as React.CSSProperties}>
-                      {STATUS_FILTERS.map((s) => (
-                        <button key={s.slug} onClick={() => setActiveStatus(s.slug)} style={{
-                          padding: '0.35rem 0.875rem', borderRadius: '7px', border: 'none', cursor: 'pointer',
-                          fontSize: '0.8rem', fontWeight: 700, whiteSpace: 'nowrap', flexShrink: 0, transition: 'all 0.15s',
-                          background: activeStatus === s.slug ? 'var(--color-secondary)' : 'transparent',
-                          color: activeStatus === s.slug ? '#fff' : '#6B7280',
-                        }}>{s.label}</button>
-                      ))}
+                      <div style={{ flex: 1, overflow: 'hidden' }}>
+                        <div ref={pfCatRef} className="pf-pills" style={{ display: 'flex', gap: '0.25rem', overflowX: 'auto', scrollbarWidth: 'none', flexWrap: 'nowrap', paddingBottom: '20px', marginBottom: '-20px' } as React.CSSProperties}>
+                          {typeOpts.map(o => (
+                            <button key={o.slug} onClick={() => setActiveCategory(o.slug)} style={pill(activeCategory === o.slug)}>{o.name}</button>
+                          ))}
+                        </div>
+                      </div>
+                      <button onClick={() => pfScroll(pfCatRef, 1)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'20px', height:'20px', borderRadius:'4px', border:'1px solid #E5E7EB', background:'transparent', color:'#9CA3AF', cursor:'pointer', flexShrink:0, opacity: pfCatSc.r ? 1 : 0, pointerEvents: pfCatSc.r ? 'auto' : 'none', transition:'opacity 0.15s' }}>
+                        <svg width="9" height="9" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                      </button>
                     </div>
                   </div>
+                  <div style={{ width: '1px', background: '#F3F4F6', alignSelf: 'stretch', flexShrink: 0 }} />
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '0.75rem 1rem', gap: '1rem', minWidth: 0 }}>
+                    <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.1em', flexShrink: 0 }}>Status</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', flex: 1, overflow: 'hidden' }}>
+                      <button onClick={() => pfScroll(pfStatusRef, -1)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'20px', height:'20px', borderRadius:'4px', border:'1px solid #E5E7EB', background:'transparent', color:'#9CA3AF', cursor:'pointer', flexShrink:0, opacity: pfStatusSc.l ? 1 : 0, pointerEvents: pfStatusSc.l ? 'auto' : 'none', transition:'opacity 0.15s' }}>
+                        <svg width="9" height="9" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                      </button>
+                      <div style={{ flex: 1, overflow: 'hidden' }}>
+                        <div ref={pfStatusRef} className="pf-pills" style={{ display: 'flex', gap: '0.25rem', overflowX: 'auto', scrollbarWidth: 'none', flexWrap: 'nowrap', paddingBottom: '20px', marginBottom: '-20px' } as React.CSSProperties}>
+                          {STATUS_FILTERS.map(s => (
+                            <button key={s.slug} onClick={() => setActiveStatus(s.slug)} style={pill(activeStatus === s.slug)}>{s.label}</button>
+                          ))}
+                        </div>
+                      </div>
+                      <button onClick={() => pfScroll(pfStatusRef, 1)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'20px', height:'20px', borderRadius:'4px', border:'1px solid #E5E7EB', background:'transparent', color:'#9CA3AF', cursor:'pointer', flexShrink:0, opacity: pfStatusSc.r ? 1 : 0, pointerEvents: pfStatusSc.r ? 'auto' : 'none', transition:'opacity 0.15s' }}>
+                        <svg width="9" height="9" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                      </button>
+                    </div>
+                  </div>
+                  {(activeCategory || activeStatus) && (
+                    <button onClick={() => { setActiveCategory(''); setActiveStatus(''); }}
+                      style={{ alignSelf:'center', padding:'0 0.5rem', color:'var(--color-primary)', background:'none', border:'none', cursor:'pointer', fontSize:'0.75rem', fontWeight:700, flexShrink:0 }}>
+                      ✕
+                    </button>
+                  )}
                 </div>
 
-                {/* Mobile: 50/50 side-by-side cycle toggles */}
-                <div className="pf-mobile-row" style={{ display: 'none', alignItems: 'stretch' }}>
+                {/* Mobile: 50/50 cycle toggles */}
+                <div className="pf-filter-cycles" style={{ display: 'none', alignItems: 'stretch' }}>
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '0.5rem 0.625rem', gap: '0.2rem' }}>
                     <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Type</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
                       <button onClick={cycleBtn(-1, typeOpts, activeCategory, setActiveCategory)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'24px', height:'24px', borderRadius:'5px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
                         <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
                       </button>
-                      <span style={{ flex:1, textAlign:'center', padding:'0.25rem 0.25rem', borderRadius:'5px', background: activeCategory ? 'var(--color-secondary)' : '#F3F4F6', color: activeCategory ? '#fff' : '#4B5563', fontSize:'0.75rem', fontWeight:700, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+                      <span style={{ flex:1, textAlign:'center', padding:'0.25rem', borderRadius:'5px', background: activeCategory ? 'var(--color-secondary)' : '#F3F4F6', color: activeCategory ? '#fff' : '#4B5563', fontSize:'0.78rem', fontWeight:700, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
                         {typeOpts.find(o => o.slug === activeCategory)?.name ?? 'All Types'}
                       </span>
                       <button onClick={cycleBtn(1, typeOpts, activeCategory, setActiveCategory)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'24px', height:'24px', borderRadius:'5px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
@@ -144,14 +173,14 @@ export default function Plots({ plots, secData = {} }: Props) {
                       </button>
                     </div>
                   </div>
-                  <div style={{ width: '1px', background: '#F3F4F6', alignSelf: 'stretch' }} />
+                  <div style={{ width: '1px', background: '#F3F4F6', alignSelf: 'stretch', flexShrink: 0 }} />
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '0.5rem 0.625rem', gap: '0.2rem' }}>
                     <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Status</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
                       <button onClick={cycleBtn(-1, STATUS_FILTERS, activeStatus, setActiveStatus)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'24px', height:'24px', borderRadius:'5px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
                         <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
                       </button>
-                      <span style={{ flex:1, textAlign:'center', padding:'0.25rem 0.25rem', borderRadius:'5px', background: activeStatus ? 'var(--color-secondary)' : '#F3F4F6', color: activeStatus ? '#fff' : '#4B5563', fontSize:'0.75rem', fontWeight:700, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+                      <span style={{ flex:1, textAlign:'center', padding:'0.25rem', borderRadius:'5px', background: activeStatus ? 'var(--color-secondary)' : '#F3F4F6', color: activeStatus ? '#fff' : '#4B5563', fontSize:'0.78rem', fontWeight:700, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
                         {STATUS_FILTERS.find(s => s.slug === activeStatus)?.label ?? 'All Status'}
                       </span>
                       <button onClick={cycleBtn(1, STATUS_FILTERS, activeStatus, setActiveStatus)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'24px', height:'24px', borderRadius:'5px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
@@ -229,22 +258,19 @@ export default function Plots({ plots, secData = {} }: Props) {
                       <p style={{ fontSize: '0.8rem', color: '#6B7280', lineHeight: 1.65, flex: 1, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {plot.description}
                       </p>
-                      <div style={{ marginTop: '0.875rem', paddingTop: '0.75rem', borderTop: '1px solid #F3F4F6' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                          {plot.areaFrom && (
-                            <div style={{ fontSize: '0.75rem', color: '#6B7280', minWidth: 0 }}>
-                              <span style={{ color: '#374151', fontWeight: 700 }}>{plot.areaFrom}</span>
-                              {plot.areaTo && plot.areaTo !== plot.areaFrom && <span> – {plot.areaTo}</span>}
-                            </div>
-                          )}
-                          <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.25rem', marginLeft: 'auto' }}>
-                            View Details
-                            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                          </span>
-                        </div>
-                        <div style={{ marginTop: '0.5rem' }}>
-                          <WishlistButton plotId={plot.id} variant="inline" />
-                        </div>
+                      <div style={{ marginTop: '0.875rem', paddingTop: '0.75rem', borderTop: '1px solid #F3F4F6', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        {plot.areaFrom && (
+                          <div style={{ fontSize: '0.75rem', color: '#6B7280', minWidth: 0, flex: 1 }}>
+                            <span style={{ color: '#374151', fontWeight: 700 }}>{plot.areaFrom}</span>
+                            {plot.areaTo && plot.areaTo !== plot.areaFrom && <span> – {plot.areaTo}</span>}
+                          </div>
+                        )}
+                        <span className="plot-wish-compact"><WishlistButton plotId={plot.id} variant="compact" /></span>
+                        <span className="plot-wish-full"><WishlistButton plotId={plot.id} variant="inline" /></span>
+                        <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.25rem', flexShrink: 0 }}>
+                          <span className="plot-view-text">View Details</span>
+                          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        </span>
                       </div>
                     </div>
                   </Link>
@@ -255,11 +281,17 @@ export default function Plots({ plots, secData = {} }: Props) {
         )}
       </div>
       <style>{`
-        .pf-desktop-rows::-webkit-scrollbar { display: none; }
-        .pf-mobile-row { display: none; }
+        .pf-pills::-webkit-scrollbar { display: none; }
+        .plot-wish-compact { display: none; }
+        @media (max-width: 480px) {
+          .plot-wish-full    { display: none !important; }
+          .plot-wish-compact { display: inline-flex !important; }
+          .plot-view-text    { display: none !important; }
+        }
+        .pf-filter-cycles { display: none; }
         @media (max-width: 640px) {
-          .pf-desktop-rows { display: none !important; }
-          .pf-mobile-row   { display: flex !important; }
+          .pf-filter-pills  { display: none !important; }
+          .pf-filter-cycles { display: flex !important; }
           .plots-grid {
             display: flex !important;
             overflow-x: auto;

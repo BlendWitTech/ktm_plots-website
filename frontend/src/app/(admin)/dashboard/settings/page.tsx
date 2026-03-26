@@ -236,8 +236,8 @@ export default function SettingsPage() {
             </div>
 
             {/* Navigation Tabs */}
-            <div className="overflow-x-auto -mx-2 px-2 sticky top-0 z-50">
-                <div className="flex items-center gap-1 p-1 bg-slate-100/80 rounded-[2rem] border border-slate-200 min-w-max sm:min-w-0">
+            <div className="overflow-x-auto custom-scrollbar-hidden -mx-2 px-2 sticky top-0 z-50">
+                <div className="flex items-center gap-1 p-1 bg-white shadow-lg shadow-slate-200/50 rounded-[2rem] border border-slate-200 w-max min-w-full">
                     {tabs.map(tab => (
                         <button
                             key={tab.id}
@@ -254,7 +254,11 @@ export default function SettingsPage() {
                 </div>
             </div>
 
-            <div className="animate-in fade-in slide-in-from-bottom-6 duration-700">
+            <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 relative">
+                {/* Global Ambient Background - Ensures consistency across all tabs */}
+                <div className="absolute top-[10%] left-[-5%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none -z-10" />
+                <div className="absolute bottom-[10%] right-[-5%] w-[40%] h-[40%] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none -z-10" />
+                <div className="absolute inset-0 bg-grid opacity-[0.02] pointer-events-none -z-10" />
                 {/* Branding Tab */}
                 {activeTab === 'branding' && (
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -1197,7 +1201,8 @@ export default function SettingsPage() {
 
                 {/* Audit Logs Tab */}
                 {activeTab === 'audit-logs' && (
-                    <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-200 border border-slate-200 overflow-hidden">
+                    <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-200 border border-slate-200 overflow-hidden relative">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-slate-500/5 rounded-full blur-3xl pointer-events-none"></div>
                         <div className="p-10 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-50/20">
                             <div>
                                 <h3 className="text-2xl font-bold text-slate-900 font-display">System Ledger</h3>
@@ -1302,7 +1307,8 @@ export default function SettingsPage() {
                 {/* Performance Tab */}
                 {activeTab === 'performance' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                        <div className="bg-white rounded-[3rem] p-5 sm:p-8 shadow-2xl shadow-slate-200 border border-slate-200 space-y-8">
+                        <div className="bg-white rounded-[3rem] p-5 sm:p-8 shadow-2xl shadow-slate-200 border border-slate-200 space-y-8 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/5 rounded-full blur-3xl group-hover:bg-blue-500/10 transition-colors pointer-events-none"></div>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="p-3 bg-blue-600 rounded-2xl shadow-xl shadow-blue-500/20 text-white">

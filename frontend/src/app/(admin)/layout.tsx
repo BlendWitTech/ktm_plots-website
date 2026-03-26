@@ -23,6 +23,7 @@ export default function AdminLayout({
     const [revocationMessage, setRevocationMessage] = useState<string | null>(null);
     const pathname = usePathname();
     const isMediaPage = pathname?.includes('/media');
+    const isSettingsPage = pathname?.includes('/settings');
 
     // Close mobile sidebar on route change
     useEffect(() => {
@@ -80,8 +81,8 @@ export default function AdminLayout({
                     {/* Main Content Area */}
                     <div className={`relative flex h-screen flex-col overflow-hidden bg-mesh transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
                         <Header isCollapsed={isCollapsed} onMobileMenuToggle={() => setIsMobileOpen(true)} />
-                        <main className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
-                            <div className={`relative ${isMediaPage ? '' : 'p-4 sm:p-6 lg:p-8'}`}>
+                        <main className={`flex-1 overflow-x-hidden ${isSettingsPage ? 'overflow-hidden' : 'overflow-y-auto custom-scrollbar'}`}>
+                            <div className={`relative ${isSettingsPage ? 'h-full overflow-y-auto custom-scrollbar' : ''} ${isMediaPage ? '' : 'p-4 sm:p-6 lg:p-8'}`}>
                                 {/* Subtle background glow */}
                                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-100/10 rounded-full blur-[120px] pointer-events-none" />
                                 <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-100/10 rounded-full blur-[120px] pointer-events-none" />

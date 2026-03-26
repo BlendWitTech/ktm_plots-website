@@ -92,9 +92,44 @@ export default function Plots({ plots, secData = {} }: Props) {
             <ScrollReveal animation="up" delay={80}>
               <div style={{ background: '#FFFFFF', borderRadius: '12px', overflow: 'hidden', marginBottom: '2rem', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
 
-                {/* Type + Status: always 50/50 side-by-side */}
-                <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                  {/* Type half */}
+                {/* Desktop: scrollable pill tab rows (like Hero) */}
+                <div className="pf-desktop-rows">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderBottom: '1px solid #F3F4F6' }}>
+                    <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Type:</span>
+                    <div style={{ display: 'flex', gap: '0.25rem', overflowX: 'auto', scrollbarWidth: 'none', flexWrap: 'nowrap' } as React.CSSProperties}>
+                      {typeOpts.map((o) => (
+                        <button key={o.slug} onClick={() => setActiveCategory(o.slug)} style={{
+                          padding: '0.35rem 0.875rem', borderRadius: '7px', border: 'none', cursor: 'pointer',
+                          fontSize: '0.8rem', fontWeight: 700, whiteSpace: 'nowrap', flexShrink: 0, transition: 'all 0.15s',
+                          background: activeCategory === o.slug ? 'var(--color-secondary)' : 'transparent',
+                          color: activeCategory === o.slug ? '#fff' : '#6B7280',
+                        }}>{o.name}</button>
+                      ))}
+                    </div>
+                    {(activeCategory || activeStatus) && (
+                      <button onClick={() => { setActiveCategory(''); setActiveStatus(''); }}
+                        style={{ marginLeft: 'auto', flexShrink: 0, padding: '0.3rem 0.75rem', borderRadius: '7px', border: '1px solid #FCA5A5', background: '#FEF2F2', color: 'var(--color-primary)', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}>
+                        ✕ Clear
+                      </button>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}>
+                    <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Status:</span>
+                    <div style={{ display: 'flex', gap: '0.25rem', overflowX: 'auto', scrollbarWidth: 'none', flexWrap: 'nowrap' } as React.CSSProperties}>
+                      {STATUS_FILTERS.map((s) => (
+                        <button key={s.slug} onClick={() => setActiveStatus(s.slug)} style={{
+                          padding: '0.35rem 0.875rem', borderRadius: '7px', border: 'none', cursor: 'pointer',
+                          fontSize: '0.8rem', fontWeight: 700, whiteSpace: 'nowrap', flexShrink: 0, transition: 'all 0.15s',
+                          background: activeStatus === s.slug ? 'var(--color-secondary)' : 'transparent',
+                          color: activeStatus === s.slug ? '#fff' : '#6B7280',
+                        }}>{s.label}</button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile: 50/50 side-by-side cycle toggles */}
+                <div className="pf-mobile-row" style={{ display: 'none', alignItems: 'stretch' }}>
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '0.5rem 0.625rem', gap: '0.2rem' }}>
                     <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Type</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
@@ -109,9 +144,7 @@ export default function Plots({ plots, secData = {} }: Props) {
                       </button>
                     </div>
                   </div>
-                  {/* Divider */}
                   <div style={{ width: '1px', background: '#F3F4F6', alignSelf: 'stretch' }} />
-                  {/* Status half */}
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '0.5rem 0.625rem', gap: '0.2rem' }}>
                     <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Status</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
@@ -126,7 +159,6 @@ export default function Plots({ plots, secData = {} }: Props) {
                       </button>
                     </div>
                   </div>
-                  {/* Clear button — only when active */}
                   {(activeCategory || activeStatus) && (
                     <button onClick={() => { setActiveCategory(''); setActiveStatus(''); }}
                       style={{ alignSelf:'center', padding:'0 0.75rem', color:'var(--color-primary)', background:'none', border:'none', cursor:'pointer', fontSize:'0.75rem', fontWeight:700, flexShrink:0 }}>
@@ -223,7 +255,11 @@ export default function Plots({ plots, secData = {} }: Props) {
         )}
       </div>
       <style>{`
+        .pf-desktop-rows::-webkit-scrollbar { display: none; }
+        .pf-mobile-row { display: none; }
         @media (max-width: 640px) {
+          .pf-desktop-rows { display: none !important; }
+          .pf-mobile-row   { display: flex !important; }
           .plots-grid {
             display: flex !important;
             overflow-x: auto;

@@ -334,7 +334,7 @@ function UsersPageContent() {
                 </div>
 
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
+                    <table className="w-full min-w-[700px] text-left border-collapse">
                         <thead>
                             <tr className="border-b border-slate-100">
                                 <th className="pl-6 py-4 w-12 text-center">

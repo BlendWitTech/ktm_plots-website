@@ -67,7 +67,7 @@ export default function AdminLayout({
                         >
                             <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" />
                             <div
-                                className="absolute inset-y-0 left-0 w-72 flex flex-col"
+                                className="absolute inset-y-0 left-0 w-72 max-w-[85vw] flex flex-col"
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <Suspense fallback={null}>

@@ -22,12 +22,13 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 body {
   font-family: var(--font-body);
   color: var(--text-dark);
   background: #fff;
   line-height: 1.6;
+  overflow-x: hidden;
   /* Sticky footer: content always fills viewport */
   display: flex;
   flex-direction: column;
@@ -413,6 +414,9 @@ h1, h2, h3, h4, h5, h6 {
 
   /* Blog/plots card grid: ensure cards don't clip */
   .blog-card, .plot-card { min-width: 0 !important; }
+
+  /* Hero content: tightest padding on very small phones */
+  .hero-content-container { padding: 2.5rem 1rem 1.5rem !important; }
 }
 
 /* 768px and below */
@@ -474,7 +478,7 @@ h1, h2, h3, h4, h5, h6 {
   .page-hero-band { padding: 2rem 0 1.5rem !important; }
 
   /* Hero content: reduce top padding further on phones */
-  .hero-content-container { padding: 4rem 1rem 2.5rem !important; }
+  .hero-content-container { padding: 3rem 1rem 2rem !important; }
 
 }
 

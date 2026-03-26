@@ -207,7 +207,7 @@ export default function Header({ siteData, menu }: Props) {
               </Link>
             );
           })}
-          <Link href="/contact" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginTop: '1.25rem' }} onClick={() => setOpen(false)}>
+          <Link href="/contact" className="btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', marginTop: '1.25rem', width: '100%' }} onClick={() => setOpen(false)}>
             Get a Quote
             <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
           </Link>

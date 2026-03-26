@@ -141,7 +141,7 @@ export default function CollectionContentPage({ params }: { params: Promise<{ sl
                 </div>
 
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
+                    <table className="w-full min-w-[700px] text-left border-collapse">
                         <thead>
                             <tr className="border-b border-slate-100 bg-slate-50/30">
                                 {tableFields.map((field: any) => (

@@ -251,7 +251,7 @@ export default function AnalyticsPage() {
                         <div className="bg-white border-2 border-slate-200 rounded-2xl p-8">
                             <h2 className="text-xl font-black text-slate-900 mb-6">Top Content</h2>
                             <div className="overflow-hidden">
-                                <table className="w-full text-left">
+                                <table className="w-full min-w-[600px] text-left">
                                     <thead>
                                         <tr className="border-b border-slate-100">
                                             <th className="pb-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Page Path</th>

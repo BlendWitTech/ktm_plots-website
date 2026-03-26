@@ -323,7 +323,7 @@ export default function DashboardPage() {
                     <div className="space-y-5">
                         <button
                             onClick={() => setCreateModalOpen(true)}
-                            className="group relative w-full overflow-hidden flex items-center justify-between p-7 rounded-[2.5rem] bg-slate-900 text-white shadow-2xl shadow-slate-900/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-500"
+                            className="group relative w-full overflow-hidden flex items-center justify-between p-4 sm:p-7 rounded-[2.5rem] bg-slate-900 text-white shadow-2xl shadow-slate-900/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-500"
                         >
                             <span className="flex items-center gap-4 font-bold uppercase tracking-widest text-xs relative z-10 font-display">
                                 <div className="p-3 bg-white/10 rounded-2xl ring-1 ring-white/20 group-hover:bg-blue-600 transition-all duration-500">
@@ -335,7 +335,7 @@ export default function DashboardPage() {
                             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl pointer-events-none group-hover:bg-blue-600/40 transition-colors"></div>
                         </button>
 
-                        <Link href="/dashboard/media" className="group w-full flex items-center justify-between p-7 rounded-[2.5rem] bg-white border border-slate-200 shadow-2xl shadow-slate-200 text-slate-900 hover:border-blue-600/30 hover:text-blue-600 hover:scale-[1.02] active:scale-[0.98] transition-all duration-500">
+                        <Link href="/dashboard/media" className="group w-full flex items-center justify-between p-4 sm:p-7 rounded-[2.5rem] bg-white border border-slate-200 shadow-2xl shadow-slate-200 text-slate-900 hover:border-blue-600/30 hover:text-blue-600 hover:scale-[1.02] active:scale-[0.98] transition-all duration-500">
                             <span className="flex items-center gap-4 font-bold uppercase tracking-widest text-xs text-slate-500 group-hover:text-blue-600 transition-all duration-500 font-display">
                                 <div className="p-3 bg-slate-50 rounded-2xl group-hover:bg-blue-50 transition-colors">
                                     <PhotoIcon className="h-5 w-5" />

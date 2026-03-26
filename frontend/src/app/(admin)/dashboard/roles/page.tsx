@@ -398,7 +398,7 @@ function RolesPageContent() {
                 /* List View */
                 <div className="mx-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
+                        <table className="w-full min-w-[700px] text-left border-collapse">
                             <thead>
                                 <tr className="bg-slate-50/50 border-b border-slate-100">
                                     <th className="pl-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Role Name</th>

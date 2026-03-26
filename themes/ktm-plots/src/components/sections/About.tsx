@@ -106,11 +106,11 @@ function AnimatedCounter({ value, label, delay = 0 }: { value: string; label: st
   }, [triggered, targetNum, delay]);
 
   return (
-    <div ref={ref} style={{ textAlign: 'center', padding: '1rem 1.5rem' }}>
-      <div style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--color-primary)', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
+    <div ref={ref} className="about-stat-cell" style={{ textAlign: 'center', padding: '1rem 1.5rem' }}>
+      <div className="about-stat-value" style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--color-primary)', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
         {isNaN(targetNum) ? value : `${count}${suffix}`}
       </div>
-      <div style={{ fontSize: '0.7rem', color: '#9CA3AF', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 600 }}>
+      <div className="about-stat-label" style={{ fontSize: '0.7rem', color: '#9CA3AF', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 600 }}>
         {label}
       </div>
     </div>
@@ -182,16 +182,23 @@ export default function About({ siteData, secData = {} }: Props) {
               </p>
 
               {/* Stats counters — after paragraphs */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 0, marginBottom: '2rem', background: '#FFFFFF', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+              <div className="about-stats-strip" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', marginBottom: '2rem', background: '#FFFFFF', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
                 {stats.map((s, i) => (
-                  <div key={s.label} style={{ display: 'flex', alignItems: 'stretch', flex: '1 1 auto', minWidth: '80px' }}>
-                    {i > 0 && <div style={{ width: '1px', background: '#F3F4F6', alignSelf: 'stretch', flexShrink: 0 }} />}
-                    <div style={{ flex: 1 }}>
-                      <AnimatedCounter value={s.value} label={s.label} delay={i * 150} />
-                    </div>
+                  <div key={s.label} style={{ position: 'relative' }}>
+                    {i > 0 && <div style={{ position: 'absolute', left: 0, top: '20%', bottom: '20%', width: '1px', background: '#E5E7EB' }} />}
+                    <AnimatedCounter value={s.value} label={s.label} delay={i * 150} />
                   </div>
                 ))}
               </div>
+              <style>{`
+                .about-stat-cell { width: 100%; box-sizing: border-box; }
+                @media (max-width: 480px) {
+                  .about-stats-strip { grid-template-columns: repeat(2, 1fr) !important; }
+                  .about-stat-cell { padding: 0.75rem 0.5rem !important; }
+                  .about-stat-value { font-size: 1.5rem !important; }
+                  .about-stat-label { font-size: 0.62rem !important; }
+                }
+              `}</style>
 
               <Link href={buttonUrl} className="btn-green">
                 {buttonText}

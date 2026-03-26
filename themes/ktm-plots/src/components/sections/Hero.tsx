@@ -184,33 +184,30 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
                   </button>
                 ))}
               </div>
-              {/* Mobile cycle toggle */}
-              <button
-                className="hero-cats-cycle"
-                onClick={() => {
-                  const idx = CATEGORIES.findIndex(c => c.slug === filterCat);
-                  setFilterCat(CATEGORIES[(idx + 1) % CATEGORIES.length].slug);
-                }}
-                style={{
-                  display: 'none',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  padding: '0.35rem 0.75rem',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(255,255,255,0.18)',
-                  background: filterCat ? 'var(--color-primary)' : 'transparent',
-                  color: '#FFFFFF',
-                  fontSize: '0.78rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {CATEGORIES.find(c => c.slug === filterCat)?.label ?? 'All Types'}
-                <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" style={{ opacity: 0.6 }}>
-                  <polyline points="9 18 15 12 9 6"/>
-                </svg>
-              </button>
+              {/* Mobile cycle toggle — prev / label / next */}
+              <div className="hero-cats-cycle" style={{ display: 'none', alignItems: 'center', gap: '0.25rem' }}>
+                <button
+                  onClick={() => {
+                    const idx = CATEGORIES.findIndex(c => c.slug === filterCat);
+                    setFilterCat(CATEGORIES[(idx - 1 + CATEGORIES.length) % CATEGORIES.length].slug);
+                  }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.18)', background: 'transparent', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', flexShrink: 0 }}
+                >
+                  <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <span style={{ padding: '0.3rem 0.5rem', borderRadius: '6px', background: filterCat ? 'var(--color-primary)' : 'rgba(255,255,255,0.08)', color: '#FFFFFF', fontSize: '0.78rem', fontWeight: 700, whiteSpace: 'nowrap', minWidth: '80px', textAlign: 'center' }}>
+                  {CATEGORIES.find(c => c.slug === filterCat)?.label ?? 'All Types'}
+                </span>
+                <button
+                  onClick={() => {
+                    const idx = CATEGORIES.findIndex(c => c.slug === filterCat);
+                    setFilterCat(CATEGORIES[(idx + 1) % CATEGORIES.length].slug);
+                  }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.18)', background: 'transparent', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', flexShrink: 0 }}
+                >
+                  <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
             </div>
 
             {/* Status row — desktop: all pills; mobile: cycle toggle */}
@@ -239,33 +236,30 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
                   </button>
                 ))}
               </div>
-              {/* Mobile cycle toggle */}
-              <button
-                className="hero-status-cycle"
-                onClick={() => {
-                  const idx = STATUS_OPTS.findIndex(s => s.slug === filterStatus);
-                  setFilterStatus(STATUS_OPTS[(idx + 1) % STATUS_OPTS.length].slug);
-                }}
-                style={{
-                  display: 'none',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  padding: '0.35rem 0.75rem',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(255,255,255,0.18)',
-                  background: filterStatus ? 'rgba(255,255,255,0.12)' : 'transparent',
-                  color: filterStatus ? '#FFFFFF' : 'rgba(255,255,255,0.5)',
-                  fontSize: '0.78rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {STATUS_OPTS.find(s => s.slug === filterStatus)?.label ?? 'Any Status'}
-                <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" style={{ opacity: 0.6 }}>
-                  <polyline points="9 18 15 12 9 6"/>
-                </svg>
-              </button>
+              {/* Mobile cycle toggle — prev / label / next */}
+              <div className="hero-status-cycle" style={{ display: 'none', alignItems: 'center', gap: '0.25rem' }}>
+                <button
+                  onClick={() => {
+                    const idx = STATUS_OPTS.findIndex(s => s.slug === filterStatus);
+                    setFilterStatus(STATUS_OPTS[(idx - 1 + STATUS_OPTS.length) % STATUS_OPTS.length].slug);
+                  }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.18)', background: 'transparent', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', flexShrink: 0 }}
+                >
+                  <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <span style={{ padding: '0.3rem 0.5rem', borderRadius: '6px', background: filterStatus ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.08)', color: '#FFFFFF', fontSize: '0.78rem', fontWeight: 700, whiteSpace: 'nowrap', minWidth: '80px', textAlign: 'center' }}>
+                  {STATUS_OPTS.find(s => s.slug === filterStatus)?.label ?? 'Any Status'}
+                </span>
+                <button
+                  onClick={() => {
+                    const idx = STATUS_OPTS.findIndex(s => s.slug === filterStatus);
+                    setFilterStatus(STATUS_OPTS[(idx + 1) % STATUS_OPTS.length].slug);
+                  }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.18)', background: 'transparent', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', flexShrink: 0 }}
+                >
+                  <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
             </div>
 
             {/* Input row */}

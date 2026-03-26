@@ -88,58 +88,78 @@ export default function Plots({ plots, secData = {} }: Props) {
         </ScrollReveal>
 
         {/* Filter bar */}
-        <ScrollReveal animation="up" delay={80}>
-          <div style={{ background: '#FFFFFF', borderRadius: '12px', padding: '0.875rem 1.25rem', marginBottom: '2rem', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', display: 'flex', gap: '1.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
-            {/* Category pills */}
-            {categories.length > 0 && (
-              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: '0.25rem' }}>Type:</span>
-                <button
-                  onClick={() => setActiveCategory('')}
-                  style={{ ...pillBase, background: activeCategory === '' ? 'var(--color-secondary)' : '#F3F4F6', color: activeCategory === '' ? '#fff' : '#4B5563', borderColor: activeCategory === '' ? 'var(--color-secondary)' : 'transparent' }}
-                >
-                  All
-                </button>
-                {categories.map((cat) => (
-                  <button
-                    key={cat.slug}
-                    onClick={() => setActiveCategory(cat.slug)}
-                    style={{ ...pillBase, background: activeCategory === cat.slug ? 'var(--color-primary)' : '#F3F4F6', color: activeCategory === cat.slug ? '#fff' : '#4B5563', borderColor: activeCategory === cat.slug ? 'var(--color-primary)' : 'transparent' }}
-                  >
-                    {cat.name}
-                  </button>
-                ))}
+        {(() => {
+          const typeOpts = [{ slug: '', name: 'All Types' }, ...categories];
+          const cycleBtn = (dir: -1 | 1, opts: {slug:string}[], active: string, set: (s:string)=>void) => {
+            const idx = opts.findIndex(o => o.slug === active);
+            return () => set(opts[(idx + dir + opts.length) % opts.length].slug);
+          };
+          return (
+            <ScrollReveal animation="up" delay={80}>
+              <div style={{ background: '#FFFFFF', borderRadius: '12px', overflow: 'hidden', marginBottom: '2rem', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
+
+                {/* Type row */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.625rem 1rem', borderBottom: '1px solid #F3F4F6' }}>
+                  <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Type:</span>
+                  {/* Desktop pills */}
+                  <div className="pf-type-pills" style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                    {typeOpts.map((o) => (
+                      <button key={o.slug} onClick={() => setActiveCategory(o.slug)}
+                        style={{ ...pillBase, background: activeCategory === o.slug ? 'var(--color-secondary)' : '#F3F4F6', color: activeCategory === o.slug ? '#fff' : '#4B5563', borderColor: activeCategory === o.slug ? 'var(--color-secondary)' : 'transparent' }}>
+                        {o.name}
+                      </button>
+                    ))}
+                  </div>
+                  {/* Mobile cycle */}
+                  <div className="pf-type-cycle" style={{ display: 'none', alignItems: 'center', gap: '0.25rem', flex: 1 }}>
+                    <button onClick={cycleBtn(-1, typeOpts, activeCategory, setActiveCategory)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'26px', height:'26px', borderRadius:'6px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
+                      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+                    <span style={{ flex:1, textAlign:'center', padding:'0.3rem 0.5rem', borderRadius:'6px', background: activeCategory ? 'var(--color-secondary)' : '#F3F4F6', color: activeCategory ? '#fff' : '#4B5563', fontSize:'0.78rem', fontWeight:700, whiteSpace:'nowrap' }}>
+                      {typeOpts.find(o => o.slug === activeCategory)?.name ?? 'All Types'}
+                    </span>
+                    <button onClick={cycleBtn(1, typeOpts, activeCategory, setActiveCategory)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'26px', height:'26px', borderRadius:'6px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
+                      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Status row */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.625rem 1rem' }}>
+                  <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Status:</span>
+                  {/* Desktop pills */}
+                  <div className="pf-status-pills" style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', flex: 1 }}>
+                    {STATUS_FILTERS.map((s) => (
+                      <button key={s.slug} onClick={() => setActiveStatus(s.slug)}
+                        style={{ ...pillBase, background: activeStatus === s.slug ? 'var(--color-secondary)' : '#F3F4F6', color: activeStatus === s.slug ? '#fff' : '#4B5563', borderColor: activeStatus === s.slug ? 'var(--color-secondary)' : 'transparent' }}>
+                        {s.label}
+                      </button>
+                    ))}
+                  </div>
+                  {/* Mobile cycle */}
+                  <div className="pf-status-cycle" style={{ display: 'none', alignItems: 'center', gap: '0.25rem', flex: 1 }}>
+                    <button onClick={cycleBtn(-1, STATUS_FILTERS, activeStatus, setActiveStatus)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'26px', height:'26px', borderRadius:'6px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
+                      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+                    <span style={{ flex:1, textAlign:'center', padding:'0.3rem 0.5rem', borderRadius:'6px', background: activeStatus ? 'var(--color-secondary)' : '#F3F4F6', color: activeStatus ? '#fff' : '#4B5563', fontSize:'0.78rem', fontWeight:700, whiteSpace:'nowrap' }}>
+                      {STATUS_FILTERS.find(s => s.slug === activeStatus)?.label ?? 'All Status'}
+                    </span>
+                    <button onClick={cycleBtn(1, STATUS_FILTERS, activeStatus, setActiveStatus)} style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'26px', height:'26px', borderRadius:'6px', border:'1px solid #E5E7EB', background:'transparent', color:'#6B7280', cursor:'pointer', flexShrink:0 }}>
+                      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                  </div>
+                  {(activeCategory || activeStatus) && (
+                    <button onClick={() => { setActiveCategory(''); setActiveStatus(''); }}
+                      style={{ ...pillBase, flexShrink:0, color:'var(--color-primary)', background:'#FEF2F2', borderColor:'#FCA5A5', fontSize:'0.72rem' }}>
+                      ✕ Clear
+                    </button>
+                  )}
+                </div>
+
               </div>
-            )}
-
-            {categories.length > 0 && (
-              <div className="plots-divider" style={{ width: '1px', height: '18px', background: '#E5E7EB', flexShrink: 0 }} />
-            )}
-
-            {/* Status pills */}
-            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: '0.25rem' }}>Status:</span>
-              {STATUS_FILTERS.map((s) => (
-                <button
-                  key={s.slug}
-                  onClick={() => setActiveStatus(s.slug)}
-                  style={{ ...pillBase, background: activeStatus === s.slug ? 'var(--color-secondary)' : '#F3F4F6', color: activeStatus === s.slug ? '#fff' : '#4B5563', borderColor: activeStatus === s.slug ? 'var(--color-secondary)' : 'transparent' }}
-                >
-                  {s.label}
-                </button>
-              ))}
-            </div>
-
-            {(activeCategory || activeStatus) && (
-              <button
-                onClick={() => { setActiveCategory(''); setActiveStatus(''); }}
-                style={{ ...pillBase, marginLeft: 'auto', color: 'var(--color-primary)', background: '#FEF2F2', borderColor: '#FCA5A5', fontSize: '0.72rem' }}
-              >
-                ✕ Clear
-              </button>
-            )}
-          </div>
-        </ScrollReveal>
+            </ScrollReveal>
+          );
+        })()}
 
         {/* Grid */}
         {filtered.length === 0 ? (
@@ -222,8 +242,13 @@ export default function Plots({ plots, secData = {} }: Props) {
         )}
       </div>
       <style>{`
+        .pf-type-cycle, .pf-status-cycle { display: none; }
         @media (max-width: 640px) {
           .plots-divider { display: none !important; }
+          .pf-type-pills  { display: none !important; }
+          .pf-status-pills { display: none !important; }
+          .pf-type-cycle  { display: flex !important; }
+          .pf-status-cycle { display: flex !important; }
           .plots-grid {
             display: flex !important;
             overflow-x: auto;

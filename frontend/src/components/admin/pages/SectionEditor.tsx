@@ -217,7 +217,7 @@ export default function SectionEditor({ schema, sections, onChange }: SectionEdi
                 const isExpanded = expanded.has(schemaSection.id);
 
                 return (
-                    <div key={schemaSection.id} className="bg-white rounded-2xl border border-slate-200/50 shadow-sm overflow-hidden">
+                    <div key={schemaSection.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                         <div className="flex items-center gap-3 p-4 cursor-pointer select-none"
                             onClick={() => toggleExpand(schemaSection.id)}>
                             <button

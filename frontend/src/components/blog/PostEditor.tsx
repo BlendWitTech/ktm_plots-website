@@ -503,7 +503,7 @@ export default function PostEditor({ content, onChange }: { content: string, onC
     };
 
     return (
-        <div className="border border-slate-200 rounded-2xl bg-white shadow-2xl shadow-slate-200/40 focus-within:ring-8 focus-within:ring-blue-600/5 transition-all duration-500">
+        <div className="border border-slate-200 rounded-2xl bg-white shadow-2xl shadow-slate-200 focus-within:ring-8 focus-within:ring-blue-600/5 transition-all duration-500">
             <MenuBar editor={editor} onOpenMedia={() => setIsMediaOpen(true)} />
             <div className="custom-scrollbar overflow-y-auto max-h-[800px] prose-img-custom">
                 <style jsx global>{`

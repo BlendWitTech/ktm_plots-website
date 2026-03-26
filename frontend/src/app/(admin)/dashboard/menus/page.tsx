@@ -70,7 +70,7 @@ export default function MenusManagement() {
             </div>
 
             {/* Menus List */}
-            <div className="mx-2 bg-white/50 backdrop-blur-xl rounded-[2.5rem] border border-slate-200/60 shadow-sm overflow-hidden min-h-[400px]">
+            <div className="mx-2 bg-white/50 backdrop-blur-xl rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden min-h-[400px]">
                 {isLoading ? (
                     <div className="flex flex-col items-center justify-center h-[400px] gap-4">
                         <div className="w-12 h-12 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>

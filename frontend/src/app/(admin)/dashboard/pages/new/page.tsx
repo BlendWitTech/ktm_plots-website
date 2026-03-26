@@ -57,7 +57,7 @@ export default function NewPage() {
 
     return (
         <div className="max-w-3xl mx-auto space-y-6">
-            <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-0 z-10">
+            <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm sticky top-0 z-10">
                 <div className="flex items-center gap-4">
                     <button onClick={() => router.back()} className="p-2 hover:bg-slate-50 rounded-xl text-slate-500 transition-colors">
                         <ArrowLeftIcon className="h-5 w-5" />
@@ -86,7 +86,7 @@ export default function NewPage() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-[2rem] p-8 shadow-xl shadow-slate-200/40 border border-slate-200/60 space-y-6">
+            <div className="bg-white rounded-[2rem] p-8 shadow-xl shadow-slate-200 border border-slate-200 space-y-6">
                 <div className="space-y-2">
                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Page Title</label>
                     <input

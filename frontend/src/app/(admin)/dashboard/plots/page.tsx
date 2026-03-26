@@ -264,7 +264,7 @@ function PlotsPageContent() {
                     <ThemeCompatibilityBanner moduleName="plots" />
 
                     {/* Sticky header toolbar */}
-                    <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-0 z-10">
+                    <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm sticky top-0 z-10">
                         <div className="flex items-center gap-4">
                             <button onClick={handleBackClick} className="p-2 hover:bg-slate-50 rounded-xl text-slate-500 transition-colors">
                                 <ArrowLeftIcon className="h-5 w-5" />
@@ -288,7 +288,7 @@ function PlotsPageContent() {
                         {/* Main fields */}
                         <div className="xl:col-span-2 space-y-6">
                             {/* Core info */}
-                            <div className="bg-white rounded-2xl p-10 border border-slate-200/60 shadow-xl space-y-6">
+                            <div className="bg-white rounded-2xl p-10 border border-slate-200 shadow-xl space-y-6">
                                 <div>
                                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Plot Title *</label>
                                     <input
@@ -323,7 +323,7 @@ function PlotsPageContent() {
                             </div>
 
                             {/* Pricing & Area */}
-                            <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Pricing & Size</h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     {[
@@ -347,7 +347,7 @@ function PlotsPageContent() {
                             </div>
 
                             {/* Location */}
-                            <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Location Details</h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     {[
@@ -370,7 +370,7 @@ function PlotsPageContent() {
                             </div>
 
                             {/* Full Content */}
-                            <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Full Content</h3>
                                 <div className="border border-slate-200 rounded-xl overflow-hidden">
                                     <PostEditor
@@ -384,7 +384,7 @@ function PlotsPageContent() {
                         {/* Sidebar */}
                         <div className="space-y-6">
                             {/* Publish */}
-                            <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Publish</h3>
                                 <div>
                                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status</label>
@@ -422,7 +422,7 @@ function PlotsPageContent() {
                             </div>
 
                             {/* Cover Image */}
-                            <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                                 <div className="flex items-center justify-between">
                                     <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Cover Image</h3>
                                     {formData.coverImage && !isReadOnly && (
@@ -449,7 +449,7 @@ function PlotsPageContent() {
                             </div>
 
                             {/* Gallery */}
-                            <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Gallery</h3>
                                 {formData.gallery && formData.gallery.length > 0 && (
                                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -482,7 +482,7 @@ function PlotsPageContent() {
                             </div>
 
                             {/* SEO */}
-                            <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">SEO</h3>
                                 <div>
                                     <div className="flex justify-between items-center mb-1">
@@ -598,7 +598,7 @@ function PlotsPageContent() {
 
             <ThemeCompatibilityBanner moduleName="plots" />
 
-            <div className="mx-2 bg-white rounded-2xl shadow-sm border border-slate-200/50 overflow-hidden">
+            <div className="mx-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -657,7 +657,7 @@ function PlotsPageContent() {
                                         </td>
                                         <td className="pr-8 py-5 text-right">
                                             {canManageContent && (
-                                                <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <div className="flex items-center justify-end gap-2">
                                                     <button onClick={() => handleEdit(plot)} className="p-2 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-emerald-600 hover:border-emerald-200 transition-all">
                                                         <PencilSquareIcon className="h-4 w-4" />
                                                     </button>

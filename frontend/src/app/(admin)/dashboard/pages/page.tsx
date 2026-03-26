@@ -227,7 +227,7 @@ export default function PagesIndex() {
                 ))}
             </div>
 
-            <div className="mx-2 bg-white rounded-2xl shadow-sm border border-slate-200/50 overflow-hidden">
+            <div className="mx-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="p-6 border-b border-slate-100 bg-slate-50/10">
                     <div className="relative group max-w-md">
                         <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
@@ -278,7 +278,7 @@ export default function PagesIndex() {
                                             </td>
                                             <td className="px-4 py-5 font-mono text-[10px] text-blue-500 font-bold">{page.slug}</td>
                                             <td className="pr-8 py-5 text-right">
-                                                <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <div className="flex items-center justify-end gap-2">
                                                     <a
                                                         href={`${themeBaseUrl}${page.slug}`}
                                                         target="_blank"

@@ -257,7 +257,7 @@ function TeamPageContent() {
 
                 <ThemeCompatibilityBanner moduleName="team" />
 
-                <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-0 z-10">
+                <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm sticky top-0 z-10">
                     <div className="flex items-center gap-4">
                         <button onClick={handleBackClick} className="p-2 hover:bg-slate-50 rounded-xl text-slate-500 transition-colors">
                             <ArrowLeftIcon className="h-5 w-5" />
@@ -279,7 +279,7 @@ function TeamPageContent() {
 
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div className="xl:col-span-2 space-y-6">
-                        <div className="bg-white rounded-2xl p-10 border border-slate-200/60 shadow-xl space-y-6">
+                        <div className="bg-white rounded-2xl p-10 border border-slate-200 shadow-xl space-y-6">
                             <div>
                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Full Name</label>
                                  <input
@@ -304,7 +304,7 @@ function TeamPageContent() {
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                             <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Biography</h3>
                              <textarea
                                 value={formData.bio}
@@ -316,7 +316,7 @@ function TeamPageContent() {
                             />
                         </div>
 
-                        <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                             <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Contact & Social Links</h3>
                             <div className="space-y-3">
                                 {[
@@ -344,7 +344,7 @@ function TeamPageContent() {
                     </div>
 
                     <div className="space-y-6">
-                        <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                             <div className="flex items-center justify-between">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Profile Photo</h3>
                                  {formData.image && !isReadOnly && (
@@ -378,7 +378,7 @@ function TeamPageContent() {
                             }}
                         />
 
-                        <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                             <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Display Order</h3>
                              <input
                                 type="number"
@@ -420,7 +420,7 @@ function TeamPageContent() {
 
             <ThemeCompatibilityBanner moduleName="team" />
 
-            <div className="mx-2 bg-white rounded-2xl shadow-sm border border-slate-200/50 overflow-hidden">
+            <div className="mx-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -468,7 +468,7 @@ function TeamPageContent() {
                                         <td className="px-4 py-5 text-xs font-semibold text-slate-500">{member.order}</td>
                                         <td className="pr-8 py-5 text-right">
                                             {canManageContent && (
-                                                <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <div className="flex items-center justify-end gap-2">
                                                     <button onClick={() => handleEdit(member)} className="p-2 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-blue-600 hover:border-blue-200 transition-all">
                                                         <PencilSquareIcon className="h-4 w-4" />
                                                     </button>

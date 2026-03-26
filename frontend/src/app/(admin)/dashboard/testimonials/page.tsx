@@ -201,7 +201,7 @@ function TestimonialsPageContent() {
 
                 <ThemeCompatibilityBanner moduleName="testimonials" />
 
-                <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] border border-slate-200/60 shadow-xl shadow-slate-200/20 p-8">
+                <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-xl shadow-slate-200 p-8">
                     <form onSubmit={handleSave} className="space-y-6">
                         <div className="space-y-5">
                             <div className="grid grid-cols-2 gap-6">
@@ -410,7 +410,7 @@ function TestimonialsPageContent() {
             <ThemeCompatibilityBanner moduleName="testimonials" />
 
             {/* List */}
-            <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] border border-slate-200/60 shadow-xl shadow-slate-200/20 overflow-hidden">
+            <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-xl shadow-slate-200 overflow-hidden">
                 {isLoading ? (
                     <div className="p-12 flex justify-center">
                         <div className="w-8 h-8 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
@@ -464,7 +464,7 @@ function TestimonialsPageContent() {
                                             </p>
                                         </td>
                                         <td className="px-8 py-6 text-right">
-                                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex items-center justify-end gap-2">
                                                 <button
                                                     onClick={() => handleEdit(testimonial)}
                                                     className="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"

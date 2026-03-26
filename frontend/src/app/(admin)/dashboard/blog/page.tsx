@@ -310,7 +310,7 @@ function BlogPageContent() {
                 )}
 
                 {/* Editor Header */}
-                <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-0 z-10">
+                <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm sticky top-0 z-10">
                     <div className="flex items-center gap-4">
                         <button onClick={handleBackClick} className="p-2 hover:bg-slate-50 rounded-xl text-slate-500 transition-colors">
                             <ArrowLeftIcon className="h-5 w-5" />
@@ -346,7 +346,7 @@ function BlogPageContent() {
                     {/* Main Content */}
                     <div className="xl:col-span-2 space-y-6">
                         {/* Premium Title & Slug Area */}
-                        <div className="bg-white rounded-2xl p-10 border border-slate-200/60 shadow-xl shadow-slate-200/20 space-y-8 relative overflow-hidden group">
+                        <div className="bg-white rounded-2xl p-10 border border-slate-200 shadow-xl shadow-slate-200 space-y-8 relative overflow-hidden group">
                             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50/30 rounded-full blur-3xl -z-10 group-hover:bg-blue-100/30 transition-colors duration-1000"></div>
 
                             <div className="space-y-3">
@@ -385,7 +385,7 @@ function BlogPageContent() {
                     {/* Sidebar Metadata */}
                     <div className="space-y-6">
                         {/* Cover Image */}
-                        <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                             <div className="flex items-center justify-between">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Cover Image</h3>
                                 {formData.coverImage && !isReadOnly && (
@@ -417,7 +417,7 @@ function BlogPageContent() {
                         />
 
                         {/* Categories */}
-                        <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                             <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Categories</h3>
                             <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
                                 {categories.map(cat => (
@@ -437,7 +437,7 @@ function BlogPageContent() {
                         </div>
 
                         {/* Tags */}
-                        <div className="bg-white rounded-2xl rounded-b-none p-6 border border-slate-200/50 shadow-sm space-y-4 relative">
+                        <div className="bg-white rounded-2xl rounded-b-none p-6 border border-slate-200 shadow-sm space-y-4 relative">
                             <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Tags</h3>
                             <div className="flex flex-wrap gap-2 mb-3">
                                 {formData.tags.map((tag: string) => (
@@ -510,7 +510,7 @@ function BlogPageContent() {
                         </div>
 
                         {/* SEO Metadata */}
-                        <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                             <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">SEO Metadata</h3>
                             <div className="space-y-3">
                                 <div>
@@ -577,7 +577,7 @@ function BlogPageContent() {
                         </div>
 
                         {/* Scheduling */}
-                        <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                             <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Publishing</h3>
                             <div>
                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Publish Date</label>
@@ -635,7 +635,7 @@ function BlogPageContent() {
             </div>
 
             {/* Posts List */}
-            <div className="mx-2 bg-white rounded-2xl shadow-sm border border-slate-200/50 overflow-hidden">
+            <div className="mx-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="p-6 border-b border-slate-100 flex flex-col md:flex-row items-center gap-4 bg-slate-50/10">
                     <div className="relative flex-1 group">
                         <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
@@ -745,7 +745,7 @@ function BlogPageContent() {
                                             </td>
                                             <td className="pr-8 py-5 text-right">
                                                 {canManageContent && (
-                                                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <div className="flex items-center justify-end gap-2">
                                                         <Link href={`/dashboard/comments?postId=${post.id}`} className="p-2 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-emerald-500 hover:border-emerald-200 transition-all" title="View Comments">
                                                             <ChatBubbleLeftRightIcon className="h-4 w-4" />
                                                         </Link>

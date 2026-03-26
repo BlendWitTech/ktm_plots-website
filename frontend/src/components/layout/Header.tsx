@@ -114,7 +114,7 @@ export default function Header({ isCollapsed, onMobileMenuToggle }: HeaderProps)
 
     return (
         <header className={classNames(
-            "sticky top-0 z-40 flex shrink-0 items-center border-b border-slate-200/60 bg-white/90 backdrop-blur-3xl transition-all duration-500 ease-out shadow-sm shadow-slate-200/20",
+            "sticky top-0 z-40 flex shrink-0 items-center border-b border-slate-200 bg-white/90 backdrop-blur-3xl transition-all duration-500 ease-out shadow-sm shadow-slate-200",
             isCollapsed ? "h-14 px-8" : "h-16 px-6"
         )}>
             <div className="flex flex-1 items-center gap-x-6">

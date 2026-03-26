@@ -169,7 +169,7 @@ export default function EditServicePage({ params }: { params: Promise<{ id: stri
             </div>
 
             {/* Form */}
-            <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] border border-slate-200/60 shadow-xl shadow-slate-200/20 p-8">
+            <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-xl shadow-slate-200 p-8">
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     <div className="space-y-5">
                         <div className="space-y-1.5">

@@ -165,7 +165,7 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
             )}
 
             {/* Header */}
-            <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-0 z-10">
+            <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm sticky top-0 z-10">
                 <div className="flex items-center gap-4">
                     <button onClick={() => router.back()} className="p-2 hover:bg-slate-50 rounded-xl text-slate-500 transition-colors">
                         <ArrowLeftIcon className="h-5 w-5" />
@@ -199,7 +199,7 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 space-y-6">
                     {/* Title & Slug */}
-                    <div className="bg-white rounded-2xl p-8 border border-slate-200/50 shadow-sm space-y-6">
+                    <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm space-y-6">
                         <div className="space-y-3">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Page Title</label>
                             <input
@@ -225,7 +225,7 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
 
                     {/* Page Sections (theme-driven) */}
                     {pageSectionSchema.length > 0 && !isReadOnly && (
-                        <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                             <div className="flex items-center gap-2">
                                 <Squares2X2Icon className="w-4 h-4 text-blue-500" />
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Page Sections</h3>
@@ -240,7 +240,7 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
 
                     {/* Fallback content editor when no section schema */}
                     {pageSectionSchema.length === 0 && (
-                        <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4 min-h-[500px]">
+                        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4 min-h-[500px]">
                             <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Page Content</h3>
                             <textarea
                                 value={formData.content}
@@ -255,7 +255,7 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
 
                 <div className="space-y-6">
                     {/* SEO Settings */}
-                    <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
+                    <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                         <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">SEO Metadata</h3>
                         <div className="space-y-1">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">SEO Title <span className="normal-case font-normal text-slate-300">({(formData.seoTitle||'').length}/60)</span></label>

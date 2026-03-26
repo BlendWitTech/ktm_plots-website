@@ -64,7 +64,7 @@ function ClearThemeCacheCard() {
     };
 
     return (
-        <div className="bg-white rounded-[3rem] p-10 shadow-2xl shadow-slate-200/40 border border-slate-200/60 space-y-6">
+        <div className="bg-white rounded-[3rem] p-10 shadow-2xl shadow-slate-200 border border-slate-200 space-y-6">
             <div className="flex items-center gap-4">
                 <div className="p-3 bg-emerald-500 rounded-2xl shadow-xl shadow-emerald-500/20 text-white">
                     <ArrowPathIcon className="h-6 w-6" />
@@ -236,14 +236,14 @@ export default function SettingsPage() {
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-[2rem] border border-slate-200/50 backdrop-blur-sm sticky top-0 z-50">
+            <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-[2rem] border border-slate-200 backdrop-blur-sm sticky top-0 z-50">
                 {tabs.map(tab => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={classNames(
                             "flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-[1.75rem] text-[11px] font-bold uppercase tracking-widest transition-all",
-                            activeTab === tab.id ? "bg-white text-blue-600 shadow-xl shadow-slate-200/50 ring-1 ring-slate-200/50" : "text-slate-500 hover:text-slate-900"
+                            activeTab === tab.id ? "bg-white text-blue-600 shadow-xl shadow-slate-200 ring-1 ring-slate-200/50" : "text-slate-500 hover:text-slate-900"
                         )}
                     >
                         <tab.icon className="h-4 w-4" />
@@ -257,7 +257,7 @@ export default function SettingsPage() {
                 {activeTab === 'branding' && (
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                         <div className="lg:col-span-2 space-y-8">
-                            <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 space-y-10 relative overflow-hidden group">
+                            <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200 border border-slate-200 space-y-10 relative overflow-hidden group">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-3xl group-hover:bg-indigo-500/10 transition-colors pointer-events-none"></div>
 
                                 <div className="flex items-center justify-between">
@@ -421,7 +421,7 @@ export default function SettingsPage() {
                             </div>
 
                             {/* Design System Card */}
-                            <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 space-y-10 relative overflow-hidden group">
+                            <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200 border border-slate-200 space-y-10 relative overflow-hidden group">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/5 rounded-full blur-3xl pointer-events-none" />
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-4">
@@ -592,7 +592,7 @@ export default function SettingsPage() {
                 {activeTab === 'website' && (
                     <div className="space-y-10">
                         {/* Contact Info */}
-                        <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 space-y-8">
+                        <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200 border border-slate-200 space-y-8">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="p-3 bg-blue-600 rounded-2xl shadow-xl shadow-blue-500/20 text-white">
@@ -647,7 +647,7 @@ export default function SettingsPage() {
                         </div>
 
                         {/* Listing Display Mode */}
-                        <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 space-y-8">
+                        <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200 border border-slate-200 space-y-8">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="p-3 bg-teal-600 rounded-2xl shadow-xl shadow-teal-500/20 text-white">
@@ -687,7 +687,7 @@ export default function SettingsPage() {
                         </div>
 
                         {/* Social Media Links */}
-                        <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 space-y-8">
+                        <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200 border border-slate-200 space-y-8">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="p-3 bg-violet-600 rounded-2xl shadow-xl shadow-violet-500/20 text-white">
@@ -743,7 +743,7 @@ export default function SettingsPage() {
                 {/* Modules Tab */}
                 {activeTab === 'modules' && (
                     <div className="space-y-8">
-                        <div className="bg-white rounded-[3rem] p-10 shadow-2xl shadow-slate-200/40 border border-slate-200/60">
+                        <div className="bg-white rounded-[3rem] p-10 shadow-2xl shadow-slate-200 border border-slate-200">
                             <div className="flex items-center justify-between mb-8">
                                 <div className="flex items-center gap-4">
                                     <div className="p-3 bg-blue-600 rounded-2xl shadow-xl shadow-blue-500/20 text-white">
@@ -794,7 +794,7 @@ export default function SettingsPage() {
 
                 {/* Email Services Tab */}
                 {activeTab === 'email' && (
-                    <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 relative overflow-hidden">
+                    <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200 border border-slate-200 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
                         <div className="flex items-center justify-between mb-8 relative z-10">
@@ -997,7 +997,7 @@ export default function SettingsPage() {
                 {activeTab === 'media' && (
                     <div className="space-y-10">
                         {/* Cloudinary Section */}
-                        <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 relative overflow-hidden">
+                        <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200 border border-slate-200 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
                             <div className="flex items-center justify-between mb-8 relative z-10">
@@ -1072,7 +1072,7 @@ export default function SettingsPage() {
                         </div>
 
                         {/* S3 / R2 Section */}
-                        <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200/40 border border-slate-200/60 relative overflow-hidden">
+                        <div className="bg-white rounded-[3rem] p-10 lg:p-12 shadow-2xl shadow-slate-200 border border-slate-200 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
                             <div className="flex items-center justify-between mb-8 relative z-10">
@@ -1195,7 +1195,7 @@ export default function SettingsPage() {
 
                 {/* Audit Logs Tab */}
                 {activeTab === 'audit-logs' && (
-                    <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-slate-200/60 overflow-hidden">
+                    <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-200 border border-slate-200 overflow-hidden">
                         <div className="p-10 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-50/20">
                             <div>
                                 <h3 className="text-2xl font-bold text-slate-900 font-display">System Ledger</h3>
@@ -1300,7 +1300,7 @@ export default function SettingsPage() {
                 {/* Performance Tab */}
                 {activeTab === 'performance' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                        <div className="bg-white rounded-[3rem] p-10 shadow-2xl shadow-slate-200/40 border border-slate-200/60 space-y-8">
+                        <div className="bg-white rounded-[3rem] p-10 shadow-2xl shadow-slate-200 border border-slate-200 space-y-8">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="p-3 bg-blue-600 rounded-2xl shadow-xl shadow-blue-500/20 text-white">
@@ -1360,7 +1360,7 @@ export default function SettingsPage() {
                 {/* Security Tab */}
                 {activeTab === 'security' && (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                        <div className="bg-white rounded-[3rem] p-10 shadow-2xl shadow-slate-200/40 border border-slate-200/60 space-y-8">
+                        <div className="bg-white rounded-[3rem] p-10 shadow-2xl shadow-slate-200 border border-slate-200 space-y-8">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="p-3 bg-emerald-500 rounded-2xl shadow-xl shadow-emerald-500/20 text-white">

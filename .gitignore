@@ -42,9 +42,6 @@ docker-compose.yml
 nixpacks.toml
 railway.json
 railway.toml
-CONTRIBUTING.md
-DEVELOPER_GUIDE.md
 LICENSE
 PRICING.md
-SETUP.md
 package-lock.json

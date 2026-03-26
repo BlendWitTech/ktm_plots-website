@@ -236,20 +236,22 @@ export default function SettingsPage() {
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-[2rem] border border-slate-200 backdrop-blur-sm sticky top-0 z-50">
-                {tabs.map(tab => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={classNames(
-                            "flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-[1.75rem] text-[11px] font-bold uppercase tracking-widest transition-all",
-                            activeTab === tab.id ? "bg-white text-blue-600 shadow-xl shadow-slate-200 ring-1 ring-slate-200/50" : "text-slate-500 hover:text-slate-900"
-                        )}
-                    >
-                        <tab.icon className="h-4 w-4" />
-                        <span className="hidden sm:inline">{tab.label}</span>
-                    </button>
-                ))}
+            <div className="overflow-x-auto -mx-2 px-2 sticky top-0 z-50">
+                <div className="flex items-center gap-1 p-1 bg-slate-100/80 rounded-[2rem] border border-slate-200 min-w-max sm:min-w-0">
+                    {tabs.map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={classNames(
+                                "flex-shrink-0 sm:flex-1 flex items-center justify-center gap-2 px-3 sm:px-6 py-3 sm:py-4 rounded-[1.75rem] text-[10px] sm:text-[11px] font-bold uppercase tracking-widest transition-all whitespace-nowrap",
+                                activeTab === tab.id ? "bg-white text-blue-600 shadow-xl shadow-slate-200 ring-1 ring-slate-200" : "text-slate-500 hover:text-slate-900"
+                            )}
+                        >
+                            <tab.icon className="h-4 w-4 shrink-0" />
+                            <span className="hidden sm:inline">{tab.label}</span>
+                        </button>
+                    ))}
+                </div>
             </div>
 
             <div className="animate-in fade-in slide-in-from-bottom-6 duration-700">

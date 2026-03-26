@@ -235,22 +235,22 @@ export default function MetaManagement() {
     );
 
     return (
-        <div className="p-8">
-            <div className="flex items-center justify-between mb-8">
+        <div className="p-4 sm:p-8">
+            <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
                 <div>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                         Meta <span className="text-blue-600">Management</span>
                     </h1>
                     <p className="mt-2 text-sm text-slate-600 font-medium">
                         View and update SEO metadata for all pages, posts, and plots
                     </p>
                 </div>
-                <div className="relative">
+                <div className="relative w-full sm:w-auto">
                     <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
                     <input
                         type="search"
                         placeholder="Search content..."
-                        className="pl-10 pr-4 py-2 border-2 border-slate-200 rounded-xl focus:border-blue-600 focus:outline-none transition-colors"
+                        className="w-full sm:w-auto pl-10 pr-4 py-2 border-2 border-slate-200 rounded-xl focus:border-blue-600 focus:outline-none transition-colors"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
@@ -258,7 +258,8 @@ export default function MetaManagement() {
             </div>
 
             <div className="bg-white border-2 border-slate-200 rounded-3xl overflow-hidden shadow-sm">
-                <table className="w-full text-left">
+                <div className="overflow-x-auto">
+                <table className="w-full text-left min-w-[600px]">
                     <thead className="bg-slate-50 border-b-2 border-slate-100">
                         <tr>
                             <th className="p-4 text-xs font-bold uppercase tracking-wider text-slate-500">Content</th>
@@ -353,6 +354,7 @@ export default function MetaManagement() {
                         )}
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     );

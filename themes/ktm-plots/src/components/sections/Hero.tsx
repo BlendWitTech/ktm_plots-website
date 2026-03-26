@@ -157,55 +157,115 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
             boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
           }}>
 
-            {/* Category tab row */}
-            <div className="hero-tabs-row" style={{ display: 'flex', gap: 0, borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '0.6rem 0.75rem' }}>
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat.slug}
-                  className="hero-tab-btn"
-                  onClick={() => setFilterCat(cat.slug)}
-                  style={{
-                    padding: '0.45rem 1rem',
-                    borderRadius: '8px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    fontSize: '0.8rem',
-                    fontWeight: 700,
-                    whiteSpace: 'nowrap',
-                    transition: 'all 0.18s',
-                    background: filterCat === cat.slug ? 'var(--color-primary)' : 'transparent',
-                    color: filterCat === cat.slug ? '#FFFFFF' : 'rgba(255,255,255,0.5)',
-                  }}
-                >
-                  {cat.label}
-                </button>
-              ))}
+            {/* Category tab row — desktop: all pills; mobile: cycle toggle */}
+            <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '0.4rem 0.75rem', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Type:</span>
+              {/* Desktop pills */}
+              <div className="hero-tabs-row" style={{ display: 'flex', gap: 0 }}>
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat.slug}
+                    className="hero-tab-btn"
+                    onClick={() => setFilterCat(cat.slug)}
+                    style={{
+                      padding: '0.45rem 1rem',
+                      borderRadius: '8px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '0.8rem',
+                      fontWeight: 700,
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.18s',
+                      background: filterCat === cat.slug ? 'var(--color-primary)' : 'transparent',
+                      color: filterCat === cat.slug ? '#FFFFFF' : 'rgba(255,255,255,0.5)',
+                    }}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+              {/* Mobile cycle toggle */}
+              <button
+                className="hero-cats-cycle"
+                onClick={() => {
+                  const idx = CATEGORIES.findIndex(c => c.slug === filterCat);
+                  setFilterCat(CATEGORIES[(idx + 1) % CATEGORIES.length].slug);
+                }}
+                style={{
+                  display: 'none',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.35rem 0.75rem',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(255,255,255,0.18)',
+                  background: filterCat ? 'var(--color-primary)' : 'transparent',
+                  color: '#FFFFFF',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {CATEGORIES.find(c => c.slug === filterCat)?.label ?? 'All Types'}
+                <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" style={{ opacity: 0.6 }}>
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </button>
             </div>
 
-            {/* Status pill row */}
-            <div className="hero-tabs-row hero-status-row" style={{ display: 'flex', gap: 0, borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '0.4rem 0.75rem', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: '0.5rem', flexShrink: 0 }}>Status:</span>
-              {STATUS_OPTS.map((s) => (
-                <button
-                  key={s.slug}
-                  className="hero-tab-btn"
-                  onClick={() => setFilterStatus(s.slug)}
-                  style={{
-                    padding: '0.35rem 0.875rem',
-                    borderRadius: '8px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    fontSize: '0.78rem',
-                    fontWeight: 700,
-                    whiteSpace: 'nowrap',
-                    transition: 'all 0.18s',
-                    background: filterStatus === s.slug ? 'rgba(255,255,255,0.15)' : 'transparent',
-                    color: filterStatus === s.slug ? '#FFFFFF' : 'rgba(255,255,255,0.45)',
-                  }}
-                >
-                  {s.label}
-                </button>
-              ))}
+            {/* Status row — desktop: all pills; mobile: cycle toggle */}
+            <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '0.4rem 0.75rem', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Status:</span>
+              {/* Desktop pills */}
+              <div className="hero-status-pills" style={{ display: 'flex', gap: 0 }}>
+                {STATUS_OPTS.map((s) => (
+                  <button
+                    key={s.slug}
+                    onClick={() => setFilterStatus(s.slug)}
+                    style={{
+                      padding: '0.35rem 0.875rem',
+                      borderRadius: '8px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '0.78rem',
+                      fontWeight: 700,
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.18s',
+                      background: filterStatus === s.slug ? 'rgba(255,255,255,0.15)' : 'transparent',
+                      color: filterStatus === s.slug ? '#FFFFFF' : 'rgba(255,255,255,0.45)',
+                    }}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+              {/* Mobile cycle toggle */}
+              <button
+                className="hero-status-cycle"
+                onClick={() => {
+                  const idx = STATUS_OPTS.findIndex(s => s.slug === filterStatus);
+                  setFilterStatus(STATUS_OPTS[(idx + 1) % STATUS_OPTS.length].slug);
+                }}
+                style={{
+                  display: 'none',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.35rem 0.75rem',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(255,255,255,0.18)',
+                  background: filterStatus ? 'rgba(255,255,255,0.12)' : 'transparent',
+                  color: filterStatus ? '#FFFFFF' : 'rgba(255,255,255,0.5)',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {STATUS_OPTS.find(s => s.slug === filterStatus)?.label ?? 'Any Status'}
+                <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" style={{ opacity: 0.6 }}>
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </button>
             </div>
 
             {/* Input row */}
@@ -398,20 +458,19 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
           .hero-trust-badge span:last-child { font-size: 0.65rem !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: calc(100vw - 6rem); }
         }
 
-        /* ── Mobile: stack the search widget vertically ─────────── */
+        /* ── Cycle toggles: hidden by default (desktop shows pills) */
+        .hero-cats-cycle { display: none; }
+        .hero-status-cycle { display: none; }
+
+        /* ── Mobile: cycle toggles visible, pills hidden ─────────── */
         @media (max-width: 640px) {
-          /* Category tabs: horizontal scroll strip on mobile */
-          .hero-tabs-row {
-            overflow-x: auto !important;
-            overflow-y: hidden !important;
-            flex-wrap: nowrap !important;
-            gap: 0.35rem !important;
-            padding: 0.5rem 0.75rem !important;
-            scrollbar-width: none !important;
-            -ms-overflow-style: none !important;
-          }
-          .hero-tabs-row::-webkit-scrollbar { display: none !important; }
-          .hero-tab-btn { padding: 0.35rem 0.875rem !important; font-size: 0.78rem !important; flex-shrink: 0 !important; }
+          /* Hide desktop pill rows */
+          .hero-tabs-row { display: none !important; }
+          .hero-status-pills { display: none !important; }
+
+          /* Show cycle toggles */
+          .hero-cats-cycle { display: flex !important; }
+          .hero-status-cycle { display: flex !important; }
 
           /* Input row: tighter padding on mobile */
           .hero-input-row { padding: 0.625rem !important; }

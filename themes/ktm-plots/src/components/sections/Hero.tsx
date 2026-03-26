@@ -407,9 +407,18 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
 
         /* ── Mobile: stack the search widget vertically ─────────── */
         @media (max-width: 640px) {
-          /* Category tabs: wrap to multiple rows, smaller buttons */
-          .hero-tabs-row { flex-wrap: wrap !important; gap: 0.35rem !important; padding: 0.625rem !important; }
-          .hero-tab-btn  { padding: 0.35rem 0.75rem !important; font-size: 0.75rem !important; }
+          /* Category tabs: horizontal scroll strip on mobile */
+          .hero-tabs-row {
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            flex-wrap: nowrap !important;
+            gap: 0.35rem !important;
+            padding: 0.5rem 0.75rem !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+          }
+          .hero-tabs-row::-webkit-scrollbar { display: none !important; }
+          .hero-tab-btn { padding: 0.35rem 0.875rem !important; font-size: 0.78rem !important; flex-shrink: 0 !important; }
 
           /* Input row: stack vertically */
           .hero-input-row { flex-wrap: wrap !important; gap: 0.5rem !important; padding: 0.625rem !important; }

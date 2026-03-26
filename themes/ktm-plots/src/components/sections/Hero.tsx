@@ -462,9 +462,11 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
           .hero-tabs-row { display: none !important; }
           .hero-status-pills { display: none !important; }
 
-          /* Show cycle toggles */
-          .hero-cats-cycle { display: flex !important; }
-          .hero-status-cycle { display: flex !important; }
+          /* Show cycle toggles — stretch full width */
+          .hero-cats-cycle { display: flex !important; flex: 1 !important; }
+          .hero-status-cycle { display: flex !important; flex: 1 !important; }
+          .hero-cats-cycle > span,
+          .hero-status-cycle > span { flex: 1 !important; }
 
           /* Input row: tighter padding on mobile */
           .hero-input-row { padding: 0.625rem !important; }

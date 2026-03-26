@@ -238,7 +238,14 @@ export default function Plots({ plots, secData = {} }: Props) {
             flex: 0 0 82vw;
             min-width: 0;
             scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            /* Force visible — off-screen cards never trigger IntersectionObserver */
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
           }
+          .plots-card-wrap > a { flex: 1; }
         }
       `}</style>
     </section>

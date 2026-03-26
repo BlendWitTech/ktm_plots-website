@@ -49,15 +49,7 @@ export default function BlogPreview({ posts, secData = {} }: Props) {
           .blog-redesign-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
         @media (max-width: 640px) {
-          .blog-redesign-grid { 
-            display: flex !important;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            gap: 1rem !important;
-            padding-bottom: 1rem;
-            scrollbar-width: none;
-          }
-          .blog-redesign-grid::-webkit-scrollbar { display: none; }
+          .blog-redesign-grid { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
         }
       `}</style>
     </section>
@@ -143,16 +135,6 @@ function BlogCard({ post, delay }: { post: Post; delay: number }) {
         </div>
       </Link>
       <style jsx>{`
-        @media (max-width: 640px) {
-          .blog-card-wrap {
-            flex: 0 0 82vw;
-            min-width: 0;
-            scroll-snap-align: start;
-            opacity: 1 !important;
-            transform: none !important;
-            transition: none !important;
-          }
-        }
       `}</style>
     </ScrollReveal>
   );

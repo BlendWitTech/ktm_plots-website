@@ -10,7 +10,7 @@ This guide covers running the theme locally, connecting it to the CMS backend, a
 ┌──────────────────────┐   NEXT_PUBLIC_CMS_API_URL   ┌──────────────────────┐
 │  KTM Plots Theme     │ ──────────────────────────► │  Mero CMS Backend    │
 │  Next.js (Vercel)    │   Public API — no auth       │  NestJS (Railway)    │
-│  ktm-plots repo      │   /public/site-data          │  blendwit-cms repo   │
+│  ktm_plots-website repo      │   /public/site-data          │  mero-cms repo   │
 │                      │   /plots/public/*            │                      │
 └──────────────────────┘   /posts/public/*            └──────────────────────┘
                            /categories, /services      │
@@ -27,13 +27,13 @@ The theme and the backend are completely independent deployments. The only conne
 ### Prerequisites
 
 - Node.js 20+
-- A running Mero CMS backend. See the [blendwit-cms repo](https://github.com/BlendWitTech/blendwit-cms) SETUP.md to get the backend running on `http://localhost:3001`.
+- A running Mero CMS backend. See the [mero-cms repo](https://github.com/BlendWitTech/mero-cms) SETUP.md to get the backend running on `http://localhost:3001`.
 
 ### Step 1 — Clone the repo
 
 ```bash
-git clone https://github.com/BlendWitTech/ktm-plots.git
-cd ktm-plots
+git clone https://github.com/BlendWitTech/ktm_plots-website.git
+cd ktm_plots-website
 ```
 
 ### Step 2 — Install dependencies
@@ -71,7 +71,7 @@ npm run dev
 
 ### Activate the theme in the admin dashboard
 
-1. Open the Mero CMS admin (deployed separately from the `blendwit-cms` repo)
+1. Open the Mero CMS admin (deployed separately from the `mero-cms` repo)
 2. Go to **Dashboard → Appearance → Themes**
 3. Find **KTM Plots** → click **Setup** (seeds menus, plots, services, etc.)
 4. Click **Activate**
@@ -112,7 +112,7 @@ THEME_REVALIDATE_URL=https://your-ktm-plots.vercel.app/api/revalidate
 ### Step 1 — Connect repo to Vercel
 
 1. Go to [vercel.com](https://vercel.com) → **New Project** → **Import**
-2. Select the `BlendWitTech/ktm-plots` repository
+2. Select the `BlendWitTech/ktm_plots-website` repository
 3. **Root Directory**: leave **empty** (theme is at repo root)
 4. Framework: Next.js (auto-detected)
 

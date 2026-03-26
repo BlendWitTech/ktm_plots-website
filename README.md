@@ -7,7 +7,7 @@ Built as a standalone Next.js theme on top of [Mero CMS](https://blendwit.com/me
 
 ## What This Repo Is
 
-This is a **theme-only** repository. It contains the client-facing public website — pages, components, and styles. It does **not** contain the CMS engine (backend API, admin dashboard, or database). Those live in the [blendwit-cms](https://github.com/BlendWitTech/blendwit-cms) repo.
+This is a **theme-only** repository. It contains the client-facing public website — pages, components, and styles. It does **not** contain the CMS engine (backend API, admin dashboard, or database). Those live in the [mero-cms](https://github.com/BlendWitTech/mero-cms) repo.
 
 The theme fetches all content from the Mero CMS backend via a single environment variable.
 
@@ -95,14 +95,14 @@ ktm-plots/
 ### Prerequisites
 
 - Node.js 20+
-- A running Mero CMS backend (see [blendwit-cms](https://github.com/BlendWitTech/blendwit-cms))
+- A running Mero CMS backend (see [mero-cms](https://github.com/BlendWitTech/mero-cms))
 
 ### Steps
 
 ```bash
 # 1. Clone
-git clone https://github.com/BlendWitTech/ktm-plots.git
-cd ktm-plots
+git clone https://github.com/BlendWitTech/ktm_plots-website.git
+cd ktm_plots-website
 
 # 2. Install dependencies
 npm install
@@ -155,7 +155,7 @@ For instant content updates, the CMS triggers the `/api/revalidate` endpoint on 
 
 This theme is built on **Mero CMS** by Blendwit Tech.
 
-- Engine repo: [BlendWitTech/blendwit-cms](https://github.com/BlendWitTech/blendwit-cms)
+- Engine repo: [BlendWitTech/mero-cms](https://github.com/BlendWitTech/mero-cms)
 - Documentation: [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md)
 - Setup guide: [SETUP.md](SETUP.md)
 

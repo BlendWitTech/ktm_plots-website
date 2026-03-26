@@ -157,108 +157,43 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
             boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
           }}>
 
-            {/* Category tab row — desktop: all pills; mobile: cycle toggle */}
-            <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '0.4rem 0.75rem', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Type:</span>
-              {/* Desktop pills — scrollable so extra categories never wrap */}
-              <div className="hero-tabs-row" style={{ display: 'flex', gap: 0, overflowX: 'auto', scrollbarWidth: 'none', flexWrap: 'nowrap' }}>
-                {CATEGORIES.map((cat) => (
-                  <button
-                    key={cat.slug}
-                    className="hero-tab-btn"
-                    onClick={() => setFilterCat(cat.slug)}
-                    style={{
-                      padding: '0.45rem 1rem',
-                      borderRadius: '8px',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: '0.8rem',
-                      fontWeight: 700,
-                      whiteSpace: 'nowrap',
-                      transition: 'all 0.18s',
-                      background: filterCat === cat.slug ? 'var(--color-primary)' : 'transparent',
-                      color: filterCat === cat.slug ? '#FFFFFF' : 'rgba(255,255,255,0.5)',
-                    }}
-                  >
-                    {cat.label}
+            {/* Type + Status: 50/50 side-by-side on all screens */}
+            <div style={{ display: 'flex', alignItems: 'stretch', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+              {/* Type half */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '0.4rem 0.625rem', gap: '0.15rem' }}>
+                <span style={{ fontSize: '0.58rem', fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Type</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                  <button onClick={() => { const i = CATEGORIES.findIndex(c => c.slug === filterCat); setFilterCat(CATEGORIES[(i - 1 + CATEGORIES.length) % CATEGORIES.length].slug); }}
+                    style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'22px', height:'22px', borderRadius:'5px', border:'1px solid rgba(255,255,255,0.18)', background:'transparent', color:'rgba(255,255,255,0.6)', cursor:'pointer', flexShrink:0 }}>
+                    <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
                   </button>
-                ))}
-              </div>
-              {/* Mobile cycle toggle — prev / label / next */}
-              <div className="hero-cats-cycle" style={{ display: 'none', alignItems: 'center', gap: '0.25rem' }}>
-                <button
-                  onClick={() => {
-                    const idx = CATEGORIES.findIndex(c => c.slug === filterCat);
-                    setFilterCat(CATEGORIES[(idx - 1 + CATEGORIES.length) % CATEGORIES.length].slug);
-                  }}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.18)', background: 'transparent', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', flexShrink: 0 }}
-                >
-                  <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                </button>
-                <span style={{ padding: '0.3rem 0.5rem', borderRadius: '6px', background: filterCat ? 'var(--color-primary)' : 'rgba(255,255,255,0.08)', color: '#FFFFFF', fontSize: '0.78rem', fontWeight: 700, whiteSpace: 'nowrap', minWidth: '80px', textAlign: 'center' }}>
-                  {CATEGORIES.find(c => c.slug === filterCat)?.label ?? 'All Types'}
-                </span>
-                <button
-                  onClick={() => {
-                    const idx = CATEGORIES.findIndex(c => c.slug === filterCat);
-                    setFilterCat(CATEGORIES[(idx + 1) % CATEGORIES.length].slug);
-                  }}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.18)', background: 'transparent', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', flexShrink: 0 }}
-                >
-                  <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-              </div>
-            </div>
-
-            {/* Status row — desktop: all pills; mobile: cycle toggle */}
-            <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '0.4rem 0.75rem', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Status:</span>
-              {/* Desktop pills — scrollable */}
-              <div className="hero-status-pills" style={{ display: 'flex', gap: 0, overflowX: 'auto', scrollbarWidth: 'none', flexWrap: 'nowrap' }}>
-                {STATUS_OPTS.map((s) => (
-                  <button
-                    key={s.slug}
-                    onClick={() => setFilterStatus(s.slug)}
-                    style={{
-                      padding: '0.35rem 0.875rem',
-                      borderRadius: '8px',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: '0.78rem',
-                      fontWeight: 700,
-                      whiteSpace: 'nowrap',
-                      transition: 'all 0.18s',
-                      background: filterStatus === s.slug ? 'rgba(255,255,255,0.15)' : 'transparent',
-                      color: filterStatus === s.slug ? '#FFFFFF' : 'rgba(255,255,255,0.45)',
-                    }}
-                  >
-                    {s.label}
+                  <span style={{ flex:1, textAlign:'center', padding:'0.2rem 0.25rem', borderRadius:'5px', background: filterCat ? 'var(--color-primary)' : 'rgba(255,255,255,0.08)', color:'#fff', fontSize:'0.72rem', fontWeight:700, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+                    {CATEGORIES.find(c => c.slug === filterCat)?.label ?? 'All Types'}
+                  </span>
+                  <button onClick={() => { const i = CATEGORIES.findIndex(c => c.slug === filterCat); setFilterCat(CATEGORIES[(i + 1) % CATEGORIES.length].slug); }}
+                    style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'22px', height:'22px', borderRadius:'5px', border:'1px solid rgba(255,255,255,0.18)', background:'transparent', color:'rgba(255,255,255,0.6)', cursor:'pointer', flexShrink:0 }}>
+                    <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
                   </button>
-                ))}
+                </div>
               </div>
-              {/* Mobile cycle toggle — prev / label / next */}
-              <div className="hero-status-cycle" style={{ display: 'none', alignItems: 'center', gap: '0.25rem' }}>
-                <button
-                  onClick={() => {
-                    const idx = STATUS_OPTS.findIndex(s => s.slug === filterStatus);
-                    setFilterStatus(STATUS_OPTS[(idx - 1 + STATUS_OPTS.length) % STATUS_OPTS.length].slug);
-                  }}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.18)', background: 'transparent', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', flexShrink: 0 }}
-                >
-                  <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                </button>
-                <span style={{ padding: '0.3rem 0.5rem', borderRadius: '6px', background: filterStatus ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.08)', color: '#FFFFFF', fontSize: '0.78rem', fontWeight: 700, whiteSpace: 'nowrap', minWidth: '80px', textAlign: 'center' }}>
-                  {STATUS_OPTS.find(s => s.slug === filterStatus)?.label ?? 'Any Status'}
-                </span>
-                <button
-                  onClick={() => {
-                    const idx = STATUS_OPTS.findIndex(s => s.slug === filterStatus);
-                    setFilterStatus(STATUS_OPTS[(idx + 1) % STATUS_OPTS.length].slug);
-                  }}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.18)', background: 'transparent', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', flexShrink: 0 }}
-                >
-                  <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
+              {/* Divider */}
+              <div style={{ width: '1px', background: 'rgba(255,255,255,0.08)', alignSelf: 'stretch' }} />
+              {/* Status half */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '0.4rem 0.625rem', gap: '0.15rem' }}>
+                <span style={{ fontSize: '0.58rem', fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Status</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                  <button onClick={() => { const i = STATUS_OPTS.findIndex(s => s.slug === filterStatus); setFilterStatus(STATUS_OPTS[(i - 1 + STATUS_OPTS.length) % STATUS_OPTS.length].slug); }}
+                    style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'22px', height:'22px', borderRadius:'5px', border:'1px solid rgba(255,255,255,0.18)', background:'transparent', color:'rgba(255,255,255,0.6)', cursor:'pointer', flexShrink:0 }}>
+                    <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                  </button>
+                  <span style={{ flex:1, textAlign:'center', padding:'0.2rem 0.25rem', borderRadius:'5px', background: filterStatus ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.08)', color:'#fff', fontSize:'0.72rem', fontWeight:700, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+                    {STATUS_OPTS.find(s => s.slug === filterStatus)?.label ?? 'Any Status'}
+                  </span>
+                  <button onClick={() => { const i = STATUS_OPTS.findIndex(s => s.slug === filterStatus); setFilterStatus(STATUS_OPTS[(i + 1) % STATUS_OPTS.length].slug); }}
+                    style={{ display:'flex', alignItems:'center', justifyContent:'center', width:'22px', height:'22px', borderRadius:'5px', border:'1px solid rgba(255,255,255,0.18)', background:'transparent', color:'rgba(255,255,255,0.6)', cursor:'pointer', flexShrink:0 }}>
+                    <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -454,21 +389,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
           .hero-trust-badge span:last-child { font-size: 0.65rem !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: calc(100vw - 6rem); }
         }
 
-        /* ── Cycle toggles: hidden by default (desktop shows pills) */
-        .hero-cats-cycle { display: none; }
-        .hero-status-cycle { display: none; }
-
-        /* ── Mobile: cycle toggles visible, pills hidden ─────────── */
         @media (max-width: 640px) {
-          /* Hide desktop pill rows */
-          .hero-tabs-row { display: none !important; }
-          .hero-status-pills { display: none !important; }
-
-          /* Show cycle toggles — stretch full width */
-          .hero-cats-cycle { display: flex !important; flex: 1 !important; }
-          .hero-status-cycle { display: flex !important; flex: 1 !important; }
-          .hero-cats-cycle > span,
-          .hero-status-cycle > span { flex: 1 !important; }
 
           /* Input row: tighter padding on mobile */
           .hero-input-row { padding: 0.625rem !important; }

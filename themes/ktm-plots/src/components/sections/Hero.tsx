@@ -135,7 +135,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
           </div>
 
           {/* Headline */}
-          <h1 className="animate-slide-up delay-100" style={{ fontSize: 'clamp(1.75rem, 5vw, 4rem)', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.1, marginBottom: '1.25rem', letterSpacing: '-0.02em' }}>
+          <h1 className="animate-slide-up delay-100" style={{ fontSize: 'clamp(2.1rem, 5.5vw, 4.5rem)', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.1, marginBottom: '1.25rem', letterSpacing: '-0.02em' }}>
             {mainText}{' '}
             <span style={{ color: '#E03030' }}>{redText}</span>
           </h1>

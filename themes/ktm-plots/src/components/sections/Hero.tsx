@@ -312,7 +312,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#A01010'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'var(--color-primary)'; }}
               >
-                Find Plots
+                <span className="hero-search-btn-text">Find Plots</span>
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </button>
             </div>
@@ -475,6 +475,10 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
           /* CTA buttons: side by side, compact */
           .hero-cta-row { gap: 0.5rem !important; }
           .hero-cta-row > a { padding: 0.6rem 0.9rem !important; font-size: 0.8rem !important; flex: 1 !important; justify-content: center !important; }
+
+          /* Search button: icon only on mobile */
+          .hero-search-btn-text { display: none !important; }
+          .hero-search-btn { padding: 0 0.875rem !important; gap: 0 !important; }
         }
       `}</style>
     </section>

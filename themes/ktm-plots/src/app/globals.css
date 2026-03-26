@@ -561,6 +561,14 @@ h1, h2, h3, h4, h5, h6 {
   .services-detail-grid { grid-template-columns: 1fr !important; }
 }
 
+/* ─── Uniform section vertical padding on mobile ─────────────────── */
+@media (max-width: 640px) {
+  section[id] { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+}
+@media (max-width: 480px) {
+  section[id] { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+}
+
 /* ─── About feature cards ─────────────────────────────────────────── */
 .about-feature-card {
   background: #FFFFFF;

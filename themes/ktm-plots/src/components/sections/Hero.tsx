@@ -272,7 +272,7 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
           </div>
 
           {/* Secondary CTA buttons */}
-          <div className="animate-fade-in delay-400" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0', flexWrap: 'wrap' }}>
+          <div className="animate-fade-in delay-400 hero-cta-row" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0', flexWrap: 'nowrap' }}>
             <Link
               href={cta2Url}
               style={{
@@ -426,6 +426,10 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
 
           /* Search button: full width */
           .hero-search-btn { width: 100% !important; justify-content: center !important; padding: 0.75rem !important; border-radius: 8px !important; margin-left: 0 !important; }
+
+          /* CTA buttons: side by side, compact */
+          .hero-cta-row { gap: 0.5rem !important; }
+          .hero-cta-row > a { padding: 0.6rem 0.9rem !important; font-size: 0.8rem !important; flex: 1 !important; justify-content: center !important; }
         }
       `}</style>
     </section>

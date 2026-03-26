@@ -160,8 +160,8 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
             {/* Category tab row — desktop: all pills; mobile: cycle toggle */}
             <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '0.4rem 0.75rem', alignItems: 'center', gap: '0.5rem' }}>
               <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Type:</span>
-              {/* Desktop pills */}
-              <div className="hero-tabs-row" style={{ display: 'flex', gap: 0 }}>
+              {/* Desktop pills — scrollable so extra categories never wrap */}
+              <div className="hero-tabs-row" style={{ display: 'flex', gap: 0, overflowX: 'auto', scrollbarWidth: 'none', flexWrap: 'nowrap' }}>
                 {CATEGORIES.map((cat) => (
                   <button
                     key={cat.slug}
@@ -213,8 +213,8 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
             {/* Status row — desktop: all pills; mobile: cycle toggle */}
             <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '0.4rem 0.75rem', alignItems: 'center', gap: '0.5rem' }}>
               <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Status:</span>
-              {/* Desktop pills */}
-              <div className="hero-status-pills" style={{ display: 'flex', gap: 0 }}>
+              {/* Desktop pills — scrollable */}
+              <div className="hero-status-pills" style={{ display: 'flex', gap: 0, overflowX: 'auto', scrollbarWidth: 'none', flexWrap: 'nowrap' }}>
                 {STATUS_OPTS.map((s) => (
                   <button
                     key={s.slug}
@@ -440,6 +440,8 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
       </div>
 
       <style>{`
+        .hero-tabs-row::-webkit-scrollbar,
+        .hero-status-pills::-webkit-scrollbar { display: none; }
         .hero-search-widget input::placeholder { color: rgba(255,255,255,0.35); }
         .hero-status-wrap select option { background: var(--color-secondary); color: #fff; }
         @media (max-width: 768px) {

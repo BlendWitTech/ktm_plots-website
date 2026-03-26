@@ -102,7 +102,7 @@ export default function Plots({ plots, secData = {} }: Props) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.625rem 1rem', borderBottom: '1px solid #F3F4F6' }}>
                   <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Type:</span>
                   {/* Desktop pills */}
-                  <div className="pf-type-pills" style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                  <div className="pf-type-pills" style={{ display: 'flex', gap: '0.4rem', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                     {typeOpts.map((o) => (
                       <button key={o.slug} onClick={() => setActiveCategory(o.slug)}
                         style={{ ...pillBase, background: activeCategory === o.slug ? 'var(--color-secondary)' : '#F3F4F6', color: activeCategory === o.slug ? '#fff' : '#4B5563', borderColor: activeCategory === o.slug ? 'var(--color-secondary)' : 'transparent' }}>
@@ -128,7 +128,7 @@ export default function Plots({ plots, secData = {} }: Props) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.625rem 1rem' }}>
                   <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Status:</span>
                   {/* Desktop pills */}
-                  <div className="pf-status-pills" style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', flex: 1 }}>
+                  <div className="pf-status-pills" style={{ display: 'flex', gap: '0.4rem', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none', flex: 1 }}>
                     {STATUS_FILTERS.map((s) => (
                       <button key={s.slug} onClick={() => setActiveStatus(s.slug)}
                         style={{ ...pillBase, background: activeStatus === s.slug ? 'var(--color-secondary)' : '#F3F4F6', color: activeStatus === s.slug ? '#fff' : '#4B5563', borderColor: activeStatus === s.slug ? 'var(--color-secondary)' : 'transparent' }}>
@@ -242,6 +242,8 @@ export default function Plots({ plots, secData = {} }: Props) {
         )}
       </div>
       <style>{`
+        .pf-type-pills::-webkit-scrollbar,
+        .pf-status-pills::-webkit-scrollbar { display: none; }
         .pf-type-cycle, .pf-status-cycle { display: none; }
         @media (max-width: 640px) {
           .plots-divider { display: none !important; }

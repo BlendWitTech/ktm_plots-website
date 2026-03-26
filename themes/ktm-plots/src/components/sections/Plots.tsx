@@ -150,11 +150,11 @@ export default function Plots({ plots, secData = {} }: Props) {
             </button>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.75rem' }}>
+          <div className="plots-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.75rem' }}>
             {filtered.map((plot, idx) => {
               const imgUrl = getImageUrl(plot.featuredImageUrl);
               return (
-                <ScrollReveal key={plot.id} animation="scale" delay={Math.min(idx * 80, 400)}>
+                <ScrollReveal key={plot.id} animation="scale" delay={Math.min(idx * 80, 400)} className="plots-card-wrap">
                   <Link
                     href={`/plots/${plot.slug}`}
                     style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: '#FFFFFF', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 2px 16px rgba(0,0,0,0.07)', transition: 'transform 0.22s ease, box-shadow 0.22s ease', height: '100%' }}
@@ -221,6 +221,25 @@ export default function Plots({ plots, secData = {} }: Props) {
           </div>
         )}
       </div>
+      <style>{`
+        @media (max-width: 640px) {
+          .plots-grid {
+            display: flex !important;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            gap: 1rem !important;
+            padding-bottom: 1rem;
+            scrollbar-width: none;
+          }
+          .plots-grid::-webkit-scrollbar { display: none; }
+          .plots-card-wrap {
+            flex: 0 0 82vw;
+            min-width: 0;
+            scroll-snap-align: start;
+          }
+        }
+      `}</style>
     </section>
   );
 }

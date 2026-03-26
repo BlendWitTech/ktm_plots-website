@@ -113,7 +113,7 @@ export default function Plots({ plots, secData = {} }: Props) {
             )}
 
             {categories.length > 0 && (
-              <div style={{ width: '1px', height: '18px', background: '#E5E7EB', flexShrink: 0 }} />
+              <div className="plots-divider" style={{ width: '1px', height: '18px', background: '#E5E7EB', flexShrink: 0 }} />
             )}
 
             {/* Status pills */}
@@ -223,6 +223,7 @@ export default function Plots({ plots, secData = {} }: Props) {
       </div>
       <style>{`
         @media (max-width: 640px) {
+          .plots-divider { display: none !important; }
           .plots-grid {
             display: flex !important;
             overflow-x: auto;

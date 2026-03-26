@@ -182,6 +182,32 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
               ))}
             </div>
 
+            {/* Status pill row */}
+            <div className="hero-tabs-row hero-status-row" style={{ display: 'flex', gap: 0, borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '0.4rem 0.75rem', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: '0.5rem', flexShrink: 0 }}>Status:</span>
+              {STATUS_OPTS.map((s) => (
+                <button
+                  key={s.slug}
+                  className="hero-tab-btn"
+                  onClick={() => setFilterStatus(s.slug)}
+                  style={{
+                    padding: '0.35rem 0.875rem',
+                    borderRadius: '8px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.18s',
+                    background: filterStatus === s.slug ? 'rgba(255,255,255,0.15)' : 'transparent',
+                    color: filterStatus === s.slug ? '#FFFFFF' : 'rgba(255,255,255,0.45)',
+                  }}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
+
             {/* Input row */}
             <div className="hero-input-row" style={{ display: 'flex', gap: 0, alignItems: 'stretch', padding: '0.75rem' }}>
               {/* Location / Name search */}
@@ -206,39 +232,6 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
                     fontFamily: 'inherit',
                   }}
                 />
-              </div>
-
-              {/* Divider */}
-              <div className="hero-input-divider" style={{ width: '1px', background: 'rgba(255,255,255,0.1)', margin: '0.25rem 0', flexShrink: 0 }} />
-
-              {/* Status select */}
-              <div className="hero-status-wrap" style={{ position: 'relative', flexShrink: 0 }}>
-                <select
-                  value={filterStatus}
-                  onChange={e => setFilterStatus(e.target.value)}
-                  style={{
-                    appearance: 'none',
-                    WebkitAppearance: 'none',
-                    background: 'transparent',
-                    border: 'none',
-                    outline: 'none',
-                    color: filterStatus ? '#FFFFFF' : 'rgba(255,255,255,0.45)',
-                    fontSize: '0.825rem',
-                    fontWeight: 600,
-                    padding: '0.75rem 2.25rem 0.75rem 1rem',
-                    cursor: 'pointer',
-                    fontFamily: 'inherit',
-                    minWidth: '120px',
-                    width: '100%',
-                  }}
-                >
-                  {STATUS_OPTS.map(s => (
-                    <option key={s.slug} value={s.slug} style={{ background: 'var(--color-secondary)', color: '#fff' }}>{s.label}</option>
-                  ))}
-                </select>
-                <svg style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
               </div>
 
               {/* Search button */}
@@ -420,21 +413,11 @@ export default function Hero({ siteData, bannerItems, featuredPlot }: Props) {
           .hero-tabs-row::-webkit-scrollbar { display: none !important; }
           .hero-tab-btn { padding: 0.35rem 0.875rem !important; font-size: 0.78rem !important; flex-shrink: 0 !important; }
 
-          /* Input row: stack vertically */
-          .hero-input-row { flex-wrap: wrap !important; gap: 0.5rem !important; padding: 0.625rem !important; }
+          /* Input row: tighter padding on mobile */
+          .hero-input-row { padding: 0.625rem !important; }
 
           /* Search text input: full width */
-          .hero-search-input { width: 100% !important; flex: none !important; }
-
-          /* Hide the vertical divider */
-          .hero-input-divider { display: none !important; }
-
-          /* Status select: full width */
-          .hero-status-wrap { width: 100% !important; flex-shrink: 1 !important; }
-          .hero-status-wrap select { min-width: 0 !important; padding: 0.75rem 2rem 0.75rem 0.875rem !important; border: 1px solid rgba(255,255,255,0.15) !important; border-radius: 8px !important; background: rgba(255,255,255,0.06) !important; }
-
-          /* Search button: full width */
-          .hero-search-btn { width: 100% !important; justify-content: center !important; padding: 0.75rem !important; border-radius: 8px !important; margin-left: 0 !important; }
+          .hero-search-input { width: 100% !important; flex: 1 !important; }
 
           /* CTA buttons: side by side, compact */
           .hero-cta-row { gap: 0.5rem !important; }

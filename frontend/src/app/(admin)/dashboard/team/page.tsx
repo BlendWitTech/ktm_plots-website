@@ -257,7 +257,7 @@ function TeamPageContent() {
 
                 <ThemeCompatibilityBanner moduleName="team" />
 
-                <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-0 z-10">
+                <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-0 z-10">
                     <div className="flex items-center gap-4">
                         <button onClick={handleBackClick} className="p-2 hover:bg-slate-50 rounded-xl text-slate-500 transition-colors">
                             <ArrowLeftIcon className="h-5 w-5" />
@@ -277,8 +277,8 @@ function TeamPageContent() {
                     </button>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-2 space-y-6">
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div className="xl:col-span-2 space-y-6">
                         <div className="bg-white rounded-2xl p-10 border border-slate-200/60 shadow-xl space-y-6">
                             <div>
                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Full Name</label>

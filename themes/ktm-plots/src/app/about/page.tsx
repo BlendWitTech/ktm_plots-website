@@ -8,8 +8,6 @@ import TeamSocialIcons from '@/components/ui/TeamSocialIcons';
 
 export const dynamic = 'force-dynamic';
 
-undefined
-
 // Fallback team if CMS team module is not enabled or empty
 const FALLBACK_TEAM = [
   { name: 'Rajesh Gurung',  role: 'CEO & Founder',             bio: '15+ years in Nepali real estate. Expert in land law and property valuation.', image: null },

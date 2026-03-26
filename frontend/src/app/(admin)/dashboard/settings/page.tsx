@@ -403,7 +403,7 @@ export default function SettingsPage() {
                                 )}
 
                                 {isSectionEditing('branding', ['site_title', 'site_tagline', 'footer_text', 'copyright_text']) && (
-                                    <div className="flex gap-4 pt-4">
+                                    <div className="flex flex-wrap gap-3 pt-4">
                                         <button
                                             onClick={() => handleSave('branding')}
                                             className="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-blue-500/20 hover:bg-blue-700 transition-all"
@@ -567,7 +567,7 @@ export default function SettingsPage() {
                                 )}
 
                                 {isSectionEditing('design', ['primary_color', 'heading_font', 'body_font']) && (
-                                    <div className="flex gap-4 pt-2">
+                                    <div className="flex flex-wrap gap-3 pt-2">
                                         <button onClick={() => handleSave('design')} className="bg-violet-600 text-white px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-violet-500/20 hover:bg-violet-700 transition-all">Save Design</button>
                                         <button onClick={() => handleCancel('design')} className="bg-slate-100 text-slate-500 px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
                                     </div>
@@ -639,7 +639,7 @@ export default function SettingsPage() {
                                 </div>
                             </div>
                             {isSectionEditing('contact', ['contact_email', 'contact_phone', 'address']) && (
-                                <div className="flex gap-4 pt-4">
+                                <div className="flex flex-wrap gap-3 pt-4">
                                     <button onClick={() => handleSave('contact')} className="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-blue-500/20 hover:bg-blue-700 transition-all">Save</button>
                                     <button onClick={() => handleCancel('contact')} className="bg-slate-100 text-slate-500 px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
                                 </div>
@@ -679,7 +679,7 @@ export default function SettingsPage() {
                                 <p className="text-[10px] text-slate-400 ml-2">Applies to both the Plots and Blog listing pages.</p>
                             </div>
                             {isSectionEditing('listing', ['listing_mode']) && (
-                                <div className="flex gap-4 pt-4">
+                                <div className="flex flex-wrap gap-3 pt-4">
                                     <button onClick={() => handleSave('listing')} className="bg-teal-600 text-white px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-teal-500/20 hover:bg-teal-700 transition-all">Save</button>
                                     <button onClick={() => handleCancel('listing')} className="bg-slate-100 text-slate-500 px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
                                 </div>
@@ -730,7 +730,7 @@ export default function SettingsPage() {
                                 ))}
                             </div>
                             {isSectionEditing('social', ['social_facebook', 'social_instagram']) && (
-                                <div className="flex gap-4 pt-4">
+                                <div className="flex flex-wrap gap-3 pt-4">
                                     <button onClick={() => handleSave('social')} className="bg-violet-600 text-white px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-violet-500/20 hover:bg-violet-700 transition-all">Save Social Links</button>
                                     <button onClick={() => handleCancel('social')} className="bg-slate-100 text-slate-500 px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
                                 </div>
@@ -1336,7 +1336,7 @@ export default function SettingsPage() {
                             </label>
 
                             {isSectionEditing('performance', ['performance_edge_caching']) && (
-                                <div className="flex gap-4 pt-4">
+                                <div className="flex flex-wrap gap-3 pt-4">
                                     <button
                                         onClick={() => handleSave('performance')}
                                         className="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-blue-500/20 hover:bg-blue-700 transition-all"
@@ -1412,7 +1412,7 @@ export default function SettingsPage() {
                             </div>
 
                             {isSectionEditing('security', ['security_session_locking', 'security_failed_login_limit', 'security_token_rotation']) && (
-                                <div className="flex gap-4 pt-4">
+                                <div className="flex flex-wrap gap-3 pt-4">
                                     <button
                                         onClick={() => handleSave('security')}
                                         className="bg-emerald-600 text-white px-8 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all"

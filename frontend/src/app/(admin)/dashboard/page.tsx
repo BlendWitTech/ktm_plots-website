@@ -259,9 +259,9 @@ export default function DashboardPage() {
                 ))}
             </div>
 
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 px-2">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 px-2">
                 {/* Activity Feed */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="md:col-span-2 lg:col-span-2 space-y-6">
                     <div className="flex items-center justify-between px-4">
                         <h2 className="text-xl font-bold text-slate-900 tracking-tight">
                             {checkPermission(permissions, 'audit_view') ? 'Recent Activity' : 'My Recent Activity'}

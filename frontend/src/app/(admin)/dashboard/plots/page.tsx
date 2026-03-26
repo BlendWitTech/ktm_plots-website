@@ -264,7 +264,7 @@ function PlotsPageContent() {
                     <ThemeCompatibilityBanner moduleName="plots" />
 
                     {/* Sticky header toolbar */}
-                    <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-0 z-10">
+                    <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/50 shadow-sm sticky top-0 z-10">
                         <div className="flex items-center gap-4">
                             <button onClick={handleBackClick} className="p-2 hover:bg-slate-50 rounded-xl text-slate-500 transition-colors">
                                 <ArrowLeftIcon className="h-5 w-5" />
@@ -284,9 +284,9 @@ function PlotsPageContent() {
                         </button>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                         {/* Main fields */}
-                        <div className="lg:col-span-2 space-y-6">
+                        <div className="xl:col-span-2 space-y-6">
                             {/* Core info */}
                             <div className="bg-white rounded-2xl p-10 border border-slate-200/60 shadow-xl space-y-6">
                                 <div>
@@ -325,7 +325,7 @@ function PlotsPageContent() {
                             {/* Pricing & Area */}
                             <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Pricing & Size</h3>
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     {[
                                         { key: 'priceFrom', label: 'Price From (NPR)' },
                                         { key: 'priceTo', label: 'Price To (NPR)' },
@@ -349,7 +349,7 @@ function PlotsPageContent() {
                             {/* Location */}
                             <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Location Details</h3>
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     {[
                                         { key: 'location', label: 'Location / Area' },
                                         { key: 'facing', label: 'Facing Direction' },
@@ -452,7 +452,7 @@ function PlotsPageContent() {
                             <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm space-y-4">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Gallery</h3>
                                 {formData.gallery && formData.gallery.length > 0 && (
-                                    <div className="grid grid-cols-3 gap-2">
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                         {formData.gallery.map((url: string, idx: number) => {
                                             const src = url.startsWith('http') ? url : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}${url}`;
                                             return (

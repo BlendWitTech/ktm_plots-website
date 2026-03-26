@@ -85,7 +85,7 @@ export default function LeadsPage() {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-2">
                 <div className="bg-white rounded-2xl p-6 border border-slate-200/50 shadow-sm">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Leads</p>
                     <p className="text-3xl font-bold text-slate-900 mt-2">{stats.total}</p>

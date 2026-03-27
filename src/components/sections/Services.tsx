@@ -95,7 +95,11 @@ export default function Services({ services, secData = {} }: Props) {
   );
 }
 
+const DESC_LIMIT = 120;
+
 function ServiceCard({ service, index }: { service: any; index: number }) {
+  const raw = service.description || '';
+  const desc = raw.length > DESC_LIMIT ? raw.slice(0, DESC_LIMIT).trimEnd() + '…' : raw;
   return (
     <div
       style={{
@@ -172,7 +176,7 @@ function ServiceCard({ service, index }: { service: any; index: number }) {
         lineHeight: 1.75,
         margin: 0,
       }}>
-        {service.description}
+        {desc}
       </p>
     </div>
   );

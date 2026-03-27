@@ -12,6 +12,9 @@ out/
 .env.local
 .env.*.local
 
+# Screenshots (source material, not committed)
+Screenshot*.png
+
 # OS / Editor
 .DS_Store
 .idea/

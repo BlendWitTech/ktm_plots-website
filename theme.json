@@ -4,7 +4,7 @@
     "displayName": "KTM Plots",
     "description": "Real estate theme for KTM Plots — land property listings in Kathmandu Valley",
     "version": "1.0.0",
-    "preview": "preview.svg",
+    "preview": "preview.png",
     "modules": [
         "blogs",
         "testimonials",

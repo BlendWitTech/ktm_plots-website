@@ -36,15 +36,4 @@ coverage/
 # TypeScript build info
 *.tsbuildinfo
 
-# Engine files (kept locally for reference, not part of this theme repo)
-backend/
-frontend/
-scripts/
-themes/
-docker-compose.yml
-nixpacks.toml
-railway.json
-railway.toml
-LICENSE
-PRICING.md
 package-lock.json
